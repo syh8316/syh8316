@@ -1,5 +1,3 @@
-
-
 /* ============ 手機版（≤ 768px） ============ */
 @media (max-width: 768px){
 
@@ -13,14 +11,14 @@
     justify-content: flex-end;
   }
   .site-header nav a{
-    font-size: 18px;         /* 16 → 18 */
+    font-size: 18px;
     padding: 10px 8px;
   }
 
   /* 首屏簡介區 */
   .about{ min-height: 72vh; padding: 52px 18px; }
-  .about h2{ font-size: 60px; line-height: 1.25; }    /* 34 → 38 */
-  .about p { font-size: 40px; line-height: 1.95; }    /* 21 → 23 */
+  .about h2{ font-size: 60px; line-height: 1.25; }
+  .about p { font-size: 40px; line-height: 1.95; }
 
   /* 歷代人物：單欄 */
   .history{
@@ -31,74 +29,78 @@
     justify-items: center;
   }
   .person-card{
-    --card-w: min(94vw, 400px);     /* 92vw, 380px → 稍放大 */
-    max-height: 336px;              /* 320 → 336 */
+    --card-w: min(94vw, 400px);
+    max-height: 336px;
     border-radius: 10px;
     box-shadow: 0 8px 18px rgba(0,0,0,.14);
   }
   .person-card .caption{
-    font-size: 17px;                /* 15 → 17 */
+    font-size: 17px;
     padding: 12px 14px;
   }
 
-  /* 結語：圖上文下 */
+  /* 結語：圖上文下（修正：不要巢狀、不要缺花括號） */
   .conclusion{
-    .conclusion{
-    display: flex !important;      /* 改成 flex，確保覆蓋桌機的 grid */
-    flex-direction: column;         /* 圖在上、文在下 */
+    display: flex !important;          /* 取代桌機的 grid */
+    flex-direction: column;            /* 圖在上、文在下 */
     align-items: center;
     gap: 14px;
     padding-block: 18px;
     width: min(94%, 1080px);
   }
-  .conclusion-media{ 
-    order: 0;                       /* 圖片在前 */
+  /* 每個直屬子元素各占一行，避免左右並排 */
+  .conclusion > *{
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+  /* 圖片容器（在上） */
+  .conclusion-media{
+    order: 0;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    float: none !important;            /* 防止殘留 float 影響 */
   }
-    }
-  .conclusion-media img{ 
+  .conclusion-media img{
     max-width: 86vw;
     height: auto;
-  }      /* 82 → 86 */
-  .conclusion .tagline{ font-size: 17px;                /* 保留一個設定即可 */
+    display: block;
+  }
+  .conclusion .tagline{
+    font-size: 17px;
     line-height: 1.6;
     text-align: center;
-  }       /* 13 → 15 */
+  }
+  /* 文字容器（在下） */
   .conclusion-text{
     order: 1;
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 20px;
+    float: none !important;
   }
   .conclusion-text p{
-    font-size: 40px;                /* 你希望的較大字級 */
+    font-size: 40px;
     line-height: 2.0;
   }
-  .conclusion .tagline{ font-size: 17px;                /* 建議保留一個設定就好 */
-    line-height: 1.6;
-    text-align: center;
-  }
-
 
   /* 聯絡表單區 */
   #contact{ padding-block: 14px; }
-  #contact h2{ font-size: 24px; }                /* 22 → 24 */
-  #contact > p:first-of-type{ font-size: 16px; margin-bottom: 16px; } /* 14 → 16 */
+  #contact h2{ font-size: 24px; }
+  #contact > p:first-of-type{ font-size: 16px; margin-bottom: 16px; }
 
   .form{ width: 94%; margin: 10px auto 24px; }
   .form input, .form textarea, .form button{
-    font-size: 18px;               /* 16 → 18 */
+    font-size: 18px;
     padding: 14px 16px;
   }
   .form textarea{ min-height: 130px; }
 
   /* 社群圓形按鈕（放大） */
   .social{ gap: 18px; padding: 22px 0 40px; }
-  .social .icon{ width: 72px; height: 72px; font-size: 30px; } /* 64/26 → 72/30 */
+  .social .icon{ width: 72px; height: 72px; font-size: 30px; }
 
   /* Footer（字級放大、可換行） */
   .site-footer{ padding: 16px 0; }
@@ -109,45 +111,36 @@
     align-items: center;
   }
   .footer-info{ gap: 18px; flex-wrap: wrap; }
-  .footer-title, .footer-info p{ font-size: 15px; } /* 13 → 15 */
+  .footer-title, .footer-info p{ font-size: 15px; }
 }
 
 /* ============ 更小的手機（≤ 480px） ============ */
 @media (max-width: 480px){
-  .brand{ width: 165px; height: 48px; }     /* 150×44 → 165×48 */
+  .brand{ width: 165px; height: 48px; }
   .site-header nav ul{ gap: 12px; }
-  .site-header nav a{ font-size: 17px; }    /* 15 → 17 */
+  .site-header nav a{ font-size: 17px; }
 
-   .about h2{ font-size: 34px; }                       /* 32 → 34 */
-  .about p { font-size: 22px; }                       /* 20 → 22 */
+  .about h2{ font-size: 34px; }
+  .about p { font-size: 22px; }
 
-  .person-card{ --card-w: 92vw; max-height: 320px; } /* 88vw/300 → 92vw/320 */
+  .person-card{ --card-w: 92vw; max-height: 320px; }
   .person-card .caption{ font-size: 16px; }
 
   .conclusion-media img{ max-width: 90vw; }
-  .conclusion .tagline{ font-size: 14px; }
-  .conclusion-text p{ font-size: 20px; line-height: 1.95; } /* 18.5 → 20 */
-  .conclusion .tagline{ font-size: 16.5px; }                /* 合併為 16.5px */
+  .conclusion .tagline{ font-size: 16.5px; }
+  .conclusion-text p{ font-size: 20px; line-height: 1.95; }
 
   #contact h2{ font-size: 23px; }
   #contact > p:first-of-type{ font-size: 15px; }
 
   .form input, .form textarea, .form button{ font-size: 17px; }
 
-  .social .icon{ width: 64px; height: 64px; font-size: 26px; } /* 保持清楚 */
+  .social .icon{ width: 64px; height: 64px; font-size: 26px; }
   .footer-title, .footer-info p{ font-size: 14.5px; }
 }
 
-@media (max-width: 1200px){
-  .about{ --aboutY: 64%; }
-}
-@media (max-width: 992px){
-  .about{ --aboutY: 68%; }
-}
-@media (max-width: 768px){
-  .about{ --aboutY: 72%; }
-}
-@media (max-width: 480px){
-  .about{ --aboutY: 76%; }
-
-}
+/* 依螢幕寬度微調 about 背景對位（你原本的設定保留） */
+@media (max-width: 1200px){ .about{ --aboutY: 64%; } }
+@media (max-width:  992px){ .about{ --aboutY: 68%; } }
+@media (max-width:  768px){ .about{ --aboutY: 72%; } }
+@media (max-width:  480px){ .about{ --aboutY: 76%; } }
