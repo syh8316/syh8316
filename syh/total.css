@@ -1,0 +1,373 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap');
+/* 字體變數：書法優先，後面是各系統常見楷體做備援 */
+:root{
+  /* mac / Windows / 其它系統的中文備援字體，確保全覆蓋 */
+  --font-ui: "Noto Sans TC",
+             "PingFang TC", "Heiti TC", "Microsoft JhengHei",
+             "Noto Sans CJK TC", /* 思源黑體 */
+             system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+}
+/* 全站用 Noto Serif TC（襯線／明體，跟預設黑體差很多） */
+html, body{
+  font-family: "Noto Serif TC", "Noto Sans TC",
+               "PingFang TC", "Microsoft JhengHei",
+               "Noto Sans CJK TC", serif !important;
+  line-height: 1.8;
+  letter-spacing: .01em;
+}
+/* 導覽列的粗細微調（Noto Serif 也有粗體可用） */
+.site-header nav a{ font-weight: 700; }
+
+
+/*全域樣式設定 避免排版跑掉*/
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/*標題設定*/
+/* 版頭條 */
+:root{
+  --header-h: 80px;                         /* 導覽列高度 */
+  --header-bg: rgba(255,255,255,.9);        /* 白底、可帶點透明 */
+  --header-ink: #111;                       /* 文字顏色（黑） */
+  --header-blur: 8px;                       /* 背景模糊，可要可不要 */
+}
+/* 固定在頂端 + 白底黑字 */
+.site-header{
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--header-h); z-index: 1000;
+
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+
+  background: var(--header-bg);
+  backdrop-filter: blur(var(--header-blur));
+  -webkit-backdrop-filter: blur(var(--header-blur));
+  border-bottom: 1px solid rgba(0,0,0,.06);   /* 細線分隔 */
+  box-shadow: 0 2px 12px rgba(0,0,0,.06);
+  color: var(--header-ink);
+}
+/* 讓內容不被固定 header 壓住 */
+body{ padding-top: var(--header-h); }
+/* Logo（沿用你的圖） */
+.brand{
+  width: 240px; height: 64px; margin: 0;
+  background: url("./img/logo.png") no-repeat left center / contain;
+  color: transparent;
+}
+.brand__text{ position: absolute; left: -10000px; }
+/* 導覽列：白底黑字 */
+.site-header nav ul{
+  list-style: none; display: flex; gap: 32px;
+  margin: 0; padding: 0; align-items: center;
+}
+.site-header nav a{
+  color: var(--header-ink);
+  text-decoration: none;
+  font-weight: 800; font-size: 20px; line-height: 1;
+  padding: 10px 8px;
+}
+.site-header nav a:hover{
+  color: #444;                                /* 滑過微變深 */
+}
+/* 錨點跳轉不被固定列擋住 */
+section[id]{ scroll-margin-top: calc(var(--header-h) + 8px); }
+
+
+/*簡介設定*/
+.about {
+    background-color: antiquewhite;
+    color: white;
+    min-height: 92vh;
+    background-repeat: no-repeat;
+    background-color: cover;
+    background-position: center;
+    display: flow-root;
+    background-image: url("img/背景.jpg");
+    background-repeat: no-repeat;
+    background-position: 50% var(--aboutY, 60%);
+    background-size: cover;      /* ← 原本寫成 background-color: cover; 把它改成這行 */
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+/* 半透明遮罩：絕對定位 + 四邊貼齊 */
+.about::before{
+  content:""; position:absolute; inset:0;
+  background: rgba(0,0,0,.55);
+}
+.about > *{ position:relative; z-index:1; margin:12px 0; }
+.about > :last-child{ margin-bottom:0; }  /* 保險 */
+.about h2 {
+    font-size: 35px;
+    color: #ffffff;
+}
+.about p {
+    font-size: 24px;
+    color: #ffffff;
+    margin: 12px 0;
+    text-align: center;  /* 水平置中 */
+}
+
+
+/*歷代人物設定*/
+/* 容器：三欄並排，標題佔滿一列 */
+.history{
+  --gap: 24px;                                   /* 卡片間距 */
+  --card-w: clamp(260px, 28vw, 360px);           /* 卡片寬度：隨螢幕縮放 */
+  --card-ratio: 3 / 4;                           /* ✅ 你喜歡的比例（修長） */
+
+  width: min(92%, var(--container, 1080px));
+  margin-inline: auto;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap);
+  padding-inline: var(--gap);                    /* 左右邊距 = 間距 */
+  justify-items: center;                         /* 每欄的卡片居中 → 第二張剛好在正中 */
+  align-items: start;
+}
+.history h2{
+  grid-column: 1 / -1;      /* 讓標題跨滿整列 */
+  margin: 0 0 12px;
+  text-align: center;
+}
+/* 單一卡片 */
+.person-card{
+  width: var(--card-w);                          /* 固定卡片寬度 */
+  max-width: 100%;
+  aspect-ratio: var(--card-ratio);               /* ← 3:4 */
+  max-height: 360px;                             /* 上限避免太長，可調 */
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.18);
+  cursor: pointer;
+}
+/* 圖片 */
+.person-card img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;                    /* 臉部略往上，可依照片調 */
+  display: block;
+  transition: transform .45s ease, filter .45s ease;
+}
+/* 介紹文字（覆蓋層） */
+.person-card .caption{
+  position: absolute;
+  left: 0; 
+  right: 0; 
+  bottom: 0;
+  padding: 12px 14px;
+  color: #fff;
+  background: linear-gradient(to top, rgba(0,0,0,.72), rgba(0,0,0,.18));
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform .3s ease, opacity .3s ease;
+  pointer-events: none;      /* 不擋滑鼠 */
+  font-size: 16px;
+}
+/* Hover：只影響自己這張 */
+.person-card:hover img{
+  transform: scale(1.06) rotate(-1.5deg);
+  filter: brightness(.92);
+}
+.person-card:hover .caption{
+  transform: translateY(0);
+  opacity: 1;
+}
+
+
+/*結語設定*/
+/* 圖左／文右 */
+.conclusion{
+  /* 版型：圖左文右 */
+  display: grid;
+  grid-template-columns: minmax(260px, 36%) 1fr;
+  gap: var(--space, 24px);
+
+  /* ✅ 水平置中整塊 */
+  width: min(92%, var(--container, 1080px));
+  margin-inline: auto;
+
+  /* 讓圖與文字在同一列彼此垂直置中 */
+  align-items: center;
+
+  padding-block: var(--space, 24px);
+}
+/* 左側圖（如果你用 <figure class="conclusion-media"> … ）*/
+.conclusion-media{ 
+    margin: 0; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* ← 讓下面的字對齊圖片中線 */
+    width: fit-content;    /* ← 讓 figure 收縮到剛好等於圖片寬 */
+    justify-self: center;  /* 若在 grid 裡，整塊置中 */
+}
+.conclusion-media img{
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.12);
+}
+/* 標語字體置中與間距 */
+.conclusion-media .tagline{
+  margin-top: 8px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--muted, #777);
+}
+/* 右側文字容器 */
+.conclusion-text{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.conclusion-text p{ margin: 0; line-height: 1.8; }
+/* 讓整塊在視窗高度中置中（可選） */
+.conclusion--center {
+  min-height: 80vh;           /* 你要多高自己調 */
+  place-content: center;      /* grid 的內容水平＋垂直置中 */
+}
+
+
+/* 表單標題 */
+/* 聯絡區塊 Title + 副標 */
+#contact{
+  padding-block: 16px;          /* 區塊上下留白 */
+  scroll-margin-top: 80px;      /* 錨點跳轉時不被導覽列蓋住（可留） */
+}
+
+#contact h2{
+  text-align: center;           /* 置中 */
+  font-size: clamp(24px, 2.6vw, 32px);
+  font-weight: 800;
+  letter-spacing: .5px;
+  margin: 0 0 8px;
+  color: var(--ink);            /* 深灰主字色 */
+}
+/* 在標題底下加一條細線，微強調 */
+#contact h2::after{
+  content:"";
+  display:block;
+  width: 72px;
+  height: 3px;
+  margin: 8px auto 0;
+  background: var(--brand-2);   /* 你的灰色 #777 */
+  border-radius: 2px;
+}
+/* 只針對標題後的第一段副標（讓我們合作 ❤） */
+#contact > p:first-of-type{
+  text-align: center;
+  color: var(--muted);          /* 次要文字色 */
+  font-size: 16px;
+  margin: 4px 0 18px;
+  line-height: 1.6;
+}
+
+/* 表單 */
+.form {
+  width: min(560px, 92%);
+  margin: 12px auto 28px;
+}
+.form input,
+.form textarea,
+.form button {
+  width: 100%;
+  font-size: 16px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 6px;
+}
+.form input,
+.form textarea { margin-bottom: 15px; }
+.form textarea { resize: vertical; min-height: 140px; }
+
+.form button {
+  border: none;
+  background: #000;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+.form button:hover { opacity: .85; }
+
+/* 社群圓形按鈕 */
+.social {                       /* ← 原本是 .social-links */
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  padding: 28px 0 48px;
+}
+.social .icon {                 /* ← 原本是 .social-links .icon */
+  background: #000000;
+  color: #fff;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 38px;
+  transition: background-color .25s ease, transform .25s ease;
+}
+.social .icon:hover {
+  background: #5d5c5b;
+  transform: translateY(-2px);
+}
+/* 你的 class 用哪個就寫哪個 (.social 或 .social-links) */
+.social .icon,
+.social-links .icon{
+  text-decoration: none;      /* 移除底線 */
+}
+.social .icon:hover,
+.social-links .icon:hover{
+  text-decoration: none;      /* 滑過也不要底線 */
+}
+
+/*聯絡資訊設定*/
+.site-footer{
+  background:#000;
+  color:#b7b7b7;
+  padding:12px 0;
+  font-size:14px;
+}
+/* 一行：左邊標題 + 右邊三項；整塊置中 */
+.footer-line{
+  display:flex;
+  justify-content:center;     /* 讓整排置中 */
+  align-items:baseline;       /* ← 與「團」同一基線，視覺上下對齊 */
+  gap:16px;
+  white-space:nowrap;         /* 不換行 */
+}
+/* 標題與內容同字級/行高，邊緣自然對齊 */
+.footer-title{
+  margin:0;
+  color:#fff;
+  font-size:14px;
+  line-height:1.3;
+}
+.footer-info{
+  display:flex;
+  gap:24px;                   /* 三項之間的距離 */
+}
+.footer-info p{
+  margin:0;
+  font-size:14px;
+  line-height:1.3;
+  text-align:left;
+}
+/* 連結顏色 */
+.site-footer a{
+  color:#fff;
+  text-decoration:underline;
+}
+.site-footer a:hover{ color:#ddd; }
