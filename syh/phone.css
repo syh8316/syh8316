@@ -42,17 +42,18 @@
 
   /* 結語：圖上文下（修正：不要巢狀、不要缺花括號） */
   .conclusion{
-    display: flex !important;          /* 取代桌機的 grid */
-    flex-direction: column;            /* 圖在上、文在下 */
+    display: flex !important;       /* 取代 grid */
+    flex-direction: column;
     align-items: center;
     gap: 14px;
-    padding-block: 18px;
     width: min(94%, 1080px);
+    padding-block: 18px;
   }
   /* 每個直屬子元素各占一行，避免左右並排 */
   .conclusion > *{
-    flex: 0 0 100% !important;
+    width: 100% !important;
     max-width: 100% !important;
+    flex: 0 0 100% !important;
   }
   /* 圖片容器（在上） */
   .conclusion-media{
@@ -64,9 +65,8 @@
     float: none !important;            /* 防止殘留 float 影響 */
   }
   .conclusion-media img{
-    max-width: 86vw;
+    max-width: 100%;
     height: auto;
-    display: block;
   }
   .conclusion .tagline{
     font-size: 17px;
@@ -192,6 +192,7 @@
 @media (max-width:  992px){ .about{ --aboutY: 68%; } }
 @media (max-width:  768px){ .about{ --aboutY: 72%; } }
 @media (max-width:  480px){ .about{ --aboutY: 76%; } }
+
 
 
 
