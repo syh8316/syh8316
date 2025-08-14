@@ -17,15 +17,22 @@
     </head>
     <body>
         <header class="site-header">
-          <h1 class="brand"><span class="brand__text">新義和歌劇團</span></h1>
+          <h1 class="brand">
+            <a href="#top" aria-label="新義和歌劇團"></a>
+          </h1>
 
           <!-- 漢堡按鈕 -->
-          <button class="nav-toggle" aria-controls="site-menu" aria-expanded="false" aria-label="開啟主選單">
-            <span></span><span></span><span></span>
+          <button class="nav-toggle" id="navToggle"
+                  aria-controls="siteNav"
+                  aria-expanded="false"
+                  aria-label="開合導覽列">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
           </button>
 
-          <!-- 導覽清單 -->
-          <nav id="site-menu" class="site-nav">
+          <!-- 選單 -->
+          <nav class="site-nav" id="siteNav" role="navigation">
             <ul>
               <li><a href="#about">關於劇團</a></li>
               <li><a href="#history">劇團歷代人物</a></li>
@@ -182,6 +189,7 @@
     </body>
 
 </html>
+
 
 
 
