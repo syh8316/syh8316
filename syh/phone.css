@@ -42,50 +42,22 @@
 
   /* 結語：圖上文下（修正：不要巢狀、不要缺花括號） */
   .conclusion{
-    display: flex !important;       /* 取代 grid */
+    display: flex !important;
     flex-direction: column;
     align-items: center;
     gap: 14px;
     width: min(94%, 1080px);
     padding-block: 18px;
   }
-  /* 每個直屬子元素各占一行，避免左右並排 */
-  .conclusion > *{
-    width: 100% !important;
-    max-width: 100% !important;
-    flex: 0 0 100% !important;
-  }
-  /* 圖片容器（在上） */
-  .conclusion-media{
-    order: 0;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    float: none !important;            /* 防止殘留 float 影響 */
-  }
-  .conclusion-media img{
-    max-width: 100%;
-    height: auto;
-  }
-  .conclusion .tagline{
-    font-size: 17px;
-    line-height: 1.6;
-    text-align: center;
-  }
-  /* 文字容器（在下） */
-  .conclusion-text{
-    order: 1;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    float: none !important;
-  }
-  .conclusion-text p{
-    font-size: 40px;
-    line-height: 2.0;
-  }
+  .conclusion > *{ flex: 0 0 100% !important; max-width: 100% !important; }
+
+  .conclusion-media{ order: 0; display:flex; align-items:center; }
+  .conclusion-media img{ width: 100%; height: auto; display:block; }
+
+  .conclusion .tagline{ text-align:center; }
+
+  .conclusion-text{ order: 1; display:flex; flex-direction:column; gap:20px; }
+}
 
   /* 聯絡表單區 */
   #contact{ padding-block: 14px; }
@@ -192,6 +164,7 @@
 @media (max-width:  992px){ .about{ --aboutY: 68%; } }
 @media (max-width:  768px){ .about{ --aboutY: 72%; } }
 @media (max-width:  480px){ .about{ --aboutY: 76%; } }
+
 
 
 
