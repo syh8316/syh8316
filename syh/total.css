@@ -400,3 +400,7 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 8px); }
 .nav-toggle[aria-expanded="true"] span:nth-child(3){
   transform: translateY(-7px) rotate(-45deg);
 }
+
+/* ====== 下拉選單（桌機維持橫排） ====== */
+.site-nav{ /* 桌機原樣式保留 */ }
+.site-nav ul{ list-style:none; margin:0; padding:0; display:flex; gap:32px; }
