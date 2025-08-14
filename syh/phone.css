@@ -1,3 +1,4 @@
+
 /* ============ 手機版（≤ 768px） ============ */
 @media (max-width: 768px){
   html::before{
@@ -118,6 +119,52 @@
   }
   .footer-info{ gap: 18px; flex-wrap: wrap; }
   .footer-title, .footer-info p{ font-size: 15px; }
+    /* 顯示漢堡按鈕 */
+  .nav-toggle{ display:block; }
+
+  /* 導覽改為「下拉面板」：固定在 header 底下，預設收起 */
+  .site-nav{
+    position: fixed;
+    left: 0; right: 0;
+    top: var(--header-h, 68px);
+    background: var(--header-bg, rgba(255,255,255,.95));
+    -webkit-backdrop-filter: blur(var(--header-blur, 8px));
+    backdrop-filter: blur(var(--header-blur, 8px));
+    border-bottom: 1px solid rgba(0,0,0,.06);
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+    transform: translateY(-10px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: transform .25s ease, opacity .25s ease, visibility .25s ease;
+    z-index: 1050;
+  }
+  /* 展開狀態 */
+  .site-nav[data-open="true"]{
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  /* 手機選單改直向 */
+  .site-nav ul{
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px 18px 16px;
+  }
+  .site-nav a{
+    display:block;
+    padding: 10px 2px;
+    font-size: 18px;
+    color: var(--header-ink, #111);
+    text-decoration: none;
+  }
+  .site-nav a:active,
+  .site-nav a:hover{ color:#444; }
+
+  /* 展開時，避免背景頁面滾動 */
+  body.no-scroll{ overflow:hidden; }
+}
 }
 
 /* ============ 更小的手機（≤ 480px） ============ */
@@ -150,4 +197,5 @@
 @media (max-width:  992px){ .about{ --aboutY: 68%; } }
 @media (max-width:  768px){ .about{ --aboutY: 72%; } }
 @media (max-width:  480px){ .about{ --aboutY: 76%; } }
+
 
