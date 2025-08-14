@@ -456,3 +456,14 @@ body::after,
 .reveal-stagger.is-visible > *:nth-child(4){ transition-delay: 240ms; }
 .reveal-stagger.is-visible > *:nth-child(5){ transition-delay: 320ms; }
 .reveal-stagger.is-visible > *:nth-child(6){ transition-delay: 400ms; }
+
+/* 使用者偏好「降低動效」時關掉動畫 */
+@media (prefers-reduced-motion: reduce){
+  .reveal,
+  .reveal-stagger > *{
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
