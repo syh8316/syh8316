@@ -399,18 +399,20 @@ body::after,
 }
 
 /* ===== Scroll Reveal (淡入 + 位移/縮放/模糊) ===== */
-/* 初始隱藏 + 漸入 */
-.reveal{ 
-  opacity: 0; 
-  transform: translateY(16px); 
+/* 初始狀態：看不到、略位移 */
+.reveal{
+  opacity: 0;
+  transform: translateY(16px);
   transition: opacity .6s ease, transform .6s ease;
+  will-change: opacity, transform;
 }
-.reveal.is-visible{ 
-  opacity: 1; 
-  transform: none; 
+/* 顯示狀態：回到原位並顯示 */
+.reveal.is-visible{
+  opacity: 1;
+  transform: none;
 }
 
-/* 方向版（可搭配 data-reveal="left|right|up|down"） */
+/* 方向版（配合 data-reveal） */
 .reveal--left  { transform: translateX(-24px); }
 .reveal--right { transform: translateX( 24px); }
 .reveal--up    { transform: translateY( 24px); }
@@ -418,8 +420,11 @@ body::after,
 .reveal--left.is-visible,
 .reveal--right.is-visible,
 .reveal--up.is-visible,
-.reveal--down.is-visible{ transform: none; }
+.reveal--down.is-visible{
+  transform: none;
+}
 
-
-
-
+/* 交錯群組（如果有需要也可加些預設） */
+.reveal-stagger > *{
+  /* 子元素本身已被 JS 加上 .reveal，因此可不特別寫 */
+}
