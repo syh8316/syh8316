@@ -373,3 +373,84 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 8px); }
 }
 .site-footer a:hover{ color:#ddd; }
 
+/* ====== 漢堡按鈕（桌機隱藏、手機顯示） ====== */
+.nav-toggle{
+  display:none;                 /* 桌機不顯示 */
+  width:40px; height:40px;
+  border:0; background:transparent;
+  position:relative; z-index:1100;  /* 在選單上層 */
+  cursor:pointer;
+}
+.nav-toggle span{
+  position:absolute; left:6px; right:6px;
+  height:2px; background: var(--header-ink, #111);
+  transition:transform .25s ease, opacity .2s ease, top .25s ease, bottom .25s ease;
+}
+.nav-toggle span:nth-child(1){ top:12px; }
+.nav-toggle span:nth-child(2){ top:19px; }
+.nav-toggle span:nth-child(3){ bottom:12px; }
+
+/* 轉成 X 狀態 */
+.nav-toggle[aria-expanded="true"] span:nth-child(1){
+  transform: translateY(7px) rotate(45deg);
+}
+.nav-toggle[aria-expanded="true"] span:nth-child(2){
+  opacity:0;
+}
+.nav-toggle[aria-expanded="true"] span:nth-child(3){
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ====== 下拉選單（桌機維持橫排） ====== */
+.site-nav{ /* 桌機原樣式保留 */ }
+.site-nav ul{ list-style:none; margin:0; padding:0; display:flex; gap:32px; }
+
+/* ====== 行動版樣式 ====== */
+@media (max-width: 768px){
+  /* 顯示漢堡按鈕 */
+  .nav-toggle{ display:block; }
+
+  /* 導覽改為「下拉面板」：固定在 header 底下，預設收起 */
+  .site-nav{
+    position: fixed;
+    left: 0; right: 0;
+    top: var(--header-h, 68px);
+    background: var(--header-bg, rgba(255,255,255,.95));
+    -webkit-backdrop-filter: blur(var(--header-blur, 8px));
+    backdrop-filter: blur(var(--header-blur, 8px));
+    border-bottom: 1px solid rgba(0,0,0,.06);
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+    transform: translateY(-10px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: transform .25s ease, opacity .25s ease, visibility .25s ease;
+    z-index: 1050;
+  }
+  /* 展開狀態 */
+  .site-nav[data-open="true"]{
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  /* 手機選單改直向 */
+  .site-nav ul{
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px 18px 16px;
+  }
+  .site-nav a{
+    display:block;
+    padding: 10px 2px;
+    font-size: 18px;
+    color: var(--header-ink, #111);
+    text-decoration: none;
+  }
+  .site-nav a:active,
+  .site-nav a:hover{ color:#444; }
+
+  /* 展開時，避免背景頁面滾動 */
+  body.no-scroll{ overflow:hidden; }
+}
+
