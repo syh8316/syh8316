@@ -1,4 +1,3 @@
-
 /* ============ 手機版（≤ 768px） ============ */
 @media (max-width: 768px){
 
@@ -40,7 +39,7 @@
     padding: 12px 14px;
   }
 
-  /* 結語：圖上文下（修正：不要巢狀、不要缺花括號） */
+  /* 結語：圖上文下 */
   .conclusion{
     display: flex !important;
     flex-direction: column;
@@ -50,25 +49,17 @@
     padding-block: 18px;
   }
   .conclusion > *{ flex: 0 0 100% !important; max-width: 100% !important; }
-
   .conclusion-media{ order: 0; display:flex; align-items:center; }
   .conclusion-media img{ width: 100%; height: auto; display:block; }
-
   .conclusion .tagline{ text-align:center; }
-
   .conclusion-text{ order: 1; display:flex; flex-direction:column; gap:20px; }
-}
 
   /* 聯絡表單區 */
   #contact{ padding-block: 14px; }
   #contact h2{ font-size: 24px; }
   #contact > p:first-of-type{ font-size: 16px; margin-bottom: 16px; }
-
   .form{ width: 94%; margin: 10px auto 24px; }
-  .form input, .form textarea, .form button{
-    font-size: 18px;
-    padding: 14px 16px;
-  }
+  .form input, .form textarea, .form button{ font-size: 18px; padding: 14px 16px; }
   .form textarea{ min-height: 130px; }
 
   /* 社群圓形按鈕（放大） */
@@ -85,7 +76,8 @@
   }
   .footer-info{ gap: 18px; flex-wrap: wrap; }
   .footer-title, .footer-info p{ font-size: 15px; }
-    /* 顯示漢堡按鈕 */
+
+  /* ✅ 手機版才顯示漢堡，並把選單改為抽屜式 */
   .nav-toggle{ display:block; }
 
   .site-nav{
@@ -153,25 +145,8 @@
   .footer-title, .footer-info p{ font-size: 14.5px; }
 }
 
-/* 依螢幕寬度微調 about 背景對位（你原本的設定保留） */
-@media (max-width: 1200px){ 
-  .about{ --aboutY: 64%; } 
-  body::after{ 
-  content: none !important; 
-  display: none !important; 
-  }
-}
+/* 依螢幕寬度微調 about 背景對位（保留你的設定） */
+@media (max-width: 1200px){ .about{ --aboutY: 64%; } }
 @media (max-width:  992px){ .about{ --aboutY: 68%; } }
 @media (max-width:  768px){ .about{ --aboutY: 72%; } }
 @media (max-width:  480px){ .about{ --aboutY: 76%; } }
-
-
-
-
-
-
-
-
-
-
-
