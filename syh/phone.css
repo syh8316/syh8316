@@ -1,13 +1,7 @@
 
 /* ============ 手機版（≤ 768px） ============ */
 @media (max-width: 768px){
-  html::before{
-    content:"MOBILE CSS LOADED";
-    position: fixed; z-index: 9999;
-    bottom: 8px; right: 8px;
-    background:#000; color:#fff;
-    padding:4px 8px; font-size:12px; border-radius:6px;
-  }
+
   /* Header：白底黑字、固定在頂端（尺寸微放大） */
   :root{ --header-h: 68px; }
   .site-header{ padding: 0 16px; }
@@ -192,6 +186,7 @@
 @media (max-width:  992px){ .about{ --aboutY: 68%; } }
 @media (max-width:  768px){ .about{ --aboutY: 72%; } }
 @media (max-width:  480px){ .about{ --aboutY: 76%; } }
+
 
 
 
