@@ -1,10 +1,7 @@
 
 /* ============ 手機版（≤ 768px） ============ */
 @media (max-width: 768px){
-  body::after{ 
-    content: none !important; 
-    display: none !important; 
-  }
+
   /* Header：白底黑字、固定在頂端（尺寸微放大） */
   :root{ --header-h: 68px; }
   .site-header{ padding: 0 16px; }
@@ -185,10 +182,17 @@
 }
 
 /* 依螢幕寬度微調 about 背景對位（你原本的設定保留） */
-@media (max-width: 1200px){ .about{ --aboutY: 64%; } }
+@media (max-width: 1200px){ 
+  .about{ --aboutY: 64%; } 
+  body::after{ 
+  content: none !important; 
+  display: none !important; 
+  }
+}
 @media (max-width:  992px){ .about{ --aboutY: 68%; } }
 @media (max-width:  768px){ .about{ --aboutY: 72%; } }
 @media (max-width:  480px){ .about{ --aboutY: 76%; } }
+
 
 
 
