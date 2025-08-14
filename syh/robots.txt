@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://syh8316.github.io/syh8316/syh/sitemap.xml
