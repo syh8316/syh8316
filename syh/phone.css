@@ -150,3 +150,18 @@
 @media (max-width:  992px){ .about{ --aboutY: 68%; } }
 @media (max-width:  768px){ .about{ --aboutY: 72%; } }
 @media (max-width:  480px){ .about{ --aboutY: 76%; } }
+
+@media (min-width: 769px){
+  .nav-toggle{ display: none !important; }
+  .site-nav{
+    position: static !important;
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: 0 !important;
+  }
+  .site-nav ul{ display: flex; gap: 32px; padding: 0; }
+}
