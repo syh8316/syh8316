@@ -188,65 +188,44 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 8px); }
 /*結語設定*/
 /* 圖左／文右 */
 .conclusion{
-  /* 版型：圖左文右 */
   display: grid;
-  grid-template-columns: minmax(260px, 36%) 1fr;
-  gap: var(--space, 24px);
-
-  /* ✅ 水平置中整塊 */
-  width: min(92%, var(--container, 1080px));
+  grid-template-columns: minmax(320px, 40%) 1fr; /* 左圖右文 */
+  gap: 24px;
+  width: min(92%, 1080px);
   margin-inline: auto;
-
-  /* 讓圖與文字在同一列彼此垂直置中 */
   align-items: center;
-
-  padding-block: var(--space, 24px);
 }
-/* 左側圖（如果你用 <figure class="conclusion-media"> … ）*/
-.conclusion-media{ 
-    margin: 0; 
-    display: flex;
-    flex-direction: column;
-    align-items: center;   /* ← 讓下面的字對齊圖片中線 */
-    width: fit-content;    /* ← 讓 figure 收縮到剛好等於圖片寬 */
-    justify-self: center;  /* 若在 grid 裡，整塊置中 */
+.conclusion-media{
+  margin: 0;
+  width: 100%;                /* ❗️取代舊的 width: fit-content */
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .conclusion-media img{
-  max-width: 100%;
+  display: block;
+  width: 100%;                /* 圖片吃滿左欄 */
   height: auto;
-  object-fit: contain;
+  object-fit: cover;          /* 可用 contain 看你喜歡 */
   border-radius: 10px;
   box-shadow: 0 10px 24px rgba(0,0,0,.12);
 }
-/* 標語字體置中與間距 */
-.conclusion-media .tagline{
+.conclusion .tagline{
   margin-top: 8px;
   text-align: center;
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--muted, #777);
 }
-/* 右側文字容器 */
 .conclusion-text{
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
-.conclusion-text p{ margin: 0; line-height: 1.8; }
-/* 讓整塊在視窗高度中置中（可選） */
-.conclusion--center {
-  min-height: 80vh;           /* 你要多高自己調 */
-  place-content: center;      /* grid 的內容水平＋垂直置中 */
-}
-
-
 /* 表單標題 */
 /* 聯絡區塊 Title + 副標 */
 #contact{
   padding-block: 16px;          /* 區塊上下留白 */
   scroll-margin-top: 80px;      /* 錨點跳轉時不被導覽列蓋住（可留） */
 }
-
 #contact h2{
   text-align: center;           /* 置中 */
   font-size: clamp(24px, 2.6vw, 32px);
@@ -273,6 +252,7 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 8px); }
   margin: 4px 0 18px;
   line-height: 1.6;
 }
+
 
 /* 表單 */
 .form {
@@ -456,5 +436,6 @@ body::after,
 .reveal-stagger.is-visible > *:nth-child(4){ transition-delay: 240ms; }
 .reveal-stagger.is-visible > *:nth-child(5){ transition-delay: 320ms; }
 .reveal-stagger.is-visible > *:nth-child(6){ transition-delay: 400ms; }
+
 
 
