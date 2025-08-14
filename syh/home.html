@@ -120,7 +120,39 @@
 
             <script>
             document.addEventListener('DOMContentLoaded', () => {
-              // 1) 如果有 .reveal-stagger，先幫它的子元素加上 .reveal 以便統一處理
+                const navToggle = document.getElementById('navToggle');
+                const siteNav   = document.getElementById('siteNav');
+
+                  if (!navToggle || !siteNav) return;
+    
+                  // 開關選單
+                  navToggle.addEventListener('click', () => {
+                    const open = siteNav.classList.toggle('is-open');
+                    navToggle.classList.toggle('is-active', open);
+                    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                    document.body.classList.toggle('no-scroll', open);
+                  });
+
+                  // 點選單連結自動收起
+                  siteNav.querySelectorAll('a').forEach(a => {
+                    a.addEventListener('click', () => {
+                      siteNav.classList.remove('is-open');
+                      navToggle.classList.remove('is-active');
+                      navToggle.setAttribute('aria-expanded', 'false');
+                      document.body.classList.remove('no-scroll');
+                    });
+                  });
+
+                  // 視窗放大回桌機時，清乾淨狀態（避免切換尺寸出問題）
+                  window.addEventListener('resize', () => {
+                    if (window.innerWidth >= 769) {
+                      siteNav.classList.remove('is-open');
+                      navToggle.classList.remove('is-active');
+                      navToggle.setAttribute('aria-expanded', 'false');
+                      document.body.classList.remove('no-scroll');
+                    }
+                  });
+                // 1) 如果有 .reveal-stagger，先幫它的子元素加上 .reveal 以便統一處理
               document.querySelectorAll('.reveal-stagger').forEach(group => {
                 [...group.children].forEach(c => c.classList.add('reveal'));
                 if (!group.dataset.stagger) group.dataset.stagger = 80; // 每格延遲(毫秒)
@@ -189,6 +221,7 @@
     </body>
 
 </html>
+
 
 
 
