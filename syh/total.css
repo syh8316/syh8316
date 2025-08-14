@@ -399,3 +399,21 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 8px); }
 
 /* 桌機維持橫排 */
 .site-nav ul{ list-style:none; margin:0; padding:0; display:flex; gap:32px; }
+
+/* ==== 強制移除任何測試用浮條（所有尺寸） ==== */
+html::before,
+html::after,
+body::before,
+body::after,
+#mobile-badge,
+.mobile-badge,
+.debug-badge,
+.dev-badge,
+.mobile-css-badge,
+[data-debug-badge] {
+  content: none !important;
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
