@@ -14,35 +14,6 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&display=swap" rel="stylesheet">
     </head>
-    <script>
-      (function(){
-        const btn  = document.querySelector('.nav-toggle');
-        const nav  = document.getElementById('site-menu');
-        if(!btn || !nav) return;
-
-        function setOpen(open){
-          btn.setAttribute('aria-expanded', String(open));
-          nav.dataset.open = String(open);
-          document.body.classList.toggle('no-scroll', open);
-        }
-
-        btn.addEventListener('click', () => {
-          const open = btn.getAttribute('aria-expanded') === 'true';
-          setOpen(!open);
-        });
-
-        // 點選單中的連結就關閉
-        nav.addEventListener('click', e => {
-          const a = e.target.closest('a');
-          if(a) setOpen(false);
-        });
-
-        // 按 ESC 關閉
-        document.addEventListener('keydown', e => {
-          if(e.key === 'Escape') setOpen(false);
-        });
-      })();
-    </script>
     <body>
         <header class="site-header">
           <h1 class="brand"><span class="brand__text">新義和歌劇團</span></h1>
@@ -53,7 +24,7 @@
           </button>
 
           <!-- 導覽清單 -->
-          <nav id="site-menu" class="site-nav" data-open="false">
+          <nav id="site-menu" class="site-nav">
             <ul>
               <li><a href="#about">關於劇團</a></li>
               <li><a href="#history">劇團歷代人物</a></li>
@@ -174,9 +145,36 @@
         </footer>
 
          </div>
+        <script>
+        document.addEventListener('DOMContentLoaded', function(){
+          const btn = document.querySelector('.nav-toggle');
+          const nav = document.querySelector('#site-menu') || document.querySelector('.site-nav');
+          if(!btn || !nav) return;
+
+          function toggle(open){
+            btn.setAttribute('aria-expanded', String(open));
+            nav.classList.toggle('is-open', open);
+            document.body.classList.toggle('no-scroll', open);
+          }
+
+          btn.addEventListener('click', () => {
+            toggle(!nav.classList.contains('is-open'));
+          });
+
+          nav.addEventListener('click', (e) => {
+            if (e.target.closest('a')) toggle(false);
+          });
+
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') toggle(false);
+          });
+        });
+        </script>
+
     </body>
 
 </html>
+
 
 
 
