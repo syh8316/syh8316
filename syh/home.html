@@ -112,118 +112,58 @@
             </section> <!-- ✅ 關閉 section，避免 footer 被包進去 -->
 
             <script>
-            document.getElementById("contactForm").addEventListener("submit", function(e) {
-                e.preventDefault(); // 防止原本表單提交
+            document.addEventListener('DOMContentLoaded', () => {
+              // 1) 如果有 .reveal-stagger，先幫它的子元素加上 .reveal 以便統一處理
+              document.querySelectorAll('.reveal-stagger').forEach(group => {
+                [...group.children].forEach(c => c.classList.add('reveal'));
+                if (!group.dataset.stagger) group.dataset.stagger = 80; // 每格延遲(毫秒)
+              });
 
-                const name = encodeURIComponent(document.getElementById("name").value);
-                const email = encodeURIComponent(document.getElementById("email").value);
-                const message = encodeURIComponent(document.getElementById("message").value);
+              // 2) 建立觀察器：進入視窗就顯示；離開就重置（方便下次再進來時重播）
+              const io = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                  const el = entry.target;
+                  const dir = el.dataset.reveal;             // 可用 data-reveal="left|right|up|down"
+                  const dirClass = dir ? `reveal--${dir}` : '';
 
-                const gmailURL = `https://mail.google.com/mail/?view=cm&fs=1&to=goxyh2012@gmail.com&su=${name} - 聯絡表單&body=姓名：${name}%0A電子信箱：${email}%0A訊息：${message}`;
+                  if (entry.isIntersecting) {
+                    if (dirClass) el.classList.add(dirClass);
+                    el.classList.add('is-visible');
 
-                window.open(gmailURL, "_blank"); // 開啟 Gmail 撰寫頁面
+                    // 如果是一個「群組」，就幫群組的每個孩子做交錯延遲
+                    if (el.matches('.reveal-stagger')) {
+                      [...el.children].forEach((child, i) => {
+                        child.style.transitionDelay = `${i * (+el.dataset.stagger || 80)}ms`;
+                        child.classList.add('is-visible');
+                      });
+                    }
+                  } else {
+                    // 離開視窗：重置，之後再進來就會再次播放
+                    el.classList.remove('is-visible');
+                    if (el.matches('.reveal-stagger')) {
+                      [...el.children].forEach(child => {
+                        child.classList.remove('is-visible');
+                        child.style.transitionDelay = '';
+                      });
+                    }
+                  }
                 });
-            </script>
-            <div id="social" class="social">
-                <a href="https://www.facebook.com/share/1Ho4w7W3ha/?mibextid=wwXIfr" target="_blank" class="icon"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://www.instagram.com/syh.ot_1994?igsh=MXd6azF0ZWs0NHZkMQ%3D%3D&utm_source=qr" target="_blank" class="icon"><i class="fab fa-instagram"></i></a>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=goxyh2012@gmail.com" target="_blank" class="icon"><i class="fas fa-envelope"></i></a>
-                <a href="https://lin.ee/jj6SE0T" target="_blank" class="icon"><i class="fab fa-line"></i></a>
-                </div>
-        </main>
-            <!-- ✅ footer 放在頁面最後，並把社群按鈕一併放進來 -->
-        <footer class="site-footer">
-            <div class="container">
-                <div class="footer-line">
-                    <h2 class="footer-title">聯絡資訊</h2>
-                    <div class="footer-info">
-                        <p>團長：江敏琛</p>
-                        <p>電話：0971-220-890</p>
-                        <p>電子信箱：<a href="mailto:goxyh2012@gmail.com">goxyh2012@gmail.com</a></p>
-                    </div>
-                </div>
-            </div>
-        </footer>
+              }, {
+                root: null,
+                threshold: 0.18,          // 元素進入 18% 就算看到
+                rootMargin: '0px 0px -8% 0px'
+              });
 
-         </div>
-        <script>
-        document.addEventListener('DOMContentLoaded', function(){
-          const btn = document.querySelector('.nav-toggle');
-          const nav = document.querySelector('#site-menu') || document.querySelector('.site-nav');
-          if(!btn || !nav) return;
-
-          function toggle(open){
-            btn.setAttribute('aria-expanded', String(open));
-            nav.classList.toggle('is-open', open);
-            document.body.classList.toggle('no-scroll', open);
-          }
-
-          btn.addEventListener('click', () => {
-            toggle(!nav.classList.contains('is-open'));
-          });
-
-          nav.addEventListener('click', (e) => {
-            if (e.target.closest('a')) toggle(false);
-          });
-
-          document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') toggle(false);
-          });
-        });
-        </script>
-        <script>
-        (() => {
-          const targets = document.querySelectorAll(
-            '[data-reveal], .reveal, .reveal-stagger'
-          );
-
-          // 沒有 IntersectionObserver（很舊的瀏覽器）就直接顯示
-          if (!('IntersectionObserver' in window)) {
-            targets.forEach(el => el.classList.add('is-visible'));
-            return;
-          }
-
-          const io = new IntersectionObserver((entries, obs) => {
-            entries.forEach(entry => {
-              if (!entry.isIntersecting) return;
-
-              const el = entry.target;
-              // 若元素用 data-reveal 指定效果，補上對應 class
-              const v = el.dataset && el.dataset.reveal;
-              if (v) el.classList.add('reveal', `reveal--${v}`);
-
-              // 進場
-              el.classList.add('is-visible');
-
-              // 若是群組交錯（父層 .reveal-stagger），幫子元素加 delay
-              if (el.classList.contains('reveal-stagger')) {
-                [...el.children].forEach((child, i) => {
-                  child.style.transitionDelay = `${i * 80}ms`;
-                });
-              }
-
-              obs.unobserve(el);
+              // 3) 觀察所有需要 reveal 的元素
+              const targets = document.querySelectorAll('.reveal, [data-reveal], .reveal-stagger');
+              targets.forEach(el => io.observe(el));
             });
-          }, { rootMargin: '0px 0px -10% 0px', threshold: 0.15 });
-
-          targets.forEach(el => {
-            // 沒有指定任何 class 的，給個基礎 reveal
-            if (!el.classList.contains('reveal') &&
-                !el.classList.contains('reveal-stagger')) {
-              el.classList.add('reveal');
-            }
-            // 如果 data-reveal 有指定，也先補 class，方便初始狀態
-            if (el.dataset && el.dataset.reveal) {
-              el.classList.add(`reveal--${el.dataset.reveal}`);
-            }
-            io.observe(el);
-          });
-        })();
-        </script>
+            </script>
 
     </body>
 
 </html>
+
 
 
 
