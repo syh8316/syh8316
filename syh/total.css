@@ -16,7 +16,11 @@ html, body{
   letter-spacing: .01em;
 }
 /* 導覽列的粗細微調（Noto Serif 也有粗體可用） */
-.site-header nav a{ font-weight: 700; }
+.site-header{
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 1200;
+}
+
 img, svg, video { max-width: 100%; height: auto; display: block; }
 figure { margin: 0; }
 
@@ -355,27 +359,29 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 8px); }
 
 /* ============ 行動版漢堡選單 ============ */
 
-/* 按鈕（桌機隱藏、手機顯示） */
+/* —— 漢堡按鈕 —— */
 .nav-toggle{
-  display:none;
-  width:40px; height:40px;
-  border:0; background:transparent;
-  position:relative; z-index:1100;
-  cursor:pointer;
+  display: none;              /* 桌機隱藏，手機顯示 (見媒體查詢) */
+  width: 44px; height: 44px;
+  border: 0; background: none; padding: 0;
+  position: relative;
+  cursor: pointer;
+  z-index: 1300;              /* 高於 .site-nav，確保可點到 */
 }
-.nav-toggle span{
-  position:absolute; left:6px; right:6px;
-  height:2px; background: var(--header-ink, #111);
-  transition:transform .25s ease, opacity .2s ease, top .25s ease, bottom .25s ease;
+.nav-toggle .bar{
+  position: absolute;
+  left: 10px; right: 10px;
+  height: 2px; background: #111;
+  border-radius: 1px;
+  transition: transform .25s, opacity .25s, top .25s;
 }
-.nav-toggle span:nth-child(1){ top:12px; }
-.nav-toggle span:nth-child(2){ top:19px; }
-.nav-toggle span:nth-child(3){ bottom:12px; }
-
-/* 轉成 X 狀態 */
-.nav-toggle[aria-expanded="true"] span:nth-child(1){ transform: translateY(7px) rotate(45deg); }
-.nav-toggle[aria-expanded="true"] span:nth-child(2){ opacity:0; }
-.nav-toggle[aria-expanded="true"] span:nth-child(3){ transform: translateY(-7px) rotate(-45deg); }
+.nav-toggle .bar:nth-child(1){ top: 14px; }
+.nav-toggle .bar:nth-child(2){ top: 21px; }
+.nav-toggle .bar:nth-child(3){ top: 28px; }
+/* 變成 X 的動畫 */
+.nav-toggle.is-active .bar:nth-child(1){ transform: translateY(7px) rotate(45deg); }
+.nav-toggle.is-active .bar:nth-child(2){ opacity: 0; }
+.nav-toggle.is-active .bar:nth-child(3){ transform: translateY(-7px) rotate(-45deg); }
 
 /* 桌機維持橫排 */
 .site-nav ul{ list-style:none; margin:0; padding:0; display:flex; gap:32px; }
@@ -428,3 +434,4 @@ body::after,
 .reveal-stagger > *{
   /* 子元素本身已被 JS 加上 .reveal，因此可不特別寫 */
 }
+
