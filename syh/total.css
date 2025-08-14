@@ -17,7 +17,8 @@ html, body{
 }
 /* 導覽列的粗細微調（Noto Serif 也有粗體可用） */
 .site-header nav a{ font-weight: 700; }
-
+img, svg, video { max-width: 100%; height: auto; display: block; }
+figure { margin: 0; }
 
 /*全域樣式設定 避免排版跑掉*/
 *{
@@ -371,3 +372,4 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 8px); }
   text-decoration:underline;
 }
 .site-footer a:hover{ color:#ddd; }
+
