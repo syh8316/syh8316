@@ -1,7 +1,10 @@
 
 /* ============ 手機版（≤ 768px） ============ */
 @media (max-width: 768px){
-
+  body::after{ 
+    content: none !important; 
+    display: none !important; 
+  }
   /* Header：白底黑字、固定在頂端（尺寸微放大） */
   :root{ --header-h: 68px; }
   .site-header{ padding: 0 16px; }
@@ -186,6 +189,7 @@
 @media (max-width:  992px){ .about{ --aboutY: 68%; } }
 @media (max-width:  768px){ .about{ --aboutY: 72%; } }
 @media (max-width:  480px){ .about{ --aboutY: 76%; } }
+
 
 
 
