@@ -417,3 +417,42 @@ body::after,
   opacity: 0 !important;
   pointer-events: none !important;
 }
+
+/* ===== Scroll Reveal (淡入 + 位移/縮放/模糊) ===== */
+.reveal{
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .6s ease, transform .6s ease, filter .6s ease;
+  will-change: opacity, transform, filter;
+}
+.reveal.is-visible{
+  opacity: 1;
+  transform: none;
+}
+
+/* 方向/效果變體 */
+.reveal--up     { transform: translateY(18px); }
+.reveal--down   { transform: translateY(-18px); }
+.reveal--left   { transform: translateX(-24px); }
+.reveal--right  { transform: translateX(24px); }
+.reveal--zoom   { transform: scale(.96); }
+.reveal--blur   { filter: blur(6px); }
+.reveal--blur.is-visible{ filter: blur(0); }
+
+/* 一次露出一排（父層加 reveal-stagger）*/
+.reveal-stagger > *{
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.reveal-stagger.is-visible > *{
+  opacity: 1;
+  transform: none;
+}
+/* 進場交錯延遲（JS 會覆蓋，但先放保底）*/
+.reveal-stagger.is-visible > *:nth-child(1){ transition-delay: 0ms; }
+.reveal-stagger.is-visible > *:nth-child(2){ transition-delay: 80ms; }
+.reveal-stagger.is-visible > *:nth-child(3){ transition-delay: 160ms; }
+.reveal-stagger.is-visible > *:nth-child(4){ transition-delay: 240ms; }
+.reveal-stagger.is-visible > *:nth-child(5){ transition-delay: 320ms; }
+.reveal-stagger.is-visible > *:nth-child(6){ transition-delay: 400ms; }
