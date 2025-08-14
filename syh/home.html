@@ -40,8 +40,8 @@
             <!--p class="figure">
                 <img src="./img/簡介.jpg" alt="新義和歌劇團劇團前身為義和歌劇團於1961年由江張卻女士創團在中部廣受追捧後來因受邀歌仔戲電台擔任廣播歌仔戲演員隨著節目熱播、演出邀請激增為了維持演出品質決定暫時收團專注於廣播歌仔戲演員第二代江郁茹女士1994年登陸歌仔戲工會參加各大劇團演出累積經驗傳承給第三代傳人2012年由第三四代傳人改名爲新義和歌劇團來傳承祖母與母親的文化精神。">
             </p-->
-            <h2>簡介</h2>
-            <p>新義和歌劇團劇團前身為義和歌劇團於1961年由江張卻女士創團，<br/>
+            <h2 class="reveal" data-reveal="down">簡介</h2>
+            <p class="reveal" data-reveal="up">新義和歌劇團劇團前身為義和歌劇團於1961年由江張卻女士創團，<br/>
                 在中部廣受追捧，後來因受邀歌仔戲電台擔任廣播歌仔戲演員，<br/>
                 隨著節目熱播、演出邀請激增，為了維持演出品質，<br/>
                 決定暫時收團專注於廣播歌仔戲演員。<br/>
@@ -51,7 +51,7 @@
             </section>
 
             <!-- 歷代人物 -->
-            <section id="history" class="history">
+            <section id="history" class="history reveal-stagger">
                 <h2 class="section-title section-title--bar">
                     新義和歌劇團歷代人物
                 </h2>
@@ -73,19 +73,19 @@
 
             <!-- 結語 -->
             <section class="conclusion">
-                <figure class="conclusion-media">
-                    <img src="./img/人物.jpg" alt="新義和歌劇團">
-                    <figcaption class="tagline">傳統骨，年輕魂 —— 戲曲潮牌・新義和</figcaption>
+                <ffigure class="conclusion-media reveal" data-reveal="left">
+                    <img src="./img/人物.jpg" alt="傳統骨，年輕魂 —— 戲曲潮牌・新義和">
+                    <figcaption class="tagline reveal" data-reveal="up">傳統骨，年輕魂 —— 戲曲潮牌・新義和</figcaption>
                 </figure>
 
                 <div class="conclusion-text">
-                    <p>新義和歌劇團，源自傳統、勇於創新。<br/>
+                    <p class="reveal" data-reveal="right">新義和歌劇團，源自傳統、勇於創新。<br/>
                        我們走進廟埕，唱出老觀眾的回憶，也走進年輕人的心裡，用戲曲說現在的故事。
                     </p>
-                    <p>在這裡，老戲新唱、青春詮釋，經典與創意交會，讓每一場演出都既熟悉又驚喜。<br/>
+                    <p class="reveal" data-reveal="right">在這裡，老戲新唱、青春詮釋，經典與創意交會，讓每一場演出都既熟悉又驚喜。<br/>
                        無論你是從小看戲長大的老朋友，還是第一次接觸戲曲的年輕人，新義和都邀你一起——看戲、聽曲、品人生。
                     </p>
-                    <p>想為地方活動增添熱鬧氣氛與文化底蘊？<br/>
+                    <p class="reveal" data-reveal="right">想為地方活動增添熱鬧氣氛與文化底蘊？<br/>
                        新義和歌劇團提供專業戲曲演出服務，<br/>
                        量身打造節慶、宮廟、社區活動的表演節目。<br/>
                        熟齡觀眾最愛的經典劇碼<br/>
@@ -100,8 +100,8 @@
 
             <!-- 聯絡表單 -->
             <section id="contact" class="contact">
-            <h2>聯絡我！</h2>
-                <p>讓我們合作。 ❤</p>
+            <h2 class="reveal" data-reveal="down">聯絡我！</h2>
+                <p class="reveal" data-reveal="up">讓我們合作。 ❤</p>
 
                 <form class="form" id="contactForm">
                     <input type="text" id="name" name="name" placeholder="姓名" required>
@@ -171,10 +171,60 @@
           });
         });
         </script>
+        <script>
+        (() => {
+          const targets = document.querySelectorAll(
+            '[data-reveal], .reveal, .reveal-stagger'
+          );
+
+          // 沒有 IntersectionObserver（很舊的瀏覽器）就直接顯示
+          if (!('IntersectionObserver' in window)) {
+            targets.forEach(el => el.classList.add('is-visible'));
+            return;
+          }
+
+          const io = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+              if (!entry.isIntersecting) return;
+
+              const el = entry.target;
+              // 若元素用 data-reveal 指定效果，補上對應 class
+              const v = el.dataset && el.dataset.reveal;
+              if (v) el.classList.add('reveal', `reveal--${v}`);
+
+              // 進場
+              el.classList.add('is-visible');
+
+              // 若是群組交錯（父層 .reveal-stagger），幫子元素加 delay
+              if (el.classList.contains('reveal-stagger')) {
+                [...el.children].forEach((child, i) => {
+                  child.style.transitionDelay = `${i * 80}ms`;
+                });
+              }
+
+              obs.unobserve(el);
+            });
+          }, { rootMargin: '0px 0px -10% 0px', threshold: 0.15 });
+
+          targets.forEach(el => {
+            // 沒有指定任何 class 的，給個基礎 reveal
+            if (!el.classList.contains('reveal') &&
+                !el.classList.contains('reveal-stagger')) {
+              el.classList.add('reveal');
+            }
+            // 如果 data-reveal 有指定，也先補 class，方便初始狀態
+            if (el.dataset && el.dataset.reveal) {
+              el.classList.add(`reveal--${el.dataset.reveal}`);
+            }
+            io.observe(el);
+          });
+        })();
+        </script>
 
     </body>
 
 </html>
+
 
 
 
