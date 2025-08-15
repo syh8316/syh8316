@@ -435,7 +435,7 @@ body::after,
   /* 子元素本身已被 JS 加上 .reveal，因此可不特別寫 */
 }
 
-/* 右下角固定的黑底白字解鎖按鈕 */
+/* 右下角解鎖播放鈕（黑底白字） */
 .bgm-unlock{
   position: fixed;
   right: 16px; bottom: 16px;
@@ -444,8 +444,9 @@ body::after,
   background: #000; color: #fff;
   font-size: 14px; line-height: 1;
   box-shadow: 0 10px 24px rgba(0,0,0,.22);
-  cursor: pointer; z-index: 2147483647;
+  cursor: pointer; z-index: 1500;
   transition: transform .2s ease, opacity .2s ease;
 }
 .bgm-unlock:hover{ transform: translateY(-1px); }
 .bgm-unlock[hidden]{ display: none !important; }
+
