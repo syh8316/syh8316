@@ -208,81 +208,81 @@
               ▶ 點一下開啟音樂
             </button>
             <script>
-            document.addEventListener('DOMContentLoaded', () => {
+            document.addEventListener('DOMContentLoaded', async () => {
               const bgm = document.getElementById('bgm');
               const unlockBtn = document.getElementById('bgmUnlock');
               if (!bgm) return;
 
-              // 保險設定
-              bgm.playsInline = true;      // iOS/Android WebView 友善
+              // 使用者是否已經允許有聲播放（點過按鈕或曾成功播放）
+              let userEnabled = false;
+
+              // 你可調整的音量（0~1）
               bgm.volume = 1;
 
-              // 進站先嘗試自動播放（桌機多半成功；手機多半被擋）
-              tryAutoPlay();
+              // 嘗試自動播放（桌機多半成功；手機通常被擋）
+              let ok = await tryPlay(bgm);
+              if (ok) {
+                userEnabled = true;
+                hideUnlock();
+              } else {
+                showUnlock();
+              }
 
-              // —— 解鎖播放（同時綁 click / touchend / pointerdown，取第一個觸發）——
-              const unlockPlay = (e) => {
-                // 某些瀏覽器/容器需要阻止既有行為（例如按鈕在 <form> 內）
-                if (e && typeof e.preventDefault === 'function') e.preventDefault();
-
-                // 保險：若尚未準備完全，先 load 一下
-                if (bgm.readyState < 2) bgm.load();
-                bgm.muted = false;
-                bgm.currentTime = 0;
-
-                // 直接在使用者手勢回調內呼叫，不 await / 不 then
-                try { bgm.play(); } catch (err) {}
-
-                // 真正開始播放後再把按鈕關掉
-                const onPlaying = () => { hideUnlock(); cleanup(); };
-                const onError    = () => { showUnlock(); cleanup(); }; // 若還是失敗，保持按鈕
-                const cleanup = () => {
-                  bgm.removeEventListener('playing', onPlaying);
-                  bgm.removeEventListener('error', onError);
-                };
-                bgm.addEventListener('playing', onPlaying, { once: true });
-                bgm.addEventListener('error', onError,   { once: true });
-              };
-              // 綁定三種事件，確保各家 Android 都能識別為手勢
-              unlockBtn?.addEventListener('click', unlockPlay, { passive: false });
-              unlockBtn?.addEventListener('touchend', unlockPlay, { passive: false });
-              unlockBtn?.addEventListener('pointerdown', unlockPlay, { passive: false });
-
-              // 備援：若使用者沒點按鈕而是點其他地方，也讓第一次互動啟動（只跑一次）
-              const bootOnce = (e) => { unlockPlay(e); window.removeEventListener('pointerdown', bootOnce); };
-              window.addEventListener('pointerdown', bootOnce, { once: true, passive: false });
-
-              // —— loop 保險（極少數環境會忽略 loop 屬性）——
-              bgm.addEventListener('ended', () => {
-                try { bgm.currentTime = 0; bgm.play(); } catch (e) {}
+              // 解鎖按鈕：點一下開始播放 → 隱藏按鈕
+              unlockBtn?.addEventListener('click', async () => {
+                const played = await tryPlay(bgm, { fadeIn: 600 });
+                if (played) {
+                  userEnabled = true;
+                  hideUnlock();
+                }
               });
 
-              // —— 前景/背景管理：背景一律暫停；回前景自動恢復 —— //
-              document.addEventListener('visibilitychange', () => {
+              // 保險：有些環境偶爾忽略 loop；手動確保重播
+              bgm.addEventListener('ended', () => {
+                bgm.currentTime = 0;
+                bgm.play().catch(() => {});
+              });
+
+              // —— 關鍵行為：不可見就暫停；回前景若已允許則自動恢復 —— //
+              const pauseIfHidden = () => {
                 if (document.visibilityState !== 'visible') {
                   if (!bgm.paused) bgm.pause();
                 } else {
-                  if (bgm.paused) {
-                    // 回到前景時直接恢復（此時已認定曾解鎖過）
+                  if (userEnabled && bgm.paused) {
                     bgm.play().catch(() => { showUnlock(); });
                   }
                 }
-              });
+              };
+              document.addEventListener('visibilitychange', pauseIfHidden);
               window.addEventListener('pagehide', () => { if (!bgm.paused) bgm.pause(); });
+              window.addEventListener('blur', () => { if (!bgm.paused) bgm.pause(); });
 
-              // —— 小工具 —— //
-              function tryAutoPlay(){
-                // 直接呼叫；若被政策擋住，promise 會 reject → 顯示解鎖鈕
+              /* ---------- 小工具 ---------- */
+              async function tryPlay(audio, { fadeIn = 0 } = {}) {
                 try {
-                  const p = bgm.play();
-                  if (p && typeof p.catch === 'function') p.catch(() => showUnlock());
+                  if (fadeIn > 0) audio.volume = 0;
+                  const p = audio.play();
+                  if (p && typeof p.then === 'function') await p;
+                  if (fadeIn > 0) fadeVolume(audio, 0, 1, fadeIn);
+                  return true;
                 } catch (e) {
-                  showUnlock();
+                  return false; // 被行動瀏覽器政策擋住
                 }
+              }
+              function fadeVolume(audio, from, to, dur) {
+                const steps = Math.max(1, Math.round(dur / 30));
+                let i = 0;
+                audio.volume = from;
+                const id = setInterval(() => {
+                  i++;
+                  const t = i / steps;
+                  audio.volume = from + (to - from) * t;
+                  if (i >= steps) { clearInterval(id); audio.volume = to; }
+                }, 30);
               }
               function showUnlock(){ if (unlockBtn) unlockBtn.hidden = false; }
               function hideUnlock(){ if (unlockBtn) unlockBtn.hidden = true; }
-                });
+            });
             </script>
                 <div id="social" class="social">
                 <a href="https://www.facebook.com/share/1Ho4w7W3ha/?mibextid=wwXIfr" target="_blank" class="icon"><i class="fab fa-facebook-f"></i></a>
@@ -307,6 +307,7 @@
     </body>
 
 </html>
+
 
 
 
