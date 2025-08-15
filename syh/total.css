@@ -446,7 +446,10 @@ body::after,
   box-shadow: 0 10px 24px rgba(0,0,0,.22);
   cursor: pointer; z-index: 1500;
   transition: transform .2s ease, opacity .2s ease;
+  pointer-events: auto;            /* ← 保險，避免被父層繼承到 none */
 }
 .bgm-unlock:hover{ transform: translateY(-1px); }
 .bgm-unlock[hidden]{ display: none !important; }
+
+
 
