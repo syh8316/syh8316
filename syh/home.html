@@ -204,54 +204,61 @@
             <audio id="bgm" src="./芙蓉.m4a" loop preload="metadata"></audio>
 
             <!-- 若自動播放被擋，顯示這顆「解鎖」按鈕 -->
-            <button class="bgm-unlock" id="bgmUnlock" hidden aria-label="點一下開啟音樂">
+            <button id="bgmUnlock" hidden>
               ▶ 點一下開啟音樂
             </button>
             <script>
             document.addEventListener('DOMContentLoaded', async () => {
-              const bgm = document.getElementById('bgm');
-              const unlockBtn = document.getElementById('bgmUnlock');
+              const bgm = document.getElementById('bgm');            // <audio id="bgm" loop>
+              const unlockBtn = document.getElementById('bgmUnlock'); // <button id="bgmUnlock" hidden>
+              if (!bgm) return;
 
-              // 音量依你喜好（0~1）
+              // 初始音量
               bgm.volume = 1;
 
-              // 嘗試自動播放（桌機多半會成功；手機可能被擋）
+              // 嘗試自動播放（桌機多半可；手機通常被擋）
               let ok = await tryPlay(bgm);
 
-              // 如果失敗，顯示解鎖按鈕，等使用者點一下
+              // 失敗就顯示「點一下開啟音樂」
               if (!ok) {
-                unlockBtn.hidden = false;
-
+                showUnlock('▶ 點一下開啟音樂');
                 const boot = async () => {
                   const played = await tryPlay(bgm, { fadeIn: 600 });
                   if (played) {
-                    unlockBtn.hidden = true;
+                    hideUnlock();
                     window.removeEventListener('pointerdown', boot);
                     window.removeEventListener('keydown', boot);
                     unlockBtn.removeEventListener('click', boot);
                   }
                 };
-
-                // 任一種互動都可以啟動
                 unlockBtn.addEventListener('click', boot);
                 window.addEventListener('pointerdown', boot, { once: true });
                 window.addEventListener('keydown', boot, { once: true });
               }
 
-              // 保險：有些環境會忽略 loop 屬性，手動確保重播
+              // 保險：確保重播（有些環境偶爾忽略 loop）
               bgm.addEventListener('ended', () => {
                 bgm.currentTime = 0;
                 bgm.play().catch(() => {});
-              });
+                });
 
-              // 回到分頁時，如果原本正在播，確保持續播放
-              document.addEventListener('visibilitychange', () => {
-                if (document.visibilityState === 'visible' && !bgm.paused) {
-                  bgm.play().catch(() => {});
+              // ====== 關鍵：進背景就暫停，回來不自動播 ======
+              const pauseBgm = () => {
+                if (!bgm.paused) {
+                  bgm.pause();
+                  showUnlock('▶ 播放音樂');   // 回到頁面由使用者再按下播放
                 }
-              });
+              };
 
-              /* --------- 小工具 --------- */
+              // 頁面不可見（切桌面/切分頁/鎖屏等）就暫停
+              document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState !== 'visible') pauseBgm();
+              });
+              // 其他保險事件
+              window.addEventListener('pagehide', pauseBgm);
+              window.addEventListener('blur', pauseBgm);
+
+              // ====== 小工具 ======
               async function tryPlay(audio, { fadeIn = 0 } = {}) {
                 try {
                   if (fadeIn > 0) audio.volume = 0;
@@ -259,9 +266,7 @@
                   if (p && typeof p.then === 'function') await p;
                   if (fadeIn > 0) fadeVolume(audio, 0, 1, fadeIn);
                   return true;
-                } catch (e) {
-                  return false; // 被瀏覽器政策擋住就會到這裡
-                }
+                } catch (e) { return false; }
               }
 
               function fadeVolume(audio, from, to, dur) {
@@ -274,6 +279,16 @@
                   audio.volume = from + (to - from) * t;
                   if (i >= steps) { clearInterval(id); audio.volume = to; }
                 }, 30);
+              }
+
+              function showUnlock(text){
+                if (!unlockBtn) return;
+                unlockBtn.hidden = false;
+                if (text) unlockBtn.textContent = text;
+              }
+              function hideUnlock(){
+                if (!unlockBtn) return;
+                unlockBtn.hidden = true;
               }
             });
             </script>
@@ -301,6 +316,7 @@
     </body>
 
 </html>
+
 
 
 
