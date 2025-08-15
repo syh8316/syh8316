@@ -118,6 +118,8 @@
 
   /* 展開時避免背景滾動 */
   body.no-scroll{ overflow:hidden; }
+
+  .bgm-unlock{ right: 12px; bottom: 12px; font-size: 13px; }
 }
 
 /* ============ 更小的手機（≤ 480px） ============ */
@@ -165,3 +167,4 @@
   }
   .site-nav ul{ display: flex; gap: 32px; padding: 0; }
 }
+
