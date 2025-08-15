@@ -435,3 +435,15 @@ body::after,
   /* 子元素本身已被 JS 加上 .reveal，因此可不特別寫 */
 }
 
+/* 被擋時的解鎖提示鈕（只在需要時顯示） */
+.bgm-unlock{
+  position: fixed;
+  right: 16px; bottom: 16px;
+  padding: 10px 14px;
+  border: 0; border-radius: 999px;
+  background: #000; color: #fff; font-size: 14px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.22);
+  cursor: pointer; z-index: 1500;
+}
+.bgm-unlock:hover{ transform: translateY(-1px); transition: transform .2s; }
+
