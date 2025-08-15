@@ -449,5 +449,3 @@ body::after,
 }
 .bgm-unlock:hover{ transform: translateY(-1px); }
 .bgm-unlock[hidden]{ display: none !important; }
-
-
