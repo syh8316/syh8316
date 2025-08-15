@@ -1,205 +1,138 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-  <head>
-    <meta charset="utf-8" />
-    <title>電子名片｜新義和歌劇團</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<head>
+  <meta charset="utf-8" />
+  <title>電子名片｜新義和歌劇團</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
-    <!-- 與首頁共用資源 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <link rel="stylesheet" href="./total.css" />
-    <link rel="stylesheet" href="./phone.css" />
+  <!-- 可共用你原本的字體與圖示（可留可刪） -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <style>
-      /* 讓 iframe 在各裝置上滿版（扣掉固定導覽列高度） */
-      .card-embed {
-        position: relative;
-        width: min(100%, 1080px);
-        margin: 0 auto;
-        height: calc(100dvh - var(--header-h, 80px));
-      }
-      .card-embed iframe {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        border: 0;
-        border-radius: 10px;
-        box-shadow: 0 10px 24px rgba(0,0,0,.12);
-        background: #fff;
-      }
-
-      /* 置中一個簡單的頁面標題 */
-      .page-title {
-        width: min(92%, 1080px);
-        margin: 14px auto 10px;
-        text-align: center;
-        font-weight: 800;
-      }
-
-      /* 內嵌失敗（被對方網站阻擋）時顯示的備援區塊 */
-      .fallback {
-        display: none;
-        width: min(92%, 1080px);
-        margin: 16px auto;
-        background: #fff3cd;
-        color: #664d03;
-        border: 1px solid #ffecb5;
-        border-radius: 8px;
-        padding: 14px 16px;
-      }
-      .fallback a {
-        font-weight: 700;
-        color: #664d03;
-      }
-
-      /* 小提示列：可切換其他成員（先預留 UI，之後再補連結） */
-      .card-switch {
-        width: min(92%, 1080px);
-        margin: 8px auto 12px;
-        display: flex;
-        gap: 8px;
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-      .card-switch a {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 12px;
-        border-radius: 999px;
-        border: 1px solid #ddd;
-        text-decoration: none;
-        color: #111;
-        font-weight: 700;
-      }
-      .card-switch a.is-active {
-        background: #111;
-        color: #fff;
-        border-color: #111;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- 頁首：導覽列（與首頁一致） -->
-    <header class="site-header">
-      <h1 class="brand">
-        <a href="home.html" aria-label="新義和歌劇團"></a>
-      </h1>
-
-      <!-- 漢堡按鈕 -->
-      <button class="nav-toggle" id="navToggle" aria-controls="siteNav" aria-expanded="false" aria-label="開合導覽列">
-        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
-      </button>
-
-      <!-- 導覽列 -->
-      <nav class="site-nav" id="siteNav" role="navigation">
-        <ul>
-          <li><a href="home.html#about">關於劇團</a></li>
-          <li><a href="home.html#history">劇團歷代人物</a></li>
-          <li><a href="home.html#contact">聯繫我們</a></li>
-          <li><a href="home.html#social">社交平台</a></li>
-          <li><a href="card.html" class="is-active">電子名片</a></li>
-        </ul>
+  <!-- 若需要沿用整站樣式，保留這兩條；否則也能只用本頁的 <style> -->
+  <link rel="stylesheet" href="./total.css">
+  <link rel="stylesheet" href="./phone.css">
+  <link rel="stylesheet" href="./card.css">
+</head>
+<body>
+  <!-- 頁首 -->
+  <header class="site-header">
+    <div class="inner">
+      <h1 class="brand"><a href="home.html" aria-label="返回首頁">新義和歌劇團</a></h1>
+      <nav class="nav">
+        <a href="home.html"><i class="fa-solid fa-house"></i> 首頁</a>
+        <a class="is-active" href="card.html"><i class="fa-regular fa-id-card"></i> 電子名片</a>
       </nav>
-    </header>
+    </div>
+  </header>
 
-    <main>
-      <h2 class="page-title">電子名片</h2>
+  <main class="wrap">
 
-      <!-- 先只完成第 1 人（你的 SpiderCard 連結） -->
-      <div class="card-switch" aria-label="切換成員名片">
-        <a href="card.html" class="is-active"><i class="fa-regular fa-id-card"></i> 成員 1</a>
-        <!-- 之後新增：成員 2、3、4 對應各自的 card_2.html / card_3.html / card_4.html -->
-        <!-- <a href="card_2.html">成員 2</a> -->
-        <!-- <a href="card_3.html">成員 3</a> -->
-        <!-- <a href="card_4.html">成員 4</a> -->
-      </div>
+    <!-- ===== 第 1 位成員：把下列占位內容換成你自己的 ===== -->
+    <section class="hero">
+      <!-- 頭像：把 src 換成你的圖（建議 800x800） -->
+      <img class="avatar" src="img/member1.jpg" alt="成員1頭像" />
 
-      <section class="card-embed">
-        <iframe
-          id="spiderCardFrame"
-          title="新義和歌劇團｜電子名片（成員 1）"
-          src="https://www.spidercard.com/web/card/info?openExternalBrowser=1&cardId=THCUF-11381&t=1755277415437"
-          referrerpolicy="no-referrer"
-          loading="lazy"
-          allow="clipboard-write"
-        ></iframe>
-      </section>
+      <div class="person">
+        <div class="name">成員姓名（例：江敏琛）</div>
+        <div class="title">職稱／角色（例：團長｜嗩吶、北管指揮）</div>
 
-      <!-- 內嵌失敗備援（例如對方網站設置 X-Frame-Options 阻擋） -->
-      <div id="fallback" class="fallback">
-        看起來電子名片無法在本頁內嵌顯示。您可以直接開啟：
-        <a href="https://www.spidercard.com/web/card/info?openExternalBrowser=1&cardId=THCUF-11381&t=1755277415437" target="_blank" rel="noopener">點我前往 SpiderCard</a>
-      </div>
-    </main>
+        <!-- 自訂關鍵字 -->
+        <div class="tags">
+          <span class="tag">傳統戲曲</span>
+          <span class="tag">器樂演奏</span>
+          <span class="tag">節目策劃</span>
+        </div>
 
-    <!-- 頁尾（沿用你的樣式） -->
-    <footer class="site-footer">
-      <div class="container">
-        <div class="footer-line">
-          <h2 class="footer-title">聯絡資訊</h2>
-          <div class="footer-info">
-            <p>團長：江敏琛</p>
-            <p>電話：0971-220-890</p>
-            <p>電子信箱：<a href="mailto:goxyh2012@gmail.com">goxyh2012@gmail.com</a></p>
-          </div>
+        <!-- 快速動作（可自行增減） -->
+        <div class="actions">
+          <!-- 電話：改成你的號碼 -->
+          <a class="btn" href="tel:0971220890"><i class="fa-solid fa-phone"></i> 立即撥打</a>
+          <!-- Email：改成你的信箱 -->
+          <a class="btn secondary" href="mailto:goxyh2012@gmail.com"><i class="fa-regular fa-envelope"></i> 寄信</a>
+          <!-- 導航：把目的地地址改掉 -->
+          <a class="btn secondary" href="https://maps.google.com/?q=新義和歌劇團" target="_blank" rel="noopener">
+            <i class="fa-solid fa-location-dot"></i> 地圖
+          </a>
         </div>
       </div>
-    </footer>
+    </section>
 
-    <!-- 行動版選單行為（與首頁一致） -->
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const navToggle = document.getElementById('navToggle');
-        const siteNav   = document.getElementById('siteNav');
-        if (navToggle && siteNav) {
-          navToggle.addEventListener('click', () => {
-            const open = siteNav.classList.toggle('is-open');
-            navToggle.classList.toggle('is-active', open);
-            navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-            document.body.classList.toggle('no-scroll', open);
-          });
-          siteNav.querySelectorAll('a').forEach(a => {
-            a.addEventListener('click', () => {
-              siteNav.classList.remove('is-open');
-              navToggle.classList.remove('is-active');
-              navToggle.setAttribute('aria-expanded', 'false');
-              document.body.classList.remove('no-scroll');
-            });
-          });
-          window.addEventListener('resize', () => {
-            if (window.innerWidth >= 769) {
-              siteNav.classList.remove('is-open');
-              navToggle.classList.remove('is-active');
-              navToggle.setAttribute('aria-expanded', 'false');
-              document.body.classList.remove('no-scroll');
-            }
-          });
-        }
+    <!-- 聯絡資訊 -->
+    <section class="card">
+      <div class="hd"><i class="fa-regular fa-address-book"></i> 聯絡與社群</div>
+      <div class="bd">
+        <div class="list">
+          <div class="kv">
+            <div class="k">電話</div>
+            <div class="v"><a href="tel:0971220890">0971-220-890</a></div>
+          </div>
+          <div class="kv">
+            <div class="k">Email</div>
+            <div class="v"><a href="mailto:goxyh2012@gmail.com">goxyh2012@gmail.com</a></div>
+          </div>
+          <div class="kv">
+            <div class="k">地址</div>
+            <div class="v">（填你要呈現的地址，例如：新北市 ×× 區 ×× 路…）</div>
+          </div>
+          <div class="kv">
+            <div class="k">社群</div>
+            <div class="v">
+              <div class="social">
+                <!-- 依需要保留 -->
+                <a href="https://www.facebook.com/" target="_blank" rel="noopener"><i class="fa-brands fa-facebook"></i> Facebook</a>
+                <a href="https://www.instagram.com/" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                <a href="https://line.me/R/ti/p/%40你的ID" target="_blank" rel="noopener"><i class="fa-brands fa-line"></i> LINE</a>
+                <a href="https://www.youtube.com/" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> YouTube</a>
+              </div>
+            </div>
+          </div>
+          <!-- 如果你要放 QR Code，就把 qrcode.png 放入 img/ 然後開啟這區塊 -->
+          <!--
+          <div class="kv">
+            <div class="k">QR Code</div>
+            <div class="v"><img src="img/qrcode_member1.png" alt="QR Code" style="max-width:180px;border:1px solid #eee;border-radius:10px;"></div>
+          </div>
+          -->
+        </div>
+      </div>
+    </section>
 
-        // 若對方網站阻擋 iframe（load 事件未觸發、或觸發 error），顯示備援
-        const frame = document.getElementById('spiderCardFrame');
-        const fb = document.getElementById('fallback');
-        let loaded = false;
+    <!-- 個人簡介 -->
+    <section class="card">
+      <div class="hd"><i class="fa-regular fa-user"></i> 個人簡介</div>
+      <div class="bd">
+        <p>
+          這裡寫第一位成員的簡介、專長與經歷摘要。
+          建議 3–6 行，條列式更清楚：<br>
+          ・北管、嗩吶演出經驗 10+ 年<br>
+          ・曾任 ×× 戲曲樂團樂隊首席<br>
+          ・策劃 ×× 演出專案，跨校社群合作
+        </p>
+      </div>
+    </section>
 
-        // 有些站即使被框也會觸發 load，這邊做一個超時保險
-        const timer = setTimeout(() => {
-          if (!loaded) fb.style.display = 'block';
-        }, 2500);
+    <!-- 經歷／作品（可選） -->
+    <section class="card">
+      <div class="hd"><i class="fa-regular fa-star"></i> 經歷與作品</div>
+      <div class="bd">
+        <ul style="margin:0; padding-left:20px; line-height:1.8">
+          <li>20xx–20xx　×× 劇團　演出樂師</li>
+          <li>20xx　　　　「×× 專場」統籌與演出</li>
+          <li>20xx　　　　代表作：〈××〉、〈××〉</li>
+        </ul>
+      </div>
+    </section>
 
-        frame.addEventListener('load', () => {
-          loaded = true;
-          clearTimeout(timer);
-        });
-        frame.addEventListener('error', () => {
-          fb.style.display = 'block';
-          clearTimeout(timer);
-        });
-      });
-    </script>
-  </body>
+    <!-- 需要的話，之後可加：相簿、演出行事曆、下載名片（vCard）等區塊 -->
+
+  </main>
+
+  <!-- 頁尾（可換成你的） -->
+  <footer style="padding:28px 16px; text-align:center; color:#777;">
+    © 新義和歌劇團
+  </footer>
+</body>
 </html>
