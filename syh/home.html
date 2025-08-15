@@ -199,15 +199,85 @@
             });
             </script>
             <!-- 預先載入音檔，縮短首播延遲 -->
-            <link rel="preload" as="audio" href="./audio/bgm.mp3" type="audio/mpeg">
+            <link rel="preload" as="audio" href="./芙蓉.m4a" type="audio/mpeg">
 
             <!-- 背景音樂（無限重播） -->
-            <audio id="bgm" src="./audio/bgm.mp3" loop preload="metadata"></audio>
+            <audio id="bgm" src="./芙蓉.m4a" loop preload="metadata"></audio>
 
             <!-- 若自動播放被擋，顯示這顆「解鎖」按鈕 -->
             <button class="bgm-unlock" id="bgmUnlock" hidden aria-label="點一下開啟音樂">
               ▶ 點一下開啟音樂
             </button>
+            <script>
+            document.addEventListener('DOMContentLoaded', async () => {
+              const bgm = document.getElementById('bgm');
+              const unlockBtn = document.getElementById('bgmUnlock');
+
+              // 音量依你喜好（0~1）
+              bgm.volume = 1;
+
+              // 嘗試自動播放（桌機多半會成功；手機可能被擋）
+              let ok = await tryPlay(bgm);
+
+              // 如果失敗，顯示解鎖按鈕，等使用者點一下
+              if (!ok) {
+                unlockBtn.hidden = false;
+
+                const boot = async () => {
+                  const played = await tryPlay(bgm, { fadeIn: 600 });
+                  if (played) {
+                    unlockBtn.hidden = true;
+                    window.removeEventListener('pointerdown', boot);
+                    window.removeEventListener('keydown', boot);
+                    unlockBtn.removeEventListener('click', boot);
+                  }
+                };
+
+                // 任一種互動都可以啟動
+                unlockBtn.addEventListener('click', boot);
+                window.addEventListener('pointerdown', boot, { once: true });
+                window.addEventListener('keydown', boot, { once: true });
+              }
+
+              // 保險：有些環境會忽略 loop 屬性，手動確保重播
+              bgm.addEventListener('ended', () => {
+                bgm.currentTime = 0;
+                bgm.play().catch(() => {});
+              });
+
+              // 回到分頁時，如果原本正在播，確保持續播放
+              document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible' && !bgm.paused) {
+                  bgm.play().catch(() => {});
+                }
+              });
+
+              /* --------- 小工具 --------- */
+              async function tryPlay(audio, { fadeIn = 0 } = {}) {
+                try {
+                  if (fadeIn > 0) audio.volume = 0;
+                  const p = audio.play();
+                  if (p && typeof p.then === 'function') await p;
+                  if (fadeIn > 0) fadeVolume(audio, 0, 1, fadeIn);
+                  return true;
+                } catch (e) {
+                  return false; // 被瀏覽器政策擋住就會到這裡
+                }
+              }
+
+              function fadeVolume(audio, from, to, dur) {
+                const steps = Math.max(1, Math.round(dur / 30));
+                let i = 0;
+                audio.volume = from;
+                const id = setInterval(() => {
+                  i++;
+                  const t = i / steps;
+                  audio.volume = from + (to - from) * t;
+                  if (i >= steps) { clearInterval(id); audio.volume = to; }
+                }, 30);
+              }
+            });
+            </script>
 
                 <div id="social" class="social">
                 <a href="https://www.facebook.com/share/1Ho4w7W3ha/?mibextid=wwXIfr" target="_blank" class="icon"><i class="fab fa-facebook-f"></i></a>
@@ -232,6 +302,7 @@
     </body>
 
 </html>
+
 
 
 
