@@ -208,88 +208,89 @@
               ▶ 點一下開啟音樂
             </button>
             <script>
-            document.addEventListener('DOMContentLoaded', async () => {
+            document.addEventListener('DOMContentLoaded', () => {
               const bgm = document.getElementById('bgm');
               const unlockBtn = document.getElementById('bgmUnlock');
               if (!bgm) return;
 
-              let userEnabled = false;      // 使用者是否已允許有聲播放
+              // iOS 安全設定
+              bgm.playsInline = true; // JS 層再保險一次
               bgm.volume = 1;
 
-              // 嘗試自動播放（桌機多半可以；手機通常被擋）
-              let ok = await tryPlay(bgm);
-              if (ok) {
-                userEnabled = true;
-                hideUnlock();
-              } else {
-                showUnlock();
-              }
+              // 嘗試自動播放（桌機多半成功；手機多半被擋）
+              tryAutoPlay();
 
-              // iOS：播放一定要在「直接的使用者手勢」裡面，不要做 await
-              const unlockPlay = () => {
-                try {
-                  bgm.currentTime = 0;
-                  bgm.play().then(() => {
-                    userEnabled = true;
-                    hideUnlock();
-                  }).catch(() => {
-                    // 如果還是被擋，保留按鈕
-                    showUnlock();
-                  });
-                } catch {
-                  showUnlock();
-                }
-              };
-              unlockBtn?.addEventListener('click', unlockPlay, { passive: true });
-              // 備援：任何第一次點擊頁面也嘗試啟動（只跑一次）
-              const bootOnce = () => { unlockPlay(); window.removeEventListener('pointerdown', bootOnce); };
-              window.addEventListener('pointerdown', bootOnce, { once: true, passive: true });
+              // 只要按下按鈕，就以「同步手勢」立刻播放；等真的開始播再隱藏按鈕
+              unlockBtn?.addEventListener('click', () => {
+                // 若音檔尚未解碼，保險再 load 一次
+                if (bgm.readyState < 2) bgm.load();
+                bgm.muted = false;
+                bgm.currentTime = 0;
+                let hideAfterPlaying = () => {
+                  hideUnlock();
+                  bgm.removeEventListener('playing', hideAfterPlaying);
+                };
+                bgm.addEventListener('playing', hideAfterPlaying, { once: true });
 
-              // 保險：個別環境偶爾忽略 loop
+                // ⚠️ 直接呼叫，不 await，不 then：符合 iOS 手勢規則
+                try { bgm.play(); } catch(e) {}
+              }, { passive: true });
+
+              // loop 保險：極少數環境會忽略 loop
               bgm.addEventListener('ended', () => {
                 bgm.currentTime = 0;
                 bgm.play().catch(() => {});
               });
 
-              // ✅ 只用 visibility/pagehide 管理前景/背景，不再用 blur（iOS 滾動會誤觸）
+              // ✅ 只在真的進背景/離開頁面時暫停；回到前景自動恢復
               document.addEventListener('visibilitychange', () => {
                 if (document.visibilityState !== 'visible') {
                   if (!bgm.paused) bgm.pause();
-                } else if (userEnabled && bgm.paused) {
-                  bgm.play().catch(() => { showUnlock(); });
+                } else {
+                  // 回前景：若曾經播過，就自動恢復
+                  if (bgm.paused) {
+                    // 直接呼叫（前景時不需手勢）
+                    bgm.play().catch(() => { showUnlock(); });
+                  }
                 }
               });
               window.addEventListener('pagehide', () => { if (!bgm.paused) bgm.pause(); });
 
-              /* ---------- 小工具 ---------- */
-              async function tryPlay(audio, { fadeIn = 0 } = {}) {
-                try {
-                  if (fadeIn > 0) audio.volume = 0;
-                  const p = audio.play();
-                  if (p && typeof p.then === 'function') await p;
-                  if (fadeIn > 0) fadeVolume(audio, 0, 1, fadeIn);
-                  return true;
-                } catch {
-                  return false;
-                }
-              }
-              function fadeVolume(audio, from, to, dur) {
-                const steps = Math.max(1, Math.round(dur / 30));
-                let i = 0;
-                audio.volume = from;
-                const id = setInterval(() => {
-                  i++;
-                  const t = i / steps;
-                  audio.volume = from + (to - from) * t;
-                  if (i >= steps) { clearInterval(id); audio.volume = to; }
-                }, 30);
-              }
+              // —— 偵錯用：開 DevTools 看原因（不影響正式運作，可保留） —— //
+              bgm.addEventListener('error', () => console.log('AUDIO ERROR:', bgm.error));
+              bgm.addEventListener('play', () => console.log('play() called'));
+              bgm.addEventListener('playing', () => console.log('playing…'));
+              bgm.addEventListener('pause', () => console.log('paused'));
+              bgm.addEventListener('stalled', () => console.log('stalled'));
+              bgm.addEventListener('waiting', () => console.log('waiting/buffering'));
+              // --------------------------------------------------------------- //
+
               function showUnlock(){ if (unlockBtn) unlockBtn.hidden = false; }
               function hideUnlock(){ if (unlockBtn) unlockBtn.hidden = true; }
+
+              function tryAutoPlay(){
+                // 自動播放嘗試：不要 await，直接呼叫；成功會觸發 playing
+                let hideAfterPlaying = () => {
+                  hideUnlock();
+                  bgm.removeEventListener('playing', hideAfterPlaying);
+                };
+                bgm.addEventListener('playing', hideAfterPlaying, { once: true });
+
+                try {
+                  const p = bgm.play();
+                  // 桌機若被政策擋，promise 會 reject；手機大多直接被擋
+                  if (p && typeof p.catch === 'function') {
+                    p.catch(() => showUnlock());
+                  } else {
+                    // 沒 promise（非常舊環境），顯示按鈕讓用戶手動
+                    showUnlock();
+                  }
+                } catch (e) {
+                  showUnlock();
+                }
+              }
             });
             </script>
-
-
                 <div id="social" class="social">
                 <a href="https://www.facebook.com/share/1Ho4w7W3ha/?mibextid=wwXIfr" target="_blank" class="icon"><i class="fab fa-facebook-f"></i></a>
                 <a href="https://www.instagram.com/syh.ot_1994?igsh=MXd6azF0ZWs0NHZkMQ%3D%3D&utm_source=qr" target="_blank" class="icon"><i class="fab fa-instagram"></i></a>
@@ -313,6 +314,7 @@
     </body>
 
 </html>
+
 
 
 
