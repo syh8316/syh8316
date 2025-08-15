@@ -198,6 +198,17 @@
               targets.forEach(el => io.observe(el));
             });
             </script>
+            <!-- 預先載入音檔，縮短首播延遲 -->
+            <link rel="preload" as="audio" href="./audio/bgm.mp3" type="audio/mpeg">
+
+            <!-- 背景音樂（無限重播） -->
+            <audio id="bgm" src="./audio/bgm.mp3" loop preload="metadata"></audio>
+
+            <!-- 若自動播放被擋，顯示這顆「解鎖」按鈕 -->
+            <button class="bgm-unlock" id="bgmUnlock" hidden aria-label="點一下開啟音樂">
+              ▶ 點一下開啟音樂
+            </button>
+
                 <div id="social" class="social">
                 <a href="https://www.facebook.com/share/1Ho4w7W3ha/?mibextid=wwXIfr" target="_blank" class="icon"><i class="fab fa-facebook-f"></i></a>
                 <a href="https://www.instagram.com/syh.ot_1994?igsh=MXd6azF0ZWs0NHZkMQ%3D%3D&utm_source=qr" target="_blank" class="icon"><i class="fab fa-instagram"></i></a>
@@ -221,6 +232,7 @@
     </body>
 
 </html>
+
 
 
 
