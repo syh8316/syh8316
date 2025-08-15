@@ -204,8 +204,8 @@
             <audio id="bgm" src="./芙蓉.m4a" loop preload="metadata"></audio>
 
             <!-- 若自動播放被擋，顯示這顆「解鎖」按鈕 -->
-            <button id="bgmUnlock" hidden>
-              ▶ 點一下開啟音樂
+            <button class="bgm-toggle" id="bgmToggle" aria-label="播放音樂" title="播放音樂">
+              <i class="fa-solid fa-music" aria-hidden="true"></i>
             </button>
             <script>
             document.addEventListener('DOMContentLoaded', async () => {
@@ -316,6 +316,7 @@
     </body>
 
 </html>
+
 
 
 
