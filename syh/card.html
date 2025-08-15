@@ -19,23 +19,36 @@
 <body>
   <!-- 頁首 -->
   <header class="site-header">
-    <div class="inner">
-      <!-- Logo 圖片 + 隱藏文字 -->
-      <h1 class="brand">
-        <a href="home.html" aria-label="新義和歌劇團">
-          <img src="img/logo.png" alt="新義和歌劇團 Logo">
-          <span>新義和歌劇團</span>
-        </a>
-      </h1>
+    <h1 class="brand">
+      <!-- 跟首頁一樣：用 CSS 背景圖顯示 logo，不放 <img> 才不會重疊 -->
+      <a href="home.html" aria-label="新義和歌劇團">
+        <span class="brand__text">新義和歌劇團</span>
+      </a>
+    </h1>
 
-      <!-- 四個成員按鈕 -->
-      <nav class="nav">
-        <a href="card.html" class="is-active">江敏琛</a>
-        <a href="card_jiangjun.html">江軍</a>
-        <a href="card_zhengyuxiang.html">鄭聿翔</a>
-        <a href="card_linyiyan.html">林羿妍</a>
-      </nav>
-    </div>
+    <!-- 漢堡按鈕（手機用） -->
+    <button class="nav-toggle" id="navToggle"
+            aria-controls="siteNav"
+            aria-expanded="false"
+            aria-label="開合導覽列">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+
+    <!-- 導覽列 -->
+    <nav class="site-nav" id="siteNav" role="navigation">
+      <ul>
+        <!-- ① 保留首頁按鈕 -->
+        <li><a href="home.html">首頁</a></li>
+
+        <!-- ② 四位成員 -->
+        <li><a href="card.html" class="is-active">江敏琛</a></li>
+        <li><a href="card_jiangjun.html">江軍</a></li>
+        <li><a href="card_zhengyuxiang.html">鄭聿翔</a></li>
+        <li><a href="card_linyiyan.html">林羿妍</a></li>
+      </ul>
+    </nav>
   </header>
 
   <main class="wrap">
