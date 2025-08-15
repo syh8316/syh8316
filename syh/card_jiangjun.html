@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="utf-8" />
+  <title>電子名片｜新義和歌劇團</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <!-- 可共用你原本的字體與圖示（可留可刪） -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- 若需要沿用整站樣式，保留這兩條；否則也能只用本頁的 <style> -->
+  <link rel="stylesheet" href="./total.css">
+  <link rel="stylesheet" href="./phone.css">
+  <link rel="stylesheet" href="./card.css">
+</head>
+<body>
+  <!-- 頁首 -->
+  <header class="site-header">
+    <h1 class="brand">
+      <!-- 跟首頁一樣：用 CSS 背景圖顯示 logo，不放 <img> 才不會重疊 -->
+      <a href="home.html" aria-label="新義和歌劇團">
+        <span class="brand__text">新義和歌劇團</span>
+      </a>
+    </h1>
+
+    <!-- 漢堡按鈕（手機用） -->
+    <button class="nav-toggle" id="navToggle"
+            aria-controls="siteNav"
+            aria-expanded="false"
+            aria-label="開合導覽列">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+
+    <!-- 導覽列 -->
+    <nav class="site-nav" id="siteNav" role="navigation">
+      <ul>
+        <!-- ① 保留首頁按鈕 -->
+        <li><a href="home.html">首頁</a></li>
+
+        <!-- ② 四位成員 -->
+        <li><a href="card_jiangminchen.html" class="is-active">江敏琛</a></li>
+        <li><a href="card_jiangjun.html">江軍</a></li>
+        <li><a href="card_zhengyuxiang.html">鄭聿翔</a></li>
+        <li><a href="card_linyiyan.html">林羿妍</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wrap">
+
+    <!-- ===== 第 1 位成員：把下列占位內容換成你自己的 ===== -->
+    <section class="hero">
+      <!-- 頭像：把 src 換成你的圖（建議 800x800） -->
+      <img class="avatar" src="img/member1.jpg" alt="成員1頭像" />
+
+      <div class="person">
+        <div class="name">江軍</div>
+        <div class="title">職稱／角色（例：團長｜嗩吶、北管指揮）</div>
+
+        <!-- 自訂關鍵字 -->
+        <div class="tags">
+          <span class="tag">傳統戲曲</span>
+          <span class="tag">器樂演奏</span>
+          <span class="tag">節目策劃</span>
+        </div>
+
+        <!-- 快速動作（可自行增減） -->
+        <div class="actions">
+          <!-- 電話：改成你的號碼 -->
+          <a class="btn" href="tel:0971220890"><i class="fa-solid fa-phone"></i> 立即撥打</a>
+          <!-- Email：改成你的信箱 -->
+          <a class="btn secondary" href="mailto:goxyh2012@gmail.com"><i class="fa-regular fa-envelope"></i> 寄信</a>
+          <!-- 導航：把目的地地址改掉 -->
+          <a class="btn secondary" href="https://maps.google.com/?q=新義和歌劇團" target="_blank" rel="noopener">
+            <i class="fa-solid fa-location-dot"></i> 地圖
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 聯絡資訊 -->
+    <section class="card">
+      <div class="hd"><i class="fa-regular fa-address-book"></i> 聯絡與社群</div>
+      <div class="bd">
+        <div class="list">
+          <div class="kv">
+            <div class="k">電話</div>
+            <div class="v"><a href="tel:0971220890">0971-220-890</a></div>
+          </div>
+          <div class="kv">
+            <div class="k">Email</div>
+            <div class="v"><a href="mailto:goxyh2012@gmail.com">goxyh2012@gmail.com</a></div>
+          </div>
+          <div class="kv">
+            <div class="k">地址</div>
+            <div class="v">（填你要呈現的地址，例如：新北市 ×× 區 ×× 路…）</div>
+          </div>
+          <div class="kv">
+            <div class="k">社群</div>
+            <div class="v">
+              <div class="social">
+                <!-- 依需要保留 -->
+                <a href="https://www.facebook.com/" target="_blank" rel="noopener"><i class="fa-brands fa-facebook"></i> Facebook</a>
+                <a href="https://www.instagram.com/" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                <a href="https://line.me/R/ti/p/%40你的ID" target="_blank" rel="noopener"><i class="fa-brands fa-line"></i> LINE</a>
+                <a href="https://www.youtube.com/" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> YouTube</a>
+              </div>
+            </div>
+          </div>
+          <!-- 如果你要放 QR Code，就把 qrcode.png 放入 img/ 然後開啟這區塊 -->
+          <!--
+          <div class="kv">
+            <div class="k">QR Code</div>
+            <div class="v"><img src="img/qrcode_member1.png" alt="QR Code" style="max-width:180px;border:1px solid #eee;border-radius:10px;"></div>
+          </div>
+          -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 個人簡介 -->
+    <section class="card">
+      <div class="hd"><i class="fa-regular fa-user"></i> 個人簡介</div>
+      <div class="bd">
+        <p>
+          這裡寫第一位成員的簡介、專長與經歷摘要。
+          建議 3–6 行，條列式更清楚：<br>
+          ・北管、嗩吶演出經驗 10+ 年<br>
+          ・曾任 ×× 戲曲樂團樂隊首席<br>
+          ・策劃 ×× 演出專案，跨校社群合作
+        </p>
+      </div>
+    </section>
+
+    <!-- 經歷／作品（可選） -->
+    <section class="card">
+      <div class="hd"><i class="fa-regular fa-star"></i> 經歷與作品</div>
+      <div class="bd">
+        <ul style="margin:0; padding-left:20px; line-height:1.8">
+          <li>20xx–20xx　×× 劇團　演出樂師</li>
+          <li>20xx　　　　「×× 專場」統籌與演出</li>
+          <li>20xx　　　　代表作：〈××〉、〈××〉</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 需要的話，之後可加：相簿、演出行事曆、下載名片（vCard）等區塊 -->
+
+  </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const navToggle = document.getElementById('navToggle');
+      const siteNav   = document.getElementById('siteNav');
+
+      if (navToggle && siteNav) {
+        navToggle.addEventListener('click', () => {
+          const open = siteNav.classList.toggle('is-open');
+          navToggle.classList.toggle('is-active', open);
+          navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+          document.body.classList.toggle('no-scroll', open);
+        });
+        siteNav.querySelectorAll('a').forEach(a => {
+          a.addEventListener('click', () => {
+            siteNav.classList.remove('is-open');
+            navToggle.classList.remove('is-active');
+            navToggle.setAttribute('aria-expanded', 'false');
+            document.body.classList.remove('no-scroll');
+          });
+        });
+        window.addEventListener('resize', () => {
+          if (window.innerWidth >= 769) {
+            siteNav.classList.remove('is-open');
+            navToggle.classList.remove('is-active');
+            navToggle.setAttribute('aria-expanded', 'false');
+            document.body.classList.remove('no-scroll');
+          }
+        });
+      }
+    });
+  </script>
+
+  <!-- 頁尾（可換成你的） -->
+  <footer style="padding:28px 16px; text-align:center; color:#777;">
+    © 新義和歌劇團
+  </footer>
+</body>
+</html>
