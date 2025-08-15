@@ -209,56 +209,46 @@
             </button>
             <script>
             document.addEventListener('DOMContentLoaded', async () => {
-              const bgm = document.getElementById('bgm');            // <audio id="bgm" loop>
-              const unlockBtn = document.getElementById('bgmUnlock'); // <button id="bgmUnlock" hidden>
-              if (!bgm) return;
+              const bgm = document.getElementById('bgm');
+              const btn = document.getElementById('bgmToggle');
+              if (!bgm || !btn) return;
 
-              // 初始音量
+              // 初始：音量依喜好
               bgm.volume = 1;
 
-              // 嘗試自動播放（桌機多半可；手機通常被擋）
-              let ok = await tryPlay(bgm);
+              // 依「目前是否在播」決定按鈕是否顯示
+              const updateButton = () => { btn.hidden = !bgm.paused ? true : false; };
 
-              // 失敗就顯示「點一下開啟音樂」
-              if (!ok) {
-                showUnlock('▶ 點一下開啟音樂');
-                const boot = async () => {
-                  const played = await tryPlay(bgm, { fadeIn: 600 });
-                  if (played) {
-                    hideUnlock();
-                    window.removeEventListener('pointerdown', boot);
-                    window.removeEventListener('keydown', boot);
-                    unlockBtn.removeEventListener('click', boot);
-                  }
-                };
-                unlockBtn.addEventListener('click', boot);
-                window.addEventListener('pointerdown', boot, { once: true });
-                window.addEventListener('keydown', boot, { once: true });
-              }
+              // 嘗試自動播放（桌機多半成功；手機通常被擋）
+              const autoPlayed = await tryPlay(bgm);
+              updateButton(); // 成功就隱藏，失敗就留著等使用者點
 
-              // 保險：確保重播（有些環境偶爾忽略 loop）
+              // 點擊播放：成功後隱藏按鈕
+              btn.addEventListener('click', async () => {
+                if (bgm.paused) {
+                  const ok = await tryPlay(bgm, { fadeIn: 600 });
+                  if (ok) updateButton();
+                } else {
+                  bgm.pause();
+                  updateButton();
+                }
+              });
+
+              // 保險：有些環境偶爾忽略 loop 屬性
               bgm.addEventListener('ended', () => {
                 bgm.currentTime = 0;
                 bgm.play().catch(() => {});
-                });
+              });
 
-              // ====== 關鍵：進背景就暫停，回來不自動播 ======
-              const pauseBgm = () => {
-                if (!bgm.paused) {
-                  bgm.pause();
-                  showUnlock('▶ 播放音樂');   // 回到頁面由使用者再按下播放
-                }
-              };
-
-              // 頁面不可見（切桌面/切分頁/鎖屏等）就暫停
+              // ✅ 切到背景就暫停；回來不自動播（按鈕會再次出現）
+              const pauseBgm = () => { if (!bgm.paused) { bgm.pause(); updateButton(); } };
               document.addEventListener('visibilitychange', () => {
                 if (document.visibilityState !== 'visible') pauseBgm();
               });
-              // 其他保險事件
               window.addEventListener('pagehide', pauseBgm);
               window.addEventListener('blur', pauseBgm);
 
-              // ====== 小工具 ======
+              /* ---- 小工具 ---- */
               async function tryPlay(audio, { fadeIn = 0 } = {}) {
                 try {
                   if (fadeIn > 0) audio.volume = 0;
@@ -279,16 +269,6 @@
                   audio.volume = from + (to - from) * t;
                   if (i >= steps) { clearInterval(id); audio.volume = to; }
                 }, 30);
-              }
-
-              function showUnlock(text){
-                if (!unlockBtn) return;
-                unlockBtn.hidden = false;
-                if (text) unlockBtn.textContent = text;
-              }
-              function hideUnlock(){
-                if (!unlockBtn) return;
-                unlockBtn.hidden = true;
               }
             });
             </script>
@@ -316,6 +296,7 @@
     </body>
 
 </html>
+
 
 
 
