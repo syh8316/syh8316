@@ -201,7 +201,7 @@
             <link rel="preload" as="audio" href="./芙蓉.m4a" type="audio/mpeg">
 
             <!-- 背景音樂（無限重播） -->
-            <audio id="bgm" src="./芙蓉.m4a" loop preload="metadata"></audio>
+            <audio id="bgm" src="./audio/bgm.mp3" loop preload="metadata" playsinline></audio>
 
             <!-- 若自動播放被擋，顯示這顆「解鎖」按鈕 -->
             <button class="bgm-unlock" id="bgmUnlock" hidden aria-label="點一下開啟音樂">
@@ -213,13 +213,10 @@
               const unlockBtn = document.getElementById('bgmUnlock');
               if (!bgm) return;
 
-              // 使用者是否已經允許有聲播放（點過按鈕或曾成功播放）
-              let userEnabled = false;
-
-              // 你可調整的音量（0~1）
+              let userEnabled = false;      // 使用者是否已允許有聲播放
               bgm.volume = 1;
 
-              // 嘗試自動播放（桌機多半成功；手機通常被擋）
+              // 嘗試自動播放（桌機多半可以；手機通常被擋）
               let ok = await tryPlay(bgm);
               if (ok) {
                 userEnabled = true;
@@ -228,34 +225,41 @@
                 showUnlock();
               }
 
-              // 解鎖按鈕：點一下開始播放 → 隱藏按鈕
-              unlockBtn?.addEventListener('click', async () => {
-                const played = await tryPlay(bgm, { fadeIn: 600 });
-                if (played) {
-                  userEnabled = true;
-                  hideUnlock();
+              // iOS：播放一定要在「直接的使用者手勢」裡面，不要做 await
+              const unlockPlay = () => {
+                try {
+                  bgm.currentTime = 0;
+                  bgm.play().then(() => {
+                    userEnabled = true;
+                    hideUnlock();
+                  }).catch(() => {
+                    // 如果還是被擋，保留按鈕
+                    showUnlock();
+                  });
+                } catch {
+                  showUnlock();
                 }
-              });
+              };
+              unlockBtn?.addEventListener('click', unlockPlay, { passive: true });
+              // 備援：任何第一次點擊頁面也嘗試啟動（只跑一次）
+              const bootOnce = () => { unlockPlay(); window.removeEventListener('pointerdown', bootOnce); };
+              window.addEventListener('pointerdown', bootOnce, { once: true, passive: true });
 
-              // 保險：有些環境偶爾忽略 loop；手動確保重播
+              // 保險：個別環境偶爾忽略 loop
               bgm.addEventListener('ended', () => {
                 bgm.currentTime = 0;
                 bgm.play().catch(() => {});
               });
 
-              // —— 關鍵行為：不可見就暫停；回前景若已允許則自動恢復 —— //
-              const pauseIfHidden = () => {
+              // ✅ 只用 visibility/pagehide 管理前景/背景，不再用 blur（iOS 滾動會誤觸）
+              document.addEventListener('visibilitychange', () => {
                 if (document.visibilityState !== 'visible') {
                   if (!bgm.paused) bgm.pause();
-                } else {
-                  if (userEnabled && bgm.paused) {
-                    bgm.play().catch(() => { showUnlock(); });
-                  }
+                } else if (userEnabled && bgm.paused) {
+                  bgm.play().catch(() => { showUnlock(); });
                 }
-              };
-              document.addEventListener('visibilitychange', pauseIfHidden);
+              });
               window.addEventListener('pagehide', () => { if (!bgm.paused) bgm.pause(); });
-              window.addEventListener('blur', () => { if (!bgm.paused) bgm.pause(); });
 
               /* ---------- 小工具 ---------- */
               async function tryPlay(audio, { fadeIn = 0 } = {}) {
@@ -265,8 +269,8 @@
                   if (p && typeof p.then === 'function') await p;
                   if (fadeIn > 0) fadeVolume(audio, 0, 1, fadeIn);
                   return true;
-                } catch (e) {
-                  return false; // 被行動瀏覽器政策擋住
+                } catch {
+                  return false;
                 }
               }
               function fadeVolume(audio, from, to, dur) {
@@ -284,6 +288,7 @@
               function hideUnlock(){ if (unlockBtn) unlockBtn.hidden = true; }
             });
             </script>
+
 
                 <div id="social" class="social">
                 <a href="https://www.facebook.com/share/1Ho4w7W3ha/?mibextid=wwXIfr" target="_blank" class="icon"><i class="fab fa-facebook-f"></i></a>
@@ -308,6 +313,7 @@
     </body>
 
 </html>
+
 
 
 
