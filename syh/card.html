@@ -152,6 +152,37 @@
     <!-- 需要的話，之後可加：相簿、演出行事曆、下載名片（vCard）等區塊 -->
 
   </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const navToggle = document.getElementById('navToggle');
+      const siteNav   = document.getElementById('siteNav');
+
+      if (navToggle && siteNav) {
+        navToggle.addEventListener('click', () => {
+          const open = siteNav.classList.toggle('is-open');
+          navToggle.classList.toggle('is-active', open);
+          navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+          document.body.classList.toggle('no-scroll', open);
+        });
+        siteNav.querySelectorAll('a').forEach(a => {
+          a.addEventListener('click', () => {
+            siteNav.classList.remove('is-open');
+            navToggle.classList.remove('is-active');
+            navToggle.setAttribute('aria-expanded', 'false');
+            document.body.classList.remove('no-scroll');
+          });
+        });
+        window.addEventListener('resize', () => {
+          if (window.innerWidth >= 769) {
+            siteNav.classList.remove('is-open');
+            navToggle.classList.remove('is-active');
+            navToggle.setAttribute('aria-expanded', 'false');
+            document.body.classList.remove('no-scroll');
+          }
+        });
+      }
+    });
+  </script>
 
   <!-- 頁尾（可換成你的） -->
   <footer style="padding:28px 16px; text-align:center; color:#777;">
