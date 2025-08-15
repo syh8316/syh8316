@@ -208,82 +208,74 @@
               ▶ 點一下開啟音樂
             </button>
             <script>
-            document.addEventListener('DOMContentLoaded', async () => {
-              const bgm = document.getElementById('bgm');
-              const unlockBtn = document.getElementById('bgmUnlock');
-              if (!bgm) return;
+            (function(){
+              const audio = document.getElementById('bgm');
+              const btn   = document.getElementById('bgmUnlock');
+              if (!audio || !btn) return;
 
-              // 使用者是否已經允許有聲播放（點過按鈕或曾成功播放）
-              let userEnabled = false;
+              // iOS/Android 友善
+              audio.playsInline = true;
+              audio.muted = false;
+              audio.volume = 1;
 
-              // 你可調整的音量（0~1）
-              bgm.volume = 1;
+              // 進站嘗試自動播放（桌機多半成功；行動裝置多半被擋→顯示按鈕）
+              tryAutoPlay();
 
-              // 嘗試自動播放（桌機多半成功；手機通常被擋）
-              let ok = await tryPlay(bgm);
-              if (ok) {
-                userEnabled = true;
-                hideUnlock();
-              } else {
-                showUnlock();
-              }
+              // === 解鎖播放：綁 click / touchend / pointerup，確保 Android 也吃得到手勢 ===
+              const unlock = (e) => {
+                if (e && e.preventDefault) e.preventDefault();       // 避免在 <form> 內提交
+                if (audio.readyState < 2) audio.load();              // 尚未準備就先載入
+                audio.currentTime = 0;
+                audio.muted = false;
 
-              // 解鎖按鈕：點一下開始播放 → 隱藏按鈕
-              unlockBtn?.addEventListener('click', async () => {
-                const played = await tryPlay(bgm, { fadeIn: 600 });
-                if (played) {
-                  userEnabled = true;
-                  hideUnlock();
-                }
+                try { audio.play(); } catch(_) {}
+
+                // 成功開始播放（收到 playing）才把按鈕隱藏；失敗則維持顯示
+                const onPlaying = () => { btn.hidden = true; cleanup(); };
+                const onError   = () => { btn.hidden = false; cleanup(); };
+                const cleanup = () => {
+                  audio.removeEventListener('playing', onPlaying);
+                  audio.removeEventListener('error',   onError);
+                };
+                audio.addEventListener('playing', onPlaying, { once: true });
+                audio.addEventListener('error',   onError,   { once: true });
+              };
+              ['click','touchend','pointerup'].forEach(evt => {
+                btn.addEventListener(evt, unlock, { passive:false });
               });
 
-              // 保險：有些環境偶爾忽略 loop；手動確保重播
-              bgm.addEventListener('ended', () => {
-                bgm.currentTime = 0;
-                bgm.play().catch(() => {});
+              // 備援：使用者第一次點頁面任何地方也當作解鎖（只跑一次）
+              const bootOnce = (e) => { unlock(e); window.removeEventListener('pointerdown', bootOnce); };
+              window.addEventListener('pointerdown', bootOnce, { once:true, passive:false });
+
+              // 播完保險重播
+              audio.addEventListener('ended', () => {
+                try { audio.currentTime = 0; audio.play(); } catch(_) {}
               });
 
-              // —— 關鍵行為：不可見就暫停；回前景若已允許則自動恢復 —— //
-              const pauseIfHidden = () => {
+              // 前景/背景：背景一律暫停；回前景若曾解鎖過（按鈕隱藏）自動恢復
+              document.addEventListener('visibilitychange', () => {
                 if (document.visibilityState !== 'visible') {
-                  if (!bgm.paused) bgm.pause();
+                  if (!audio.paused) audio.pause();
                 } else {
-                  if (userEnabled && bgm.paused) {
-                    bgm.play().catch(() => { showUnlock(); });
+                  if (audio.paused && btn.hidden) {
+                    audio.play().catch(() => { btn.hidden = false; });
                   }
                 }
-              };
-              document.addEventListener('visibilitychange', pauseIfHidden);
-              window.addEventListener('pagehide', () => { if (!bgm.paused) bgm.pause(); });
-              window.addEventListener('blur', () => { if (!bgm.paused) bgm.pause(); });
+              });
+              window.addEventListener('pagehide', () => { if (!audio.paused) audio.pause(); });
 
-              /* ---------- 小工具 ---------- */
-              async function tryPlay(audio, { fadeIn = 0 } = {}) {
-                try {
-                  if (fadeIn > 0) audio.volume = 0;
+              function tryAutoPlay(){
+                try{
                   const p = audio.play();
-                  if (p && typeof p.then === 'function') await p;
-                  if (fadeIn > 0) fadeVolume(audio, 0, 1, fadeIn);
-                  return true;
-                } catch (e) {
-                  return false; // 被行動瀏覽器政策擋住
+                  if (p && p.catch) p.catch(() => { btn.hidden = false; });
+                }catch{
+                  btn.hidden = false;
                 }
               }
-              function fadeVolume(audio, from, to, dur) {
-                const steps = Math.max(1, Math.round(dur / 30));
-                let i = 0;
-                audio.volume = from;
-                const id = setInterval(() => {
-                  i++;
-                  const t = i / steps;
-                  audio.volume = from + (to - from) * t;
-                  if (i >= steps) { clearInterval(id); audio.volume = to; }
-                }, 30);
-              }
-              function showUnlock(){ if (unlockBtn) unlockBtn.hidden = false; }
-              function hideUnlock(){ if (unlockBtn) unlockBtn.hidden = true; }
-            });
+            })();
             </script>
+
                 <div id="social" class="social">
                 <a href="https://www.facebook.com/share/1Ho4w7W3ha/?mibextid=wwXIfr" target="_blank" class="icon"><i class="fab fa-facebook-f"></i></a>
                 <a href="https://www.instagram.com/syh.ot_1994?igsh=MXd6azF0ZWs0NHZkMQ%3D%3D&utm_source=qr" target="_blank" class="icon"><i class="fab fa-instagram"></i></a>
@@ -307,6 +299,7 @@
     </body>
 
 </html>
+
 
 
 
