@@ -42,6 +42,14 @@ body {
   gap: 12px;
 }
 
+.brand{
+  width: 240px; height: 64px; margin: 0;
+  background: url("./img/logo.png") no-repeat left center / contain;
+  color: transparent;
+}
+.brand__text{ position: absolute; left: -10000px; }
+body{ padding-top: var(--header-h); } /* 預留固定導覽列的高度 */
+
 /* Logo 圖片 */
 .brand img {
   height: 40px;
