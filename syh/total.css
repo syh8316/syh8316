@@ -444,9 +444,10 @@ body::after,
   background: #000; color: #fff;
   font-size: 14px; line-height: 1;
   box-shadow: 0 10px 24px rgba(0,0,0,.22);
-  cursor: pointer; z-index: 2147483647; /* 確保蓋過一切 */
+  cursor: pointer; z-index: 2147483647;
   transition: transform .2s ease, opacity .2s ease;
 }
 .bgm-unlock:hover{ transform: translateY(-1px); }
 .bgm-unlock[hidden]{ display: none !important; }
+
 
