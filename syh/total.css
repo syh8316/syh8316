@@ -435,15 +435,19 @@ body::after,
   /* 子元素本身已被 JS 加上 .reveal，因此可不特別寫 */
 }
 
-/* 被擋時的解鎖提示鈕（只在需要時顯示） */
-.bgm-unlock{
+/* 右下角浮動播放鈕 */
+.bgm-toggle{
   position: fixed;
   right: 16px; bottom: 16px;
-  padding: 10px 14px;
-  border: 0; border-radius: 999px;
-  background: #000; color: #fff; font-size: 14px;
-  box-shadow: 0 10px 24px rgba(0,0,0,.22);
+  width: 56px; height: 56px;
+  display: grid; place-items: center;
+  border: 0; border-radius: 50%;
+  background: #000; color: #fff;
+  box-shadow: 0 8px 24px rgba(0,0,0,.22);
   cursor: pointer; z-index: 1500;
+  font-size: 20px;
+  transition: transform .2s ease, opacity .2s ease;
 }
-.bgm-unlock:hover{ transform: translateY(-1px); transition: transform .2s; }
+.bgm-toggle:hover{ transform: translateY(-2px); }
+.bgm-toggle[hidden]{ display: none !important; }
 
