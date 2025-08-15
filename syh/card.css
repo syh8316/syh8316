@@ -18,12 +18,21 @@ body {
 
 /* 頁首 */
 .site-header {
-  position: sticky;
+  position: fixed; /* 一開始就固定 */
   top: 0;
-  z-index: 10;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
   background: #fff;
   box-shadow: 0 1px 0 rgba(0,0,0,.06);
 }
+
+/* 預留空間避免內容被覆蓋 */
+body {
+  padding-top: 70px; /* 視導覽列高度可調整 */
+}
+
+/* 內層容器 */
 .site-header .inner {
   max-width: var(--card-w);
   margin: 0 auto;
@@ -32,13 +41,20 @@ body {
   align-items: center;
   gap: 12px;
 }
-.brand {
-  font-weight: 800;
-  letter-spacing: .02em;
-  margin: 0;
-  font-size: 18px;
+
+/* Logo 圖片 */
+.brand img {
+  height: 40px;
+  width: auto;
 }
-.brand a { color: var(--brand); text-decoration: none }
+
+/* 隱藏文字但保留可讀性（SEO / 輔助工具） */
+.brand span {
+  position: absolute;
+  left: -9999px;
+}
+
+/* 導覽列按鈕 */
 .nav {
   margin-left: auto;
   display: flex;
@@ -55,7 +71,10 @@ body {
   background: #f2f2f2;
   font-weight: 700;
 }
-.nav a.is-active { background: #111; color: #fff }
+.nav a.is-active {
+  background: #111;
+  color: #fff;
+}
 
 /* 內容容器 */
 .wrap { max-width: var(--card-w); margin: 18px auto; padding: 0 16px 24px }
