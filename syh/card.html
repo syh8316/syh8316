@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="utf-8" />
+    <title>電子名片｜新義和歌劇團</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+    <!-- 與首頁共用資源 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="./total.css" />
+    <link rel="stylesheet" href="./phone.css" />
+
+    <style>
+      /* 讓 iframe 在各裝置上滿版（扣掉固定導覽列高度） */
+      .card-embed {
+        position: relative;
+        width: min(100%, 1080px);
+        margin: 0 auto;
+        height: calc(100dvh - var(--header-h, 80px));
+      }
+      .card-embed iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        border-radius: 10px;
+        box-shadow: 0 10px 24px rgba(0,0,0,.12);
+        background: #fff;
+      }
+
+      /* 置中一個簡單的頁面標題 */
+      .page-title {
+        width: min(92%, 1080px);
+        margin: 14px auto 10px;
+        text-align: center;
+        font-weight: 800;
+      }
+
+      /* 內嵌失敗（被對方網站阻擋）時顯示的備援區塊 */
+      .fallback {
+        display: none;
+        width: min(92%, 1080px);
+        margin: 16px auto;
+        background: #fff3cd;
+        color: #664d03;
+        border: 1px solid #ffecb5;
+        border-radius: 8px;
+        padding: 14px 16px;
+      }
+      .fallback a {
+        font-weight: 700;
+        color: #664d03;
+      }
+
+      /* 小提示列：可切換其他成員（先預留 UI，之後再補連結） */
+      .card-switch {
+        width: min(92%, 1080px);
+        margin: 8px auto 12px;
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .card-switch a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px solid #ddd;
+        text-decoration: none;
+        color: #111;
+        font-weight: 700;
+      }
+      .card-switch a.is-active {
+        background: #111;
+        color: #fff;
+        border-color: #111;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 頁首：導覽列（與首頁一致） -->
+    <header class="site-header">
+      <h1 class="brand">
+        <a href="home.html" aria-label="新義和歌劇團"></a>
+      </h1>
+
+      <!-- 漢堡按鈕 -->
+      <button class="nav-toggle" id="navToggle" aria-controls="siteNav" aria-expanded="false" aria-label="開合導覽列">
+        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      </button>
+
+      <!-- 導覽列 -->
+      <nav class="site-nav" id="siteNav" role="navigation">
+        <ul>
+          <li><a href="home.html#about">關於劇團</a></li>
+          <li><a href="home.html#history">劇團歷代人物</a></li>
+          <li><a href="home.html#contact">聯繫我們</a></li>
+          <li><a href="home.html#social">社交平台</a></li>
+          <li><a href="card.html" class="is-active">電子名片</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <h2 class="page-title">電子名片</h2>
+
+      <!-- 先只完成第 1 人（你的 SpiderCard 連結） -->
+      <div class="card-switch" aria-label="切換成員名片">
+        <a href="card.html" class="is-active"><i class="fa-regular fa-id-card"></i> 成員 1</a>
+        <!-- 之後新增：成員 2、3、4 對應各自的 card_2.html / card_3.html / card_4.html -->
+        <!-- <a href="card_2.html">成員 2</a> -->
+        <!-- <a href="card_3.html">成員 3</a> -->
+        <!-- <a href="card_4.html">成員 4</a> -->
+      </div>
+
+      <section class="card-embed">
+        <iframe
+          id="spiderCardFrame"
+          title="新義和歌劇團｜電子名片（成員 1）"
+          src="https://www.spidercard.com/web/card/info?openExternalBrowser=1&cardId=THCUF-11381&t=1755277415437"
+          referrerpolicy="no-referrer"
+          loading="lazy"
+          allow="clipboard-write"
+        ></iframe>
+      </section>
+
+      <!-- 內嵌失敗備援（例如對方網站設置 X-Frame-Options 阻擋） -->
+      <div id="fallback" class="fallback">
+        看起來電子名片無法在本頁內嵌顯示。您可以直接開啟：
+        <a href="https://www.spidercard.com/web/card/info?openExternalBrowser=1&cardId=THCUF-11381&t=1755277415437" target="_blank" rel="noopener">點我前往 SpiderCard</a>
+      </div>
+    </main>
+
+    <!-- 頁尾（沿用你的樣式） -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-line">
+          <h2 class="footer-title">聯絡資訊</h2>
+          <div class="footer-info">
+            <p>團長：江敏琛</p>
+            <p>電話：0971-220-890</p>
+            <p>電子信箱：<a href="mailto:goxyh2012@gmail.com">goxyh2012@gmail.com</a></p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- 行動版選單行為（與首頁一致） -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const navToggle = document.getElementById('navToggle');
+        const siteNav   = document.getElementById('siteNav');
+        if (navToggle && siteNav) {
+          navToggle.addEventListener('click', () => {
+            const open = siteNav.classList.toggle('is-open');
+            navToggle.classList.toggle('is-active', open);
+            navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            document.body.classList.toggle('no-scroll', open);
+          });
+          siteNav.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => {
+              siteNav.classList.remove('is-open');
+              navToggle.classList.remove('is-active');
+              navToggle.setAttribute('aria-expanded', 'false');
+              document.body.classList.remove('no-scroll');
+            });
+          });
+          window.addEventListener('resize', () => {
+            if (window.innerWidth >= 769) {
+              siteNav.classList.remove('is-open');
+              navToggle.classList.remove('is-active');
+              navToggle.setAttribute('aria-expanded', 'false');
+              document.body.classList.remove('no-scroll');
+            }
+          });
+        }
+
+        // 若對方網站阻擋 iframe（load 事件未觸發、或觸發 error），顯示備援
+        const frame = document.getElementById('spiderCardFrame');
+        const fb = document.getElementById('fallback');
+        let loaded = false;
+
+        // 有些站即使被框也會觸發 load，這邊做一個超時保險
+        const timer = setTimeout(() => {
+          if (!loaded) fb.style.display = 'block';
+        }, 2500);
+
+        frame.addEventListener('load', () => {
+          loaded = true;
+          clearTimeout(timer);
+        });
+        frame.addEventListener('error', () => {
+          fb.style.display = 'block';
+          clearTimeout(timer);
+        });
+      });
+    </script>
+  </body>
+</html>
