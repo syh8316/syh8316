@@ -15,30 +15,34 @@
   <url>
     <loc>https://syh8316.github.io/syh8316/syh/card_jiangminchen.html</loc>
     <image:image>
-      <image:loc>https://syh8316.github.io/syh8316/syh/img/logo.png</image:loc>
-      <image:title>新義和歌劇團 標誌</image:title>
-    </image:image>
+       <image:loc>https://syh8316.github.io/syh8316/syh/img/阿姨.jpg</image:loc>
+       <image:title>江敏琛</image:title>
+       <image:caption>新義和歌劇團 團長 江敏琛</image:caption>
+     </image:image>
   </url>
   <url>
     <loc>https://syh8316.github.io/syh8316/syh/card_jiangjun.html</loc>
     <image:image>
-      <image:loc>https://syh8316.github.io/syh8316/syh/img/logo.png</image:loc>
-      <image:title>新義和歌劇團 標誌</image:title>
-    </image:image>
+       <image:loc>https://syh8316.github.io/syh8316/syh/img/江軍.jpg</image:loc>
+       <image:title>江軍</image:title>
+       <image:caption>新義和歌劇團 副團長 江軍</image:caption>
+     </image:image>
   </url>
   <url>
-  <loc>https://syh8316.github.io/syh8316/syh/card_zhengyuxiang.html</loc>
-  <image:image>
-    <image:loc>https://syh8316.github.io/syh8316/syh/img/logo.png</image:loc>
-    <image:title>新義和歌劇團 標誌</image:title>
-  </image:image>
+    <loc>https://syh8316.github.io/syh8316/syh/card_zhengyuxiang.html</loc>
+    <image:image>
+       <image:loc>https://syh8316.github.io/syh8316/syh/img/鄭聿翔.jpg</image:loc>
+       <image:title>鄭聿翔</image:title>
+       <image:caption>新義和歌劇團 總務 鄭聿翔</image:caption>
+     </image:image>
   </url>
   <url>
-  <loc>https://syh8316.github.io/syh8316/syh/card_linyiyan.html</loc>
-  <image:image>
-    <image:loc>https://syh8316.github.io/syh8316/syh/img/logo.png</image:loc>
-    <image:title>新義和歌劇團 標誌</image:title>
-  </image:image>
-</url>
+    <loc>https://syh8316.github.io/syh8316/syh/card_linyiyan.html</loc>
+    <image:image>
+       <image:loc>https://syh8316.github.io/syh8316/syh/img/林羿妍.jpg</image:loc>
+       <image:title>林羿妍</image:title>
+       <image:caption>新義和歌劇團 行銷公關總監 林羿妍</image:caption>
+     </image:image>
+  </url>
 </urlset>
 
