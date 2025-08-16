@@ -1,3 +1,5 @@
 User-agent: *
-Allow: /
+Allow: /assets/
+Allow: /*.png$
+Allow: /*.webp$
 Sitemap: https://syh8316.github.io/syh8316/syh/sitemap.xml
