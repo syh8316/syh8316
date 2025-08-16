@@ -15,6 +15,53 @@
   <link rel="stylesheet" href="./total.css">
   <link rel="stylesheet" href="./phone.css">
   <link rel="stylesheet" href="./card.css">
+  <!-- 1) 這一頁的正規網址（用你的正式網域） -->
+  <link rel="canonical" href="https://syh8316.github.io/syh8316/syh/card_linyiyan.html">
+
+  <!-- 2) Open Graph：讓 FB/LINE 之類抓圖時指向正確大頭貼與頁面 -->
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="林羿妍｜新義和歌劇團">
+  <meta property="og:description" content="新義和歌劇團 行銷公關總監。">
+  <meta property="og:url" content="https://syh8316.github.io/syh8316/syh/card_linyiyan.html">
+  <meta property="og:image" content="https://syh8316.github.io/syh8316/syh/img/林羿妍.jpg">
+  <meta property="og:image:alt" content="林羿妍的大頭照">
+  <meta property="og:site_name" content="新義和歌劇團">
+
+  <!-- 3) Twitter Card（可有可無，但建議） -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="林羿妍｜新義和歌劇團">
+  <meta name="twitter:description" content="新義和歌劇團 行銷公關總監。">
+  <meta name="twitter:image" content="https://syh8316.github.io/syh8316/syh/img/林羿妍.jpg">
+
+  <!-- 4) JSON-LD：Person + ImageObject，告訴搜尋引擎“這張圖就是這個人，這一頁是主頁” -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "林羿妍",
+    "jobTitle": "行銷公關總監",
+    "affiliation": {
+      "@type": "PerformingGroup",
+      "name": "新義和歌劇團"
+    },
+    "image": {
+      "@type": "ImageObject",
+      "contentUrl": "https://syh8316.github.io/syh8316/syh/img/林羿妍.jpg",
+      "representativeOfPage": true,
+      "caption": "林羿妍",
+      "inLanguage": "zh-TW",
+      "creditText": "新義和歌劇團",
+      "license": "https://creativecommons.org/licenses/by/4.0/" 
+    },
+    "url": "https://syh8316.github.io/syh8316/syh/card_linyiyan.html",
+    "mainEntityOfPage": "https://syh8316.github.io/syh8316/syh/card_linyiyan.html",
+    "sameAs": [
+      "https://www.facebook.com/share/1Ho4w7W3ha/?mibextid=wwXIfr", 
+      "https://www.instagram.com/syh.ot_1994?igsh=MXd6azF0ZWs0NHZkMQ%3D%3D&utm_source=qr",
+      "https://lin.ee/jj6SE0T"
+    ]
+  }
+  </script>
 </head>
 <body>
   <!-- 頁首 -->
@@ -56,8 +103,16 @@
     <!-- ===== 第 1 位成員：把下列占位內容換成你自己的 ===== -->
     <section class="hero">
       <!-- 頭像：把 src 換成你的圖（建議 800x800） -->
-      <img class="avatar" src="img/林羿妍.jpg" alt="林羿妍" />
-
+      <figure class="avatar-wrap">
+        <a href="https://syh8316.github.io/syh8316/syh/card_linyiyan.html">
+          <img class="avatar"
+               src="img/林羿妍.jpg"
+               alt="新義和歌劇團 行銷公關總監 林羿妍"
+               width="800" height="800"
+               loading="eager" fetchpriority="high">
+        </a>
+        <figcaption class="sr-only">林羿妍</figcaption>
+      </figure>
       <div class="person">
         <div class="name">林羿妍</div>
         <div class="title">行銷公關總監</div>
