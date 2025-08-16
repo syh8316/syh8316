@@ -1,13 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://syh8316.github.io/syh8316/syh/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
   <url>
     <loc>https://syh8316.github.io/syh8316/syh/home.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://syh8316.github.io/syh8316/syh/img/logo.png</image:loc>
+      <image:title>新義和歌劇團 標誌</image:title>
+      <image:caption>新義和歌劇團官方 Logo</image:caption>
+    </image:image>
   </url>
+
+  <!-- 其他四個頁面也列出 -->
+  <url>
+    <loc>https://syh8316.github.io/syh8316/syh/card_jiangminchen.html</loc>
+    <image:image>
+      <image:loc>https://syh8316.github.io/syh8316/syh/img/logo.png</image:loc>
+      <image:title>新義和歌劇團 標誌</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://syh8316.github.io/syh8316/syh/card_jiangjun.html</loc>
+    <image:image>
+      <image:loc>https://syh8316.github.io/syh8316/syh/img/logo.png</image:loc>
+      <image:title>新義和歌劇團 標誌</image:title>
+    </image:image>
+  </url>
+  <url>
+  <loc>https://syh8316.github.io/syh8316/syh/card_zhengyuxiang.html</loc>
+  <image:image>
+    <image:loc>https://syh8316.github.io/syh8316/syh/img/logo.png</image:loc>
+    <image:title>新義和歌劇團 標誌</image:title>
+  </image:image>
+  </url>
+  <url>
+  <loc>https://syh8316.github.io/syh8316/syh/card_linyiyan.html</loc>
+  <image:image>
+    <image:loc>https://syh8316.github.io/syh8316/syh/img/logo.png</image:loc>
+    <image:title>新義和歌劇團 標誌</image:title>
+  </image:image>
+</url>
 </urlset>
+
