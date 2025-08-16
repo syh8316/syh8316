@@ -31,42 +31,36 @@
       <!-- Google 驗證（保持不變即可） -->
       <meta name="google-site-verification" content="N20GhW5Cv0OGp_9mv4Bh8SaradbqZiMPCQZ_FzPSwDU" />
 
-      <!-- 結構化資料（Organization + WebSite + 站內搜尋） -->
+      <!-- Organization + Logo 結構化資料 -->
       <script type="application/ld+json">
       {
-        "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "Organization",
-            "name": "新義和歌劇團",
-            "url": "https://syh8316.github.io/syh8316/syh/home.html",
-            "logo": "https://syh8316.github.io/syh8316/syh/img/人物.jpg",
-            "sameAs": [
-              "https://www.facebook.com/share/1Ho4w7W3ha/?mibextid=wwXIfr",
-              "https://www.instagram.com/syh.ot_1994?igsh=MXd6azF0ZWs0NHZkMQ=="
-            ],
-            "contactPoint": [{
-              "@type": "ContactPoint",
-              "contactType": "customer service",
-              "telephone": "+886-971-220-890",
-              "email": "goxyh2012@gmail.com",
-              "areaServed": "TW",
-              "availableLanguage": ["zh-TW"]
-            }]
-          },
-          {
-            "@type": "WebSite",
-            "name": "新義和歌劇團官方網站",
-            "url": "https://syh8316.github.io/syh8316/syh/home.html",
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": "https://syh8316.github.io/syh8316/syh/home.html?q={search_term_string}",
-              "query-input": "required name=search_term_string"
-            }
-          }
-        ]
-      }
-      </script>
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "新義和歌劇團",
+          "url": "https://syh8316.github.io/syh8316/syh/home.html", 
+          "logo": "https://syh8316.github.io/syh8316/syh/img/logo.jpg",
+          "sameAs": [
+            "https://www.facebook.com/share/1Ho4w7W3ha/?mibextid=wwXIfr",
+            "https://www.instagram.com/syh.ot_1994?igsh=MXd6azF0ZWs0NHZkMQ%3D%3D&utm_source=qr",
+            "https://lin.ee/jj6SE0T"
+          ]
+        }
+        </script>
+
+        <!-- 可加：網站結構化資料（選擇性，但加分） -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "新義和歌劇團",
+          "url": "https://syh8316.github.io/syh8316/syh/home.html"
+        }
+        </script>
+
+        <!-- 基本 SEO（選擇性） -->
+        <link rel="canonical" href="https://syh8316.github.io/syh8316/syh/home.html">
+        <meta name="description" content="新義和歌劇團官方網站。最新演出資訊、劇團介紹、聯絡方式等。">
+        <meta name="robots" content="index,follow">
 
       <!-- 字型與樣式（合併重複的 preconnect） -->
       <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -363,33 +357,3 @@
     </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
