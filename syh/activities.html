@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="utf-8" />
+  <title>活動資訊｜新義和歌劇團</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="最新活動、活動紀錄與作品集，一頁掌握演出資訊、報名連結與精彩回顧。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="activities.css">
+  <link rel="icon" href="favicon.ico">
+</head>
+<body>
+  <!-- 頁首 / 次級導覽 -->
+  <header class="site-header">
+    <div class="container head-wrap">
+      <a class="brand" href="home.html" aria-label="回到首頁">新義和歌劇團</a>
+
+      <!-- 次級導覽：僅此頁顯示 -->
+      <nav class="subnav" aria-label="活動頁導覽">
+        <a class="subnav-link" href="home.html">首頁</a>
+        <a class="subnav-link" href="#latest" data-tab="latest" aria-current="page">最新活動</a>
+        <a class="subnav-link" href="#history" data-tab="history">活動紀錄</a>
+        <a class="subnav-link" href="#portfolio" data-tab="portfolio">作品集</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero 區 -->
+  <section class="hero">
+    <div class="container">
+      <h1>活動資訊</h1>
+      <p class="hero-sub">📣 追蹤即將上演的節目、回顧歷來演出與精選作品。</p>
+      <div class="filters">
+        <label class="sr-only" for="search">搜尋活動</label>
+        <input id="search" class="search" type="search" placeholder="搜尋關鍵字（標題、地點、標籤）…" />
+        <select id="tagFilter" class="tag-filter" aria-label="依標籤篩選">
+          <option value="">全部標籤</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- 分頁內容 -->
+  <main class="container">
+    <!-- 最新活動 -->
+    <section id="panel-latest" class="panel" role="region" aria-labelledby="tab-latest">
+      <h2 id="tab-latest" class="panel-title">最新活動</h2>
+      <div id="latestList" class="card-grid" aria-live="polite"></div>
+      <div class="empty" id="latestEmpty" hidden>目前沒有即將舉辦的活動，敬請期待！</div>
+    </section>
+
+    <!-- 活動紀錄 -->
+    <section id="panel-history" class="panel" role="region" aria-labelledby="tab-history" hidden>
+      <h2 id="tab-history" class="panel-title">活動紀錄</h2>
+      <div id="historyList" class="timeline" aria-live="polite"></div>
+      <div class="empty" id="historyEmpty" hidden>尚無活動紀錄。</div>
+    </section>
+
+    <!-- 作品集 -->
+    <section id="panel-portfolio" class="panel" role="region" aria-labelledby="tab-portfolio" hidden>
+      <h2 id="tab-portfolio" class="panel-title">作品集</h2>
+      <div id="portfolioList" class="masonry" aria-live="polite"></div>
+      <div class="empty" id="portfolioEmpty" hidden>尚未建立作品集項目。</div>
+    </section>
+  </main>
+
+  <!-- 活動詳情 Modal -->
+  <dialog id="eventDialog" class="event-dialog" aria-label="活動詳情">
+    <form method="dialog">
+      <button class="close" aria-label="關閉">✕</button>
+    </form>
+    <div class="dialog-body" id="dialogBody"></div>
+  </dialog>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>© <span id="year"></span> 新義和歌劇團｜All Rights Reserved.</small>
+    </div>
+  </footer>
+
+  <!-- ======== JS（合併在 HTML）======== -->
+  <script>
+    // ======== 1) 範例資料（可改成你自己的內容）========
+    const events = [
+      {
+        id: "e-2025-09-07",
+        title: "《狀元樓》巡演 — 台北場",
+        dateStart: "2025-09-07T19:30:00+08:00",
+        dateEnd:   "2025-09-07T21:30:00+08:00",
+        location: "臺北表演藝術中心小劇場",
+        city: "臺北市",
+        cover: "https://picsum.photos/seed/bao/800/500",
+        tags: ["歌仔戲", "現場演出"],
+        summary: "經典曲牌聯奏與精彩武場重現，限時加演！",
+        ticketUrl: "https://example.com/tickets/bao",
+        type: "upcoming" // upcoming / past / portfolio
+      },
+      {
+        id: "e-2025-10-12",
+        title: "傳統掌中戲 — 「將水」專場",
+        dateStart: "2025-10-12T14:30:00+08:00",
+        dateEnd:   "2025-10-12T16:00:00+08:00",
+        location: "臺中國家歌劇院小劇場",
+        city: "臺中市",
+        cover: "https://picsum.photos/seed/wawa/800/500",
+        tags: ["布袋戲", "曲牌", "親子友善"],
+        summary: "以曲牌將水為軸，帶出掌中戲身段與音樂的融合。",
+        ticketUrl: "",
+        type: "upcoming"
+      },
+      {
+        id: "p-2024-12-15",
+        title: "《夜深沉》二六集—精華影像",
+        dateStart: "2024-12-15",
+        location: "影像整理",
+        city: "線上",
+        cover: "https://picsum.photos/seed/yeshen/800/500",
+        tags: ["京劇", "作品集", "音樂分析"],
+        summary: "節選示範二六集的板式與鑼鼓點，並附上樂理註解。",
+        videoUrl: "https://example.com/video/yeshen",
+        type: "portfolio"
+      },
+      {
+        id: "h-2024-04-28",
+        title: "《八仙傳奇》— 高雄場",
+        dateStart: "2024-04-28T19:00:00+08:00",
+        dateEnd:   "2024-04-28T21:30:00+08:00",
+        location: "衛武營表演廳",
+        city: "高雄市",
+        cover: "https://picsum.photos/seed/baxian/800/500",
+        tags: ["歌仔戲", "巡演"],
+        summary: "經典八仙故事，融合現代燈光與多媒體舞台。",
+        gallery: ["https://picsum.photos/seed/a1/1200/800","https://picsum.photos/seed/a2/1200/800"],
+        type: "past"
+      }
+    ];
+
+    // ======== 2) 工具函式 ========
+    const $ = (sel, root = document) => root.querySelector(sel);
+    const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+    const formatDate = (iso) => {
+      if (!iso) return "";
+      const d = new Date(iso);
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    };
+    const todayISO = () => new Date().toISOString();
+
+    // ======== 3) 動態填入標籤選單 ========
+    function populateTagFilter() {
+      const set = new Set();
+      events.forEach(e => (e.tags || []).forEach(t => set.add(t)));
+      const sel = $("#tagFilter");
+      [...set].sort().forEach(tag => {
+        const opt = document.createElement("option");
+        opt.value = tag; opt.textContent = tag;
+        sel.appendChild(opt);
+      });
+    }
+
+    // ======== 4) 卡片 / 時間軸 / 作品格子 渲染 ========
+    function createTagChips(tags=[]) {
+      return tags.map(t => `<span class="chip" data-chip="${t}">${t}</span>`).join("");
+    }
+
+    function ren
