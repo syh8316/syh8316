@@ -16,8 +16,6 @@
   <header class="site-header">
     <div class="container head-wrap">
       <a class="brand" href="home.html" aria-label="回到首頁">新義和歌劇團</a>
-
-      <!-- 次級導覽：僅此頁顯示 -->
       <nav class="subnav" aria-label="活動頁導覽">
         <a class="subnav-link" href="home.html">首頁</a>
         <a class="subnav-link" href="#latest" data-tab="latest" aria-current="page">最新活動</a>
@@ -27,7 +25,7 @@
     </div>
   </header>
 
-  <!-- Hero 區 -->
+  <!-- Hero -->
   <section class="hero">
     <div class="container">
       <h1>活動資訊</h1>
@@ -44,21 +42,18 @@
 
   <!-- 分頁內容 -->
   <main class="container">
-    <!-- 最新活動 -->
     <section id="panel-latest" class="panel" role="region" aria-labelledby="tab-latest">
       <h2 id="tab-latest" class="panel-title">最新活動</h2>
       <div id="latestList" class="card-grid" aria-live="polite"></div>
       <div class="empty" id="latestEmpty" hidden>目前沒有即將舉辦的活動，敬請期待！</div>
     </section>
 
-    <!-- 活動紀錄 -->
     <section id="panel-history" class="panel" role="region" aria-labelledby="tab-history" hidden>
       <h2 id="tab-history" class="panel-title">活動紀錄</h2>
       <div id="historyList" class="timeline" aria-live="polite"></div>
       <div class="empty" id="historyEmpty" hidden>尚無活動紀錄。</div>
     </section>
 
-    <!-- 作品集 -->
     <section id="panel-portfolio" class="panel" role="region" aria-labelledby="tab-portfolio" hidden>
       <h2 id="tab-portfolio" class="panel-title">作品集</h2>
       <div id="portfolioList" class="masonry" aria-live="polite"></div>
@@ -82,72 +77,95 @@
 
   <!-- ======== JS（合併在 HTML）======== -->
   <script>
-    // ======== 1) 範例資料（可改成你自己的內容）========
+    /* ============== 0) 範例資料（先這樣放，之後換成你的真實資料） ============== */
     const events = [
       {
-        id: "e-2025-09-07",
-        title: "《狀元樓》巡演 — 台北場",
-        dateStart: "2025-09-07T19:30:00+08:00",
-        dateEnd:   "2025-09-07T21:30:00+08:00",
-        location: "臺北表演藝術中心小劇場",
-        city: "臺北市",
-        cover: "https://picsum.photos/seed/bao/800/500",
-        tags: ["歌仔戲", "現場演出"],
-        summary: "經典曲牌聯奏與精彩武場重現，限時加演！",
-        ticketUrl: "https://example.com/tickets/bao",
-        type: "upcoming" // upcoming / past / portfolio
+        id: "e-2025-09-20",
+        title: "《花燈六百護國將軍》— 彰化場",
+        dateStart: "2025-09-20T19:00:00+08:00",
+        dateEnd:   "2025-09-20T21:30:00+08:00",
+        location: "彰化演藝廳",
+        city: "彰化市",
+        cover: "https://picsum.photos/seed/hl600/800/500",
+        tags: ["歌仔戲","現場演出"],
+        summary: "經典鉅作巡演，首次於彰化登場！",
+        ticketUrl: "https://example.com/tickets",
+        type: "upcoming"
       },
       {
         id: "e-2025-10-12",
         title: "傳統掌中戲 — 「將水」專場",
         dateStart: "2025-10-12T14:30:00+08:00",
-        dateEnd:   "2025-10-12T16:00:00+08:00",
         location: "臺中國家歌劇院小劇場",
         city: "臺中市",
-        cover: "https://picsum.photos/seed/wawa/800/500",
-        tags: ["布袋戲", "曲牌", "親子友善"],
-        summary: "以曲牌將水為軸，帶出掌中戲身段與音樂的融合。",
+        cover: "https://picsum.photos/seed/jiangshui/800/500",
+        tags: ["布袋戲","曲牌","親子友善"],
+        summary: "以曲牌〈將水〉為軸，展現掌中戲身段與音樂。",
         ticketUrl: "",
         type: "upcoming"
       },
       {
-        id: "p-2024-12-15",
-        title: "《夜深沉》二六集—精華影像",
-        dateStart: "2024-12-15",
-        location: "影像整理",
-        city: "線上",
-        cover: "https://picsum.photos/seed/yeshen/800/500",
-        tags: ["京劇", "作品集", "音樂分析"],
-        summary: "節選示範二六集的板式與鑼鼓點，並附上樂理註解。",
-        videoUrl: "https://example.com/video/yeshen",
-        type: "portfolio"
+        id: "h-2024-12-25",
+        title: "《龍城爭霸》— 雲林場",
+        dateStart: "2024-12-25T19:30:00+08:00",
+        location: "雲林表演藝術中心",
+        city: "雲林縣",
+        cover: "https://picsum.photos/seed/longcheng/800/500",
+        tags: ["歌仔戲","巡演"],
+        summary: "融合傳統與現代舞台技術的全新演繹。",
+        gallery: ["https://picsum.photos/seed/a1/1200/800","https://picsum.photos/seed/a2/1200/800"],
+        type: "past"
       },
       {
         id: "h-2024-04-28",
         title: "《八仙傳奇》— 高雄場",
         dateStart: "2024-04-28T19:00:00+08:00",
-        dateEnd:   "2024-04-28T21:30:00+08:00",
         location: "衛武營表演廳",
         city: "高雄市",
         cover: "https://picsum.photos/seed/baxian/800/500",
-        tags: ["歌仔戲", "巡演"],
+        tags: ["歌仔戲","經典"],
         summary: "經典八仙故事，融合現代燈光與多媒體舞台。",
-        gallery: ["https://picsum.photos/seed/a1/1200/800","https://picsum.photos/seed/a2/1200/800"],
         type: "past"
+      },
+      {
+        id: "p-2024-08-15",
+        title: "《霸王別姬》精華影像",
+        dateStart: "2024-08-15",
+        location: "線上影音",
+        city: "線上",
+        cover: "https://picsum.photos/seed/bawang/800/500",
+        tags: ["京劇","作品集"],
+        summary: "經典片段回顧，附上樂理註解。",
+        videoUrl: "https://youtube.com/xxxxx",
+        type: "portfolio"
       }
     ];
 
-    // ======== 2) 工具函式 ========
+    /* ============== 1) 小工具 ============== */
     const $ = (sel, root = document) => root.querySelector(sel);
     const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
-    const formatDate = (iso) => {
-      if (!iso) return "";
-      const d = new Date(iso);
-      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    const safeTime = (iso) => {
+      if (!iso) return NaN;
+      const t = Date.parse(iso);
+      return Number.isFinite(t) ? t : NaN;
     };
-    const todayISO = () => new Date().toISOString();
+    const formatDate = (iso) => {
+      if (!iso) return "日期未定";
+      const t = safeTime(iso);
+      if (!Number.isFinite(t)) return iso; // 保留你原本填的字串
+      const d = new Date(t);
+      const Y = d.getFullYear();
+      const M = String(d.getMonth()+1).padStart(2,'0');
+      const D = String(d.getDate()).padStart(2,'0');
+      const h = String(d.getHours()).padStart(2,'0');
+      const m = String(d.getMinutes()).padStart(2,'0');
+      return `${Y}-${M}-${D}${(h+m!=="0000") ? ` ${h}:${m}` : ""}`;
+    };
 
-    // ======== 3) 動態填入標籤選單 ========
+    function createTagChips(tags = []) {
+      return tags.map(t => `<span class="chip" data-chip="${t}">${t}</span>`).join("");
+    }
+
     function populateTagFilter() {
       const set = new Set();
       events.forEach(e => (e.tags || []).forEach(t => set.add(t)));
@@ -159,9 +177,217 @@
       });
     }
 
-    // ======== 4) 卡片 / 時間軸 / 作品格子 渲染 ========
-    function createTagChips(tags=[]) {
-      return tags.map(t => `<span class="chip" data-chip="${t}">${t}</span>`).join("");
+    /* ============== 2) HTML 生成（卡片/時間軸/作品集） ============== */
+    function cardHTML(e){
+      return `
+      <article class="card" tabindex="0" aria-label="${e.title}">
+        <img loading="lazy" src="${e.cover || ''}" alt="${e.title}">
+        <div class="card-body">
+          <h3 class="card-title">${e.title}</h3>
+          <p class="card-meta">🗓 ${formatDate(e.dateStart)}${e.dateEnd ? ' - ' + formatDate(e.dateEnd) : ''}</p>
+          <p class="card-meta">📍 ${e.location || ''}${e.city ? '（' + e.city + '）' : ''}</p>
+          <p class="card-desc">${e.summary || ""}</p>
+          <div class="card-tags">${createTagChips(e.tags || [])}</div>
+          <div class="card-actions">
+            ${e.ticketUrl ? `<a class="btn primary" href="${e.ticketUrl}" target="_blank" rel="noopener">立即報名</a>` : ""}
+            <button class="btn ghost" data-detail="${e.id}">看詳情</button>
+          </div>
+        </div>
+      </article>`;
     }
 
-    function ren
+    function timelineHTML(e){
+      return `
+      <div class="time-item">
+        <div class="time-dot" aria-hidden="true"></div>
+        <div class="time-content">
+          <time class="time-date">${formatDate(e.dateStart)}</time>
+          <h3 class="time-title">${e.title}</h3>
+          <p class="time-meta">📍 ${e.location || ''}${e.city ? '（' + e.city + '）' : ''}</p>
+          <div class="time-tags">${createTagChips(e.tags || [])}</div>
+          <div class="time-actions">
+            <button class="btn ghost" data-detail="${e.id}">看回顧</button>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function portfolioHTML(e){
+      return `
+      <figure class="masonry-item" tabindex="0" aria-label="${e.title}">
+        <img loading="lazy" src="${e.cover || ''}" alt="${e.title}">
+        <figcaption>
+          <h3>${e.title}</h3>
+          <p>🗓 ${formatDate(e.dateStart)}｜${e.location || ''}</p>
+          <div class="chips">${createTagChips(e.tags || [])}</div>
+          <div class="card-actions">
+            ${e.videoUrl ? `<a class="btn primary" href="${e.videoUrl}" target="_blank" rel="noopener">觀看影片</a>` : ""}
+            <button class="btn ghost" data-detail="${e.id}">看詳情</button>
+          </div>
+        </figcaption>
+      </figure>`;
+    }
+
+    /* ============== 3) 渲染函式（僅靠 type 分頁，日期只用來排序） ============== */
+    function matchKeyword(e, kw) {
+      if (!kw) return true;
+      const hay = [
+        e.title, e.location, e.city, e.summary, ...(e.tags || [])
+      ].join(" ").toLowerCase();
+      return hay.includes(kw.toLowerCase());
+    }
+    function matchTag(e, tag) {
+      if (!tag) return true;
+      return (e.tags || []).includes(tag);
+    }
+
+    function renderLatest(list, kw="", tag="") {
+      const data = events
+        .filter(e => (e.type || "").trim() === "upcoming")
+        .filter(e => matchKeyword(e, kw) && matchTag(e, tag))
+        .sort((a,b) => (Number.isFinite(safeTime(a.dateStart)) ? safeTime(a.dateStart) : Infinity) - (Number.isFinite(safeTime(b.dateStart)) ? safeTime(b.dateStart) : Infinity));
+      list.innerHTML = data.map(cardHTML).join("");
+      $("#latestEmpty").hidden = data.length !== 0;
+    }
+
+    function renderHistory(list, kw="", tag="") {
+      const data = events
+        .filter(e => (e.type || "").trim() === "past")
+        .filter(e => matchKeyword(e, kw) && matchTag(e, tag))
+        .sort((a,b) => (Number.isFinite(safeTime(b.dateStart)) ? safeTime(b.dateStart) : -Infinity) - (Number.isFinite(safeTime(a.dateStart)) ? safeTime(a.dateStart) : -Infinity));
+      list.innerHTML = data.map(timelineHTML).join("");
+      $("#historyEmpty").hidden = data.length !== 0;
+    }
+
+    function renderPortfolio(list, kw="", tag="") {
+      const data = events
+        .filter(e => (e.type || "").trim() === "portfolio")
+        .filter(e => matchKeyword(e, kw) && matchTag(e, tag))
+        .sort((a,b) => (Number.isFinite(safeTime(b.dateStart)) ? safeTime(b.dateStart) : -Infinity) - (Number.isFinite(safeTime(a.dateStart)) ? safeTime(a.dateStart) : -Infinity));
+      list.innerHTML = data.map(portfolioHTML).join("");
+      $("#portfolioEmpty").hidden = data.length !== 0;
+    }
+
+    /* ============== 4) 分頁切換（hash 路由） ============== */
+    const panels = {
+      latest: $("#panel-latest"),
+      history: $("#panel-history"),
+      portfolio: $("#panel-portfolio"),
+    };
+    function switchTab(tab) {
+      Object.entries(panels).forEach(([k, el]) => {
+        el.hidden = (k !== tab);
+      });
+      $$(".subnav-link").forEach(a => {
+        a.classList.toggle("active", a.dataset.tab === tab);
+        if (a.dataset.tab === tab) a.setAttribute("aria-current", "page");
+        else a.removeAttribute("aria-current");
+      });
+      document.activeElement && document.activeElement.blur();
+    }
+
+    function handleHashChange() {
+      const tab = (location.hash.replace("#","") || "latest");
+      switchTab(tab);
+      const kw = $("#search").value.trim();
+      const tg = $("#tagFilter").value;
+      renderLatest($("#latestList"), kw, tg);
+      renderHistory($("#historyList"), kw, tg);
+      renderPortfolio($("#portfolioList"), kw, tg);
+    }
+
+    /* ============== 5) 詳情 Modal ============== */
+    const dialog = $("#eventDialog");
+    const dialogBody = $("#dialogBody");
+
+    function openDetail(id) {
+      const e = events.find(x => x.id === id);
+      if (!e) return;
+      dialogBody.innerHTML = `
+        <div class="detail">
+          <img class="detail-cover" src="${e.cover || ''}" alt="${e.title}">
+          <div class="detail-info">
+            <h3>${e.title}</h3>
+            <p>🗓 ${formatDate(e.dateStart)}${e.dateEnd ? ' - ' + formatDate(e.dateEnd) : ''}</p>
+            <p>📍 ${e.location || ''}${e.city ? '（' + e.city + '）' : ''}</p>
+            <div class="chips">${createTagChips(e.tags || [])}</div>
+            <p class="detail-desc">${e.summary || ""}</p>
+            <div class="detail-actions">
+              ${e.ticketUrl ? `<a class="btn primary" href="${e.ticketUrl}" target="_blank" rel="noopener">前往報名</a>` : ""}
+              ${e.videoUrl ? `<a class="btn" href="${e.videoUrl}" target="_blank" rel="noopener">觀看影片</a>` : ""}
+            </div>
+          </div>
+        </div>
+      `;
+      dialog.showModal();
+    }
+
+    dialog.addEventListener("click", (ev) => {
+      const rect = dialog.querySelector(".dialog-body").getBoundingClientRect();
+      const inDialog = ev.clientX >= rect.left && ev.clientX <= rect.right && ev.clientY >= rect.top && ev.clientY <= rect.bottom;
+      if (!inDialog) dialog.close();
+    });
+
+    document.body.addEventListener("click", (ev) => {
+      const btn = ev.target.closest("[data-detail]");
+      if (btn) openDetail(btn.getAttribute("data-detail"));
+    });
+
+    /* ============== 6) 搜尋與標籤事件 ============== */
+    $("#search").addEventListener("input", handleHashChange);
+    $("#tagFilter").addEventListener("change", handleHashChange);
+
+    /* ============== 7) 初始化 ============== */
+    (function init() {
+      $("#year").textContent = new Date().getFullYear();
+      populateTagFilter();
+
+      // 次級導覽點擊（避免重載）
+      $$(".subnav a[data-tab]").forEach(a => {
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+          const tab = a.dataset.tab;
+          history.replaceState(null, "", `#${tab}`);
+          handleHashChange();
+        });
+      });
+
+      if (!location.hash) location.hash = "#latest";
+      handleHashChange();
+      window.addEventListener("hashchange", handleHashChange);
+
+      injectStructuredData(events);
+    })();
+
+    /* ============== 8) JSON-LD（SEO 結構化資料） ============== */
+    function injectStructuredData(items) {
+      const upcoming = items.filter(i => (i.type || "").trim() === "upcoming");
+      const ld = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "新義和歌劇團 活動列表",
+        "itemListElement": upcoming.map((e, idx) => ({
+          "@type": "ListItem",
+          "position": idx + 1,
+          "item": {
+            "@type": "Event",
+            "name": e.title,
+            "startDate": e.dateStart,
+            ...(e.dateEnd ? {"endDate": e.dateEnd} : {}),
+            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+            "location": {"@type": "Place","name": e.location,"address": e.city || ""},
+            "image": e.cover || "",
+            "description": e.summary || "",
+            ...(e.ticketUrl ? {"offers": {"@type": "Offer","url": e.ticketUrl,"availability": "https://schema.org/InStock"}} : {})
+          }
+        }))
+      };
+      const script = document.createElement("script");
+      script.type = "application/ld+json";
+      script.textContent = JSON.stringify(ld, null, 2);
+      document.head.appendChild(script);
+    }
+  </script>
+</body>
+</html>
+
