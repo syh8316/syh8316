@@ -138,3 +138,28 @@ body{
 
 /* A11y */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* 讓左上角使用圖片 logo，而不是文字 */
+.brand{
+  display:inline-flex;
+  align-items:center;
+  padding:.3rem .5rem;
+  border-radius:10px;
+  background:linear-gradient(135deg,#111827,#0b0c0f);
+  border:1px solid #222;
+  text-decoration:none;
+}
+
+/* 控制 logo 尺寸 */
+.brand-logo{
+  height:34px;     /* 想大一點改這裡 */
+  width:auto;
+  display:block;
+}
+
+/* 如果只有「白底黑字」logo.png：加上 invert 讓它變黑底白字（矩形黑底會與深色導覽列融為一體） */
+.brand-logo.invert{
+  filter: invert(1) brightness(1.05) contrast(1.05);
+}
+
+/* 如果你之後改用透明底白色版 logo-white.png，就把 .invert class 移除即可 */
