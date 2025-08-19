@@ -428,6 +428,7 @@
         tags: ["作品集", "花絮", "歌仔戲"],
         summary: "片段花絮：經典電視歌仔戲《陸文龍》中的曲調節選。",
         videoUrl: "https://www.instagram.com/reel/DNahemuyJDC/?igsh=ODhwNGhtZms0dHQ4",
+        videoThumb: "img/portfolio/陸文龍花絮.jpg"
         type: "portfolio"
       }
     ];
@@ -693,23 +694,26 @@
         `;
       } else if (e.videoUrl) {
         if (isPortfolio) {
-          // 作品集 + 外部連結：不內嵌，整塊可點出站
+          // 作品集 + 外部連結：不內嵌，改成可點縮圖卡
           const provider =
             /instagram\.com/.test(e.videoUrl) ? "Instagram" :
             /(youtu\.be|youtube\.com)/.test(e.videoUrl) ? "YouTube" :
             /vimeo\.com/.test(e.videoUrl) ? "Vimeo" : "外部平台";
+          const thumb = e.videoThumb || e.cover || ""; // 優先用你新加的 videoThumb，沒有就退回 cover
           html += `
             <h4 class="gallery-title">影片</h4>
             <a href="${e.videoUrl}" target="_blank" rel="noopener"
-               class="video-link" aria-label="前往${provider}觀看">
+               class="video-link has-thumb" aria-label="前往${provider}觀看">
+              ${thumb ? `<img src="${thumb}" alt="${e.title} 影片預覽" loading="lazy" onerror="this.style.display='none'">` : ""}
               <div class="vl-center">
                 <span class="vl-play">▶</span>
-                <span>前往${provider}觀看</span>
+                <span class="vl-text">前往${provider}觀看</span>
               </div>
             </a>
           `;
+          // 不載入任何外部嵌入腳本
         } else {
-          // 其他分類：若專案已定義 buildVideoBlock，就用它內嵌；沒有就單靠上面的「另開影片」按鈕
+          // 其他分類：若專案已定義 buildVideoBlock，就用它內嵌；沒有就只顯示上面的「另開影片」按鈕
           if (typeof buildVideoBlock === "function") {
             html += buildVideoBlock(e);
           }
@@ -803,7 +807,7 @@
       }
     }
     
-    // （函式外）全域事件：保留這兩個
+    // （函式外）全域事件：保留
     dialog.addEventListener("click", (ev) => {
       const rect = dialog.querySelector(".dialog-body").getBoundingClientRect?.() || dialog.getBoundingClientRect();
       const inDialog = ev.clientX >= rect.left && ev.clientX <= rect.right && ev.clientY >= rect.top && ev.clientY <= rect.bottom;
