@@ -678,7 +678,7 @@
         </div>
       `;
     
-      // 影片（若有；你檔案裡已經有 buildVideoBlock/ensureIGScript）
+      // 影片（若有）
       html += (typeof buildVideoBlock === "function") ? buildVideoBlock(e) : "";
     
       // 照片縮圖格 + lightbox
@@ -750,22 +750,9 @@
           if (Math.abs(dx) > 40) (dx < 0 ? next : prev)();
         }, {passive:true});
       }
-    }    
-      // Instagram 嵌入：載入/刷新官方腳本
-      if (needIGProcess) {
-        const exist = document.querySelector('script[src*="instagram.com/embed.js"]');
-        if (!exist) {
-          const s = document.createElement('script');
-          s.async = true;
-          s.src = 'https://www.instagram.com/embed.js';
-          s.onload = () => window.instgrm?.Embeds?.process();
-          document.body.appendChild(s);
-        } else {
-          window.instgrm?.Embeds?.process();
-        }
-      }
     }
-
+    
+    // （函式外）全域事件：這些要保留
     dialog.addEventListener("click", (ev) => {
       const rect = dialog.querySelector(".dialog-body").getBoundingClientRect?.() || dialog.getBoundingClientRect();
       const inDialog = ev.clientX >= rect.left && ev.clientX <= rect.right && ev.clientY >= rect.top && ev.clientY <= rect.bottom;
