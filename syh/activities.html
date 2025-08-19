@@ -61,7 +61,7 @@
     </section>
   </main>
 
-  <!-- 活動詳情 Modal -->
+  <!-- 活動詳情 Modal（不顯示圖片） -->
   <dialog id="eventDialog" class="event-dialog" aria-label="活動詳情">
     <form method="dialog">
       <button class="close" aria-label="關閉">✕</button>
@@ -417,22 +417,20 @@
     /* ============== 1) 小工具 ============== */
     const $ = (sel, root = document) => root.querySelector(sel);
     const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
-    const safeTime = (iso) => {
-      if (!iso) return NaN;
-      const t = Date.parse(iso);
-      return Number.isFinite(t) ? t : NaN;
-    };
+
+    // 只顯示「日期」YYYY-MM-DD（不管原始字串是否含時間）
     const formatDate = (iso) => {
       if (!iso) return "日期未定";
-      const t = safeTime(iso);
-      if (!Number.isFinite(t)) return iso; // 保留你原本填的字串
+      const t = Date.parse(iso);
+      if (!Number.isFinite(t)) {
+        // 若完全無法解析，就嘗試切出前 10 碼 YYYY-MM-DD；再不行就原樣回傳
+        return /^\d{4}-\d{2}-\d{2}/.test(iso) ? iso.slice(0,10) : iso;
+      }
       const d = new Date(t);
       const Y = d.getFullYear();
       const M = String(d.getMonth()+1).padStart(2,'0');
       const D = String(d.getDate()).padStart(2,'0');
-      const h = String(d.getHours()).padStart(2,'0');
-      const m = String(d.getMinutes()).padStart(2,'0');
-      return `${Y}-${M}-${D}${(h+m!=="0000") ? ` ${h}:${m}` : ""}`;
+      return `${Y}-${M}-${D}`;
     };
 
     function createTagChips(tags = []) {
@@ -450,11 +448,10 @@
       });
     }
 
-    /* ============== 2) HTML 生成（卡片/時間軸/作品集） ============== */
+    /* ============== 2) HTML 生成（不含圖片） ============== */
     function cardHTML(e){
       return `
       <article class="card" tabindex="0" aria-label="${e.title}">
-        <img loading="lazy" src="${e.cover || ''}" alt="${e.title}">
         <div class="card-body">
           <h3 class="card-title">${e.title}</h3>
           <p class="card-meta">🗓 ${formatDate(e.dateStart)}${e.dateEnd ? ' - ' + formatDate(e.dateEnd) : ''}</p>
@@ -474,7 +471,7 @@
       <div class="time-item">
         <div class="time-dot" aria-hidden="true"></div>
         <div class="time-content">
-          <time class="time-date">${formatDate(e.dateStart)}</time>
+          <time class="time-date">${formatDate(e.dateStart)}${e.dateEnd ? ' - ' + formatDate(e.dateEnd) : ''}</time>
           <h3 class="time-title">${e.title}</h3>
           <p class="time-meta">📍 ${e.location || ''}${e.city ? '（' + e.city + '）' : ''}</p>
           <div class="time-tags">${createTagChips(e.tags || [])}</div>
@@ -488,10 +485,9 @@
     function portfolioHTML(e){
       return `
       <figure class="masonry-item" tabindex="0" aria-label="${e.title}">
-        <img loading="lazy" src="${e.cover || ''}" alt="${e.title}">
         <figcaption>
           <h3>${e.title}</h3>
-          <p>🗓 ${formatDate(e.dateStart)}｜${e.location || ''}</p>
+          <p>🗓 ${formatDate(e.dateStart)}${e.dateEnd ? ' - ' + formatDate(e.dateEnd) : ''}｜${e.location || ''}</p>
           <div class="chips">${createTagChips(e.tags || [])}</div>
           <div class="card-actions">
             ${e.videoUrl ? `<a class="btn primary" href="${e.videoUrl}" target="_blank" rel="noopener">觀看影片</a>` : ""}
@@ -501,12 +497,11 @@
       </figure>`;
     }
 
-    /* ============== 3) 渲染函式（僅靠 type 分頁，日期只用來排序） ============== */
+    /* ============== 3) 渲染（依 type 分頁，日期只排序不顯示時間） ============== */
+    const safeTime = iso => Number.isFinite(Date.parse(iso)) ? Date.parse(iso) : NaN;
     function matchKeyword(e, kw) {
       if (!kw) return true;
-      const hay = [
-        e.title, e.location, e.city, e.summary, ...(e.tags || [])
-      ].join(" ").toLowerCase();
+      const hay = [e.title, e.location, e.city, e.summary, ...(e.tags || [])].join(" ").toLowerCase();
       return hay.includes(kw.toLowerCase());
     }
     function matchTag(e, tag) {
@@ -548,9 +543,7 @@
       portfolio: $("#panel-portfolio"),
     };
     function switchTab(tab) {
-      Object.entries(panels).forEach(([k, el]) => {
-        el.hidden = (k !== tab);
-      });
+      Object.entries(panels).forEach(([k, el]) => el.hidden = (k !== tab));
       $$(".subnav-link").forEach(a => {
         a.classList.toggle("active", a.dataset.tab === tab);
         if (a.dataset.tab === tab) a.setAttribute("aria-current", "page");
@@ -569,16 +562,14 @@
       renderPortfolio($("#portfolioList"), kw, tg);
     }
 
-    /* ============== 5) 詳情 Modal ============== */
+    /* ============== 5) 詳情 Modal（不顯示圖片） ============== */
     const dialog = $("#eventDialog");
     const dialogBody = $("#dialogBody");
-
     function openDetail(id) {
       const e = events.find(x => x.id === id);
       if (!e) return;
       dialogBody.innerHTML = `
         <div class="detail">
-          <img class="detail-cover" src="${e.cover || ''}" alt="${e.title}">
           <div class="detail-info">
             <h3>${e.title}</h3>
             <p>🗓 ${formatDate(e.dateStart)}${e.dateEnd ? ' - ' + formatDate(e.dateEnd) : ''}</p>
@@ -594,13 +585,11 @@
       `;
       dialog.showModal();
     }
-
     dialog.addEventListener("click", (ev) => {
-      const rect = dialog.querySelector(".dialog-body").getBoundingClientRect();
+      const rect = dialog.querySelector(".dialog-body").getBoundingClientRect?.() || dialog.getBoundingClientRect();
       const inDialog = ev.clientX >= rect.left && ev.clientX <= rect.right && ev.clientY >= rect.top && ev.clientY <= rect.bottom;
       if (!inDialog) dialog.close();
     });
-
     document.body.addEventListener("click", (ev) => {
       const btn = ev.target.closest("[data-detail]");
       if (btn) openDetail(btn.getAttribute("data-detail"));
@@ -614,25 +603,20 @@
     (function init() {
       $("#year").textContent = new Date().getFullYear();
       populateTagFilter();
-
-      // 次級導覽點擊（避免重載）
       $$(".subnav a[data-tab]").forEach(a => {
         a.addEventListener("click", (e) => {
           e.preventDefault();
-          const tab = a.dataset.tab;
-          history.replaceState(null, "", `#${tab}`);
+          history.replaceState(null, "", `#${a.dataset.tab}`);
           handleHashChange();
         });
       });
-
       if (!location.hash) location.hash = "#latest";
       handleHashChange();
       window.addEventListener("hashchange", handleHashChange);
-
       injectStructuredData(events);
     })();
 
-    /* ============== 8) JSON-LD（SEO 結構化資料） ============== */
+    /* ============== 8) JSON-LD（SEO；不輸出 image） ============== */
     function injectStructuredData(items) {
       const upcoming = items.filter(i => (i.type || "").trim() === "upcoming");
       const ld = {
@@ -648,8 +632,7 @@
             "startDate": e.dateStart,
             ...(e.dateEnd ? {"endDate": e.dateEnd} : {}),
             "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-            "location": {"@type": "Place","name": e.location,"address": e.city || ""},
-            "image": e.cover || "",
+            "location": {"@type": "Place","name": e.location || "","address": e.city || ""},
             "description": e.summary || "",
             ...(e.ticketUrl ? {"offers": {"@type": "Offer","url": e.ticketUrl,"availability": "https://schema.org/InStock"}} : {})
           }
@@ -663,4 +646,3 @@
   </script>
 </body>
 </html>
-
