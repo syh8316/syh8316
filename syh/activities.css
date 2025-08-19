@@ -152,7 +152,7 @@ body{
 
 /* 控制 logo 尺寸 */
 .brand-logo{
-  height:34px;     /* 想大一點改這裡 */
+  height:40px;     /* 想大一點改這裡 */
   width:auto;
   display:block;
 }
