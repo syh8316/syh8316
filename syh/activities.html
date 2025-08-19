@@ -79,29 +79,302 @@
   <script>
     /* ============== 0) 範例資料（先這樣放，之後換成你的真實資料） ============== */
     const events = [
+      /* ---------- 七月（對應國曆 8–9 月） ---------- */
       {
-        id: "e-2025-09-20",
-        title: "《花燈六百護國將軍》— 彰化場",
-        dateStart: "2025-09-20T19:00:00+08:00",
-        dateEnd:   "2025-09-20T21:30:00+08:00",
-        location: "彰化演藝廳",
-        city: "彰化市",
-        cover: "https://picsum.photos/seed/hl600/800/500",
-        tags: ["歌仔戲","現場演出"],
-        summary: "經典鉅作巡演，首次於彰化登場！",
-        ticketUrl: "https://example.com/tickets",
+        id: "u-20250827-fuxing-zhentiangong",
+        title: "台北復興北路",
+        dateStart: "2025-08-27",
+        location: "台北復興北路",
+        tags: ["宮廟","活動","台北"],
+        summary: "農曆 7/5。",
         type: "upcoming"
       },
       {
-        id: "e-2025-10-12",
-        title: "傳統掌中戲 — 「將水」專場",
-        dateStart: "2025-10-12T14:30:00+08:00",
-        location: "臺中國家歌劇院小劇場",
-        city: "臺中市",
-        cover: "https://picsum.photos/seed/jiangshui/800/500",
-        tags: ["布袋戲","曲牌","親子友善"],
-        summary: "以曲牌〈將水〉為軸，展現掌中戲身段與音樂。",
-        ticketUrl: "",
+        id: "u-20250904-0925-baishatun",
+        title: "苗栗白沙屯（連續多日）",
+        dateStart: "2025-09-04",
+        dateEnd:   "2025-09-12",
+        location: "苗栗白沙屯",
+        tags: ["宮廟","連續多日","苗栗"],
+        summary: "農曆 7/13–7/16，連續多日活動。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20250905-gongliao-hemei",
+        title: "新北貢寮和美",
+        dateStart: "2025-09-05",
+        location: "新北貢寮和美",
+        tags: ["宮廟","新北"],
+        summary: "農曆 7/14。",
+        type: "upcoming"
+      },
+      {
+        id: "u-7m-16-30-malinggong",
+        title: "苗栗後龍",
+        dateStart: "2025-09-07",
+        dateEnd:   "2025-09-25",
+        location: "苗栗後龍",
+        tags: ["宮廟","苗栗"],
+        summary: "農曆 7/16–7/30，國曆未定。",
+        type: "upcoming"
+      },
+
+      /* ---------- 八月（對應國曆 9–10 月） ---------- */
+      {
+        id: "u-20250922-houlong-baixing",
+        title: "苗栗後龍",
+        dateStart: "2025-09-22",
+        location: "後龍百姓公",
+        tags: ["宮廟","苗栗"],
+        summary: "農曆 8/1。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20250926-27-jingmei-xizhou-fude",
+        title: "台北景美溪州",
+        dateStart: "2025-09-26",
+        dateEnd:   "2025-09-27",
+        location: "台北景美溪州",
+        tags: ["宮廟","台北"],
+        summary: "農曆 8/5–8/6。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20250929-shimen-fude",
+        title: "支援金龍 新北石門",
+        dateStart: "2025-09-29",
+        location: "石門",
+        tags: ["宮廟","支援","新北"],
+        summary: "農曆 8/8。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20250930-sanchong-jiexing",
+        title: "支援民權 新北三重",
+        dateStart: "2025-09-30",
+        location: "三重",
+        tags: ["宮廟","支援","新北"],
+        summary: "農曆 8/9。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20251001-hsinchu-wenhua-fude",
+        title: "新竹文華",
+        dateStart: "2025-10-01",
+        location: "新竹文華",
+        tags: ["宮廟","新竹"],
+        summary: "農曆 8/10。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20251004-xinfeng-senmei",
+        title: "支援森美 新竹新豐",
+        dateStart: "2025-10-04",
+        location: "新竹新豐",
+        tags: ["活動","支援","新竹"],
+        summary: "農曆 8/13。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20251010-11-zhudong-ronghua-fude",
+        title: "支援王世金 新竹竹東榮華",
+        dateStart: "2025-10-10",
+        dateEnd:   "2025-10-11",
+        location: "新竹竹東榮華",
+        tags: ["宮廟","支援","新竹"],
+        summary: "農曆 8/19–8/20。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20251013-taichung-fengyuan",
+        title: "台中豐原",
+        dateStart: "2025-10-13",
+        location: "台中豐原",
+        tags: ["活動","台中"],
+        summary: "農曆 8/22。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20251014-15-longdong-longxing",
+        title: "新北龍洞",
+        dateStart: "2025-10-14",
+        dateEnd:   "2025-10-15",
+        location: "新北龍洞",
+        tags: ["宮廟","新北"],
+        summary: "農曆 8/23–8/24。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20251017-19-sanxia-xibeili",
+        title: "新北三峽溪北里",
+        dateStart: "2025-10-17",
+        dateEnd:   "2025-10-19",
+        location: "新北三峽橫溪路17號",
+        tags: ["活動","新北"],
+        summary: "農曆 8/26–8/28。",
+        type: "upcoming"
+      },
+    
+      /* ---------- 九月（對應國曆 10–11 月） ---------- */
+      {
+        id: "u-20251021-22-qingshui",
+        title: "台中清水",
+        dateStart: "2025-10-21",
+        dateEnd:   "2025-10-22",
+        location: "台中清水",
+        tags: ["活動","台中"],
+        summary: "農曆 9/1–9/2。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20251024-hsinchu-wangxiansheng",
+        title: "新竹",
+        dateStart: "2025-10-24",
+        location: "新竹",
+        tags: ["宮廟","新竹"],
+        summary: "農曆 9/4。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20251029-banqiao-shenqiu-fude",
+        title: "新北板橋深秋",
+        dateStart: "2025-10-29",
+        location: "新北板橋深秋",
+        tags: ["宮廟","新北"],
+        summary: "農曆 9/9。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20251031-taoyuan-yushan-street",
+        title: "支援王世金 桃園玉山街",
+        dateStart: "2025-10-31",
+        location: "支援世金 桃園市玉山街",
+        tags: ["活動","支援","桃園"],
+        summary: "農曆 9/11。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20251103-wugu-shanan",
+        title: "新北五股",
+        dateStart: "2025-11-03",
+        location: "新北五股",
+        tags: ["宮廟","新北"],
+        summary: "農曆 9/14。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20251104-05-hemei-baoan",
+        title: "新北和美",
+        dateStart: "2025-11-04",
+        dateEnd:   "2025-11-05",
+        location: "新北和美",
+        tags: ["宮廟","新北"],
+        summary: "農曆 9/15–9/16。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20251107-yilan-zhuangwei",
+        title: "宜蘭壯圍",
+        dateStart: "2025-11-07",
+        location: "宜蘭壯圍",
+        tags: ["活動","宜蘭"],
+        summary: "農曆 9/18。",
+        type: "upcoming"
+      },
+    
+      /* ---------- 十月（對應國曆 11–12 月） ---------- */
+      {
+        id: "u-20251122-huitian",
+        title: "苗栗後龍",
+        dateStart: "2025-11-22",
+        location: "苗栗後龍",
+        tags: ["宮廟","苗栗"],
+        summary: "農曆 10/3。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20251130-tanwen-senmei",
+        title: "支援森美 苗栗造橋",
+        dateStart: "2025-11-30",
+        location: "苗栗造橋",
+        tags: ["活動","苗栗"],
+        summary: "農曆 10/11。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20251203-nanqing",
+        title: "台中清水",
+        dateStart: "2025-12-03",
+        location: "台中清水",
+        tags: ["宮廟","台中"],
+        summary: "農曆 10/14。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20251206-zaoqiao-shijjn",
+        title: "支援王世金 苗栗造橋",
+        dateStart: "2025-12-06",
+        location: "苗栗造橋",
+        tags: ["活動","苗栗"],
+        summary: "農曆 10/17。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20251211-12-xingan-senmei",
+        title: "支援森美 苗栗白沙屯",
+        dateStart: "2025-12-11",
+        dateEnd:   "2025-12-12",
+        location: "苗栗白沙屯",
+        tags: ["宮廟","苗栗"],
+        summary: "農曆 10/22–10/23。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20251213-houlong-ziyun-shangdi",
+        title: "苗栗後龍",
+        dateStart: "2025-12-13",
+        location: "苗栗後龍",
+        tags: ["宮廟","苗栗"],
+        summary: "農曆 10/24。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20251219-21-hsinchu-75",
+        title: "新竹",
+        dateStart: "2025-12-19",
+        dateEnd:   "2025-12-21",
+        location: "新竹",
+        tags: ["宮廟","新竹"],
+        summary: "農曆 10/30–11/2。",
+        type: "upcoming"
+      },
+    
+      /* ---------- 十一月（對應國曆 12 月與次年 1 月） ---------- */
+      {
+        id: "u-20251220-qingshui-senmei",
+        title: "支援森美 台中清水",
+        dateStart: "2025-12-20",
+        location: "台中市清水區",
+        tags: ["活動","台中","支援"],
+        summary: "農曆 11/1。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20251228-sanmin",
+        title: "桃園三民",
+        dateStart: "2025-12-28",
+        location: "桃園三民",
+        tags: ["活動","桃園"],
+        summary: "農曆 11/9。",
+        type: "upcoming"
+      },
+      {
+        id: "u-20260102-houlong-baixing-senmei",
+        title: "支援森美 苗栗後龍",
+        dateStart: "2026-01-02",
+        location: "後龍百姓宮",
+        tags: ["宮廟","苗栗","支援"],
+        summary: "農曆 11/14。",
         type: "upcoming"
       },
       {
