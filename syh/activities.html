@@ -15,7 +15,11 @@
   <!-- 頁首 / 次級導覽 -->
   <header class="site-header">
     <div class="container head-wrap">
-      <a class="brand" href="home.html" aria-label="回到首頁">新義和歌劇團</a>
+      <a class="brand" href="home.html" aria-label="回到首頁">
+      <!-- 若目前只有「白底黑字」logo.png，先用 .invert 反轉成黑底白字 -->
+      <img class="brand-logo invert" src="img/logo.png" alt="新義和歌劇團">
+    </a>
+
       <nav class="subnav" aria-label="活動頁導覽">
         <a class="subnav-link" href="home.html">首頁</a>
         <a class="subnav-link" href="#latest" data-tab="latest" aria-current="page">最新活動</a>
@@ -91,7 +95,7 @@
       },
       {
         id: "u-20250904-0925-baishatun",
-        title: "苗栗白沙屯（連續多日）",
+        title: "苗栗白沙屯",
         dateStart: "2025-09-04",
         dateEnd:   "2025-09-12",
         location: "苗栗白沙屯",
@@ -114,8 +118,8 @@
         dateStart: "2025-09-07",
         dateEnd:   "2025-09-25",
         location: "苗栗後龍",
-        tags: ["宮廟","苗栗"],
-        summary: "農曆 7/16–7/30。",
+        tags: ["宮廟","苗栗","連續多日"],
+        summary: "農曆 7/16–7/30，連續多日活動。",
         type: "upcoming"
       },
 
