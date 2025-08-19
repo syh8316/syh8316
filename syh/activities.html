@@ -621,7 +621,7 @@
       <figure class="masonry-item" tabindex="0" aria-label="${e.title}">
         <figcaption>
           <h3>${e.title}</h3>
-          <p>🗓 ${formatDate(e.dateStart)}${e.dateEnd ? ' - ' + formatDate(e.dateEnd) : ''}｜${e.location || ''}</p>
+          <p>${e.location || ""}</p>
           <div class="chips">${createTagChips(e.tags || [])}</div>
           <div class="card-actions">
             <button class="btn ghost" data-detail="${e.id}">看詳情</button>
@@ -671,9 +671,11 @@
 
     function renderAlbum(list, kw="", tag="") {
       const data = events
+        .map((e, i) => ({ ...e, _idx: i }))       // 記住原本順序
         .filter(e => (e.type || "").trim() === "album")
         .filter(e => matchKeyword(e, kw) && matchTag(e, tag))
-        .sort((a,b) => (Number.isFinite(safeTime(b.dateStart)) ? safeTime(b.dateStart) : -Infinity) - (Number.isFinite(safeTime(a.dateStart)) ? safeTime(a.dateStart) : -Infinity));
+        .sort((a, b) => a._idx - b._idx);         // 用原始順序顯示
+    
       list.innerHTML = data.map(albumHTML).join("");
       $("#albumEmpty").hidden = data.length !== 0;
     }
@@ -715,20 +717,22 @@
       const e = events.find(x => x.id === id);
       if (!e) return;
     
-      const isPortfolio = ((e.type || "").trim() === "portfolio");
+      const type = (e.type || "").trim();
+      const isAlbum = type === "album";
+      const isPortfolio = type === "portfolio";
     
-      // 基本資訊（作品集時不顯示「另開影片」按鈕）
+      // 基本資訊（像簿不顯示日期；作品集不顯示「另開影片」）
       let html = `
         <div class="detail">
           <div class="detail-info">
             <h3>${e.title}</h3>
-            <p>🗓 ${formatDate(e.dateStart)}${e.dateEnd ? ' - ' + formatDate(e.dateEnd) : ''}</p>
+            ${isAlbum ? "" : `<p>🗓 ${formatDate(e.dateStart)}${e.dateEnd ? ' - ' + formatDate(e.dateEnd) : ''}</p>`}
             <p>📍 ${e.location || ''}${e.city ? '（' + e.city + '）' : ''}</p>
             <div class="chips">${createTagChips(e.tags || [])}</div>
             <p class="detail-desc">${e.summary || ""}</p>
             <div class="detail-actions">
               ${e.ticketUrl ? `<a class="btn primary" href="${e.ticketUrl}" target="_blank" rel="noopener">前往報名</a>` : ""}
-              ${(!isPortfolio && e.videoUrl) ? `<a class="btn" href="${e.videoUrl}" target="_blank" rel="noopener">另開影片</a>` : ""}
+              ${(!isAlbum && !isPortfolio && e.videoUrl) ? `<a class="btn" href="${e.videoUrl}" target="_blank" rel="noopener">另開影片</a>` : ""}
             </div>
           </div>
         </div>
@@ -751,11 +755,11 @@
             /instagram\.com/.test(e.videoUrl) ? "Instagram" :
             /(youtu\.be|youtube\.com)/.test(e.videoUrl) ? "YouTube" :
             /vimeo\.com/.test(e.videoUrl) ? "Vimeo" : "外部平台";
-          const thumb = e.videoThumb || e.cover || ""; // 優先用你新加的 videoThumb，沒有就退回 cover
+          const thumb = e.videoThumb || e.cover || "";
           html += `
             <h4 class="gallery-title">影片</h4>
             <a href="${e.videoUrl}" target="_blank" rel="noopener"
-               class="video-link has-thumb" aria-label="前往${provider}觀看">
+               class="video-link${thumb ? " has-thumb" : ""}" aria-label="前往${provider}觀看">
               ${thumb ? `<img src="${thumb}" alt="${e.title} 影片預覽" loading="lazy" onerror="this.style.display='none'">` : ""}
               <div class="vl-center">
                 <span class="vl-play">▶</span>
@@ -763,12 +767,9 @@
               </div>
             </a>
           `;
-          // 不載入任何外部嵌入腳本
-        } else {
-          // 其他分類：若專案已定義 buildVideoBlock，就用它內嵌；沒有就只顯示上面的「另開影片」按鈕
-          if (typeof buildVideoBlock === "function") {
-            html += buildVideoBlock(e);
-          }
+        } else if (typeof buildVideoBlock === "function") {
+          // 其他分類：若專案已定義 buildVideoBlock，使用既有的內嵌邏輯
+          html += buildVideoBlock(e);
         }
       }
     
