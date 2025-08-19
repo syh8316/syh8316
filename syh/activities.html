@@ -678,72 +678,81 @@
         </div>
       `;
     
-      // 影片區塊（videoFile / videoUrl 皆可）
-      let needIGProcess = false;
-      if (e.videoFile) {
-        html += `
-          <h4 class="gallery-title">影片</h4>
-          <video class="detail-video" controls preload="metadata" playsinline>
-            <source src="${e.videoFile}" type="video/mp4">
-            你的瀏覽器不支援影片播放。
-          </video>
-        `;
-      } else if (e.videoUrl) {
-        const yt = e.videoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_\-]+)/);
-        const vm = e.videoUrl.match(/vimeo\.com\/(\d+)/);
-        const isIG = /instagram\.com/.test(e.videoUrl);
+      // 影片（若有）
+      html += buildVideoBlock ? buildVideoBlock(e) : "";
     
-        if (yt) {
-          const id = yt[1];
-          html += `
-            <h4 class="gallery-title">影片</h4>
-            <div class="video-embed">
-              <iframe
-                src="https://www.youtube.com/embed/${id}"
-                title="YouTube video player" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen loading="lazy"></iframe>
-            </div>
-          `;
-        } else if (vm) {
-          const id = vm[1];
-          html += `
-            <h4 class="gallery-title">影片</h4>
-            <div class="video-embed">
-              <iframe
-                src="https://player.vimeo.com/video/${id}"
-                frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
-                allowfullscreen loading="lazy"></iframe>
-            </div>
-          `;
-        } else if (isIG) {
-          needIGProcess = true;
-          html += `
-            <h4 class="gallery-title">影片</h4>
-            <blockquote class="instagram-media"
-                        data-instgrm-permalink="${e.videoUrl}"
-                        data-instgrm-captioned
-                        style="background:#0b0c0f; border:0; margin:0 auto; max-width:540px; width:100%"></blockquote>
-          `;
-        } else {
-          // 其他連結：顯示外開按鈕（上面已加），這裡就不再內嵌
-        }
-      }
-    
-      // 相簿（可選）
+      // 照片縮圖格
       if (e.gallery && e.gallery.length) {
         html += `
           <h4 class="gallery-title">現場照片</h4>
           <div class="gallery-grid">
             ${e.gallery.map((src, i) => `
-              <a href="${src}" target="_blank" rel="noopener">
+              <a href="${src}" data-idx="${i}">
                 <img src="${src}" alt="${e.title} 現場照片 ${i+1}" loading="lazy"
                      onerror="this.style.display='none'">
               </a>
             `).join("")}
           </div>
+    
+          <!-- Lightbox 觀賞器 -->
+          <div class="lightbox" id="lightbox" hidden aria-modal="true" role="dialog">
+            <button class="lb-close" aria-label="關閉">✕</button>
+            <button class="lb-prev" aria-label="上一張">‹</button>
+            <img class="lb-img" src="" alt="">
+            <button class="lb-next" aria-label="下一張">›</button>
+            <div class="lb-counter" aria-live="polite"></div>
+          </div>
         `;
       }
+    
+      dialogBody.innerHTML = html;
+      dialog.showModal();
+    
+      // 綁定縮圖 → 開啟 lightbox
+      const grid = dialogBody.querySelector(".gallery-grid");
+      const lb   = dialogBody.querySelector("#lightbox");
+      if (grid && lb) {
+        const thumbs = Array.from(grid.querySelectorAll("a"));
+        const state = { idx: 0, gallery: e.gallery.slice(), title: e.title };
+    
+        function render() {
+          const img = lb.querySelector(".lb-img");
+          const counter = lb.querySelector(".lb-counter");
+          img.src = state.gallery[state.idx];
+          img.alt = `${state.title} 現場照片 ${state.idx+1}`;
+          counter.textContent = `${state.idx+1} / ${state.gallery.length}`;
+        }
+        function openLB(i){ state.idx = i; lb.hidden = false; render(); document.addEventListener("keydown", onKey); }
+        function closeLB(){ lb.hidden = true; document.removeEventListener("keydown", onKey); }
+        function prev(){ state.idx = (state.idx - 1 + state.gallery.length) % state.gallery.length; render(); }
+        function next(){ state.idx = (state.idx + 1) % state.gallery.length; render(); }
+        function onKey(ev){
+          if (ev.key === "Escape") closeLB();
+          else if (ev.key === "ArrowLeft") prev();
+          else if (ev.key === "ArrowRight") next();
+        }
+    
+        thumbs.forEach(a => {
+          a.addEventListener("click", ev => {
+            ev.preventDefault(); // 不另開新分頁
+            openLB(parseInt(a.dataset.idx, 10) || 0);
+          });
+        });
+    
+        lb.querySelector(".lb-close").addEventListener("click", closeLB);
+        lb.querySelector(".lb-prev").addEventListener("click", prev);
+        lb.querySelector(".lb-next").addEventListener("click", next);
+        lb.addEventListener("click", ev => { if (ev.target === lb) closeLB(); });
+    
+        // 觸控滑動
+        let startX = 0;
+        lb.addEventListener("touchstart", e => { startX = e.touches[0].clientX; }, {passive:true});
+        lb.addEventListener("touchend", e => {
+          const dx = e.changedTouches[0].clientX - startX;
+          if (Math.abs(dx) > 40) (dx < 0 ? next : prev)();
+        }, {passive:true});
+      }
+    }
     
       // 寫入並開啟對話框
       dialogBody.innerHTML = html;
