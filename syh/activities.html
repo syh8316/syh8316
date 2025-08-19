@@ -381,29 +381,24 @@
         summary: "農曆 11/14。",
         type: "upcoming"
       },
+      /* ============== 歷史活動 ============= */
       {
-        id: "h-2024-12-25",
-        title: "《龍城爭霸》— 雲林場",
-        dateStart: "2024-12-25T19:30:00+08:00",
-        location: "雲林表演藝術中心",
-        city: "雲林縣",
-        cover: "https://picsum.photos/seed/longcheng/800/500",
-        tags: ["歌仔戲","巡演"],
-        summary: "融合傳統與現代舞台技術的全新演繹。",
-        gallery: ["https://picsum.photos/seed/a1/1200/800","https://picsum.photos/seed/a2/1200/800"],
+        id: "h-2023-7-25",
+        title: "《劉海戲金禪》老爺戲 — 南投縣",
+        dateStart: "2023-7-25",
+        location: "南投縣",
+        tags: ["歌仔戲","南投"],
+        summary: "祝壽一帽換新歲，一戲祝千祥",
+        gallery: ["img/老爺戲/1.jpg",
+                  "img/老爺戲/2.jpg",
+                  "img/老爺戲/3.jpg",
+                  "img/老爺戲/4.jpg",
+                  "img/老爺戲/5.jpg",
+                  "img/老爺戲/6.jpg"
+                 ],
         type: "past"
       },
-      {
-        id: "h-2024-04-28",
-        title: "《八仙傳奇》— 高雄場",
-        dateStart: "2024-04-28T19:00:00+08:00",
-        location: "衛武營表演廳",
-        city: "高雄市",
-        cover: "https://picsum.photos/seed/baxian/800/500",
-        tags: ["歌仔戲","經典"],
-        summary: "經典八仙故事，融合現代燈光與多媒體舞台。",
-        type: "past"
-      },
+      /* ============== 作品集 ============= */
       {
         id: "p-ig-luwenlong",
         title: "經典電視歌仔戲《陸文龍》戲中曲調",
@@ -586,6 +581,38 @@
           </div>
         </div>
       `;
+      let html = `
+        <div class="detail">
+          <div class="detail-info">
+            <h3>${e.title}</h3>
+            <p>🗓 ${formatDate(e.dateStart)}${e.dateEnd ? ' - ' + formatDate(e.dateEnd) : ''}</p>
+            <p>📍 ${e.location || ''}${e.city ? '（' + e.city + '）' : ''}</p>
+            <div class="chips">${createTagChips(e.tags || [])}</div>
+            <p class="detail-desc">${e.summary || ""}</p>
+            <div class="detail-actions">
+              ${e.ticketUrl ? `<a class="btn primary" href="${e.ticketUrl}" target="_blank" rel="noopener">前往報名</a>` : ""}
+              ${e.videoUrl ? `<a class="btn" href="${e.videoUrl}" target="_blank" rel="noopener">觀看影片</a>` : ""}
+            </div>
+          </div>
+        </div>
+      `;
+    
+      if (e.gallery && e.gallery.length) {
+        const galleryHTML = `
+          <h4 class="gallery-title">現場照片</h4>
+          <div class="gallery-grid">
+            ${e.gallery.map((src, i) => `
+              <a href="${src}" target="_blank" rel="noopener">
+                <img src="${src}" alt="${e.title} 現場照片 ${i+1}" loading="lazy"
+                     onerror="this.style.display='none'">
+              </a>
+            `).join("")}
+          </div>
+        `;
+        html += galleryHTML;
+      }
+    
+      dialogBody.innerHTML = html;
       dialog.showModal();
     }
     dialog.addEventListener("click", (ev) => {
