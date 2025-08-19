@@ -206,3 +206,33 @@ body{
 .video-embed iframe{
   position:absolute; inset:0; width:100%; height:100%; display:block;
 }
+
+/* Lightbox 觀賞器 */
+.lightbox{
+  position: fixed; inset: 0;
+  display: grid; place-items: center;
+  background: rgba(0,0,0,.8);
+  z-index: 1000;
+}
+.lightbox[hidden]{ display:none; }
+.lb-img{
+  max-width: 92vw; max-height: 82vh;
+  border-radius: 12px; border: 1px solid #1b2230;
+  background: #0b0c0f;
+}
+.lb-prev, .lb-next, .lb-close{
+  position: absolute; border: 1px solid #1b2230; background: #0f1420;
+  color: #e5e7eb; border-radius: 10px; padding: .4rem .6rem; cursor: pointer;
+}
+.lb-prev, .lb-next{ top: 50%; transform: translateY(-50%); font-size: 1.6rem; line-height: 1; }
+.lb-prev{ left: 10px; } .lb-next{ right: 10px; }
+.lb-close{ top: 10px; right: 10px; font-size: 1rem; }
+.lb-counter{
+  position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+  background: rgba(15,20,32,.8); border: 1px solid #1b2230;
+  padding: .25rem .5rem; border-radius: 8px; font-size: .9rem; color:#e5e7eb;
+}
+
+/* 讓縮圖點起來更好點 */
+.gallery-grid a{ display:block; border-radius:10px; overflow:hidden; }
+.gallery-grid img{ width:100%; height:100%; object-fit:cover; display:block; }
