@@ -437,6 +437,81 @@
       return tags.map(t => `<span class="chip" data-chip="${t}">${t}</span>`).join("");
     }
 
+    // 只要 event 有 videoFile 或 videoUrl，就會在詳情彈窗插入影片
+    function ensureIGScript() {
+      if (!document.querySelector('script[src*="instagram.com/embed.js"]')) {
+        const s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.instagram.com/embed.js';
+        document.body.appendChild(s);
+      } else {
+        window.instgrm?.Embeds?.process();
+      }
+    }
+    
+    function buildVideoBlock(e){
+      // 站內 mp4
+      if (e.videoFile) {
+        return `
+          <h4 class="gallery-title">影片</h4>
+          <video class="detail-video" controls preload="metadata" playsinline>
+            <source src="${e.videoFile}" type="video/mp4">
+            你的瀏覽器不支援影片播放。
+          </video>
+        `;
+      }
+    
+      // YouTube
+      if (e.videoUrl && /(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_\-]+)/.test(e.videoUrl)) {
+        const id = RegExp.$1;
+        return `
+          <h4 class="gallery-title">影片</h4>
+          <div class="video-embed">
+            <iframe
+              src="https://www.youtube.com/embed/${id}"
+              title="YouTube video player" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen loading="lazy"></iframe>
+          </div>
+        `;
+      }
+    
+      // Vimeo
+      if (e.videoUrl && /vimeo\.com\/(\d+)/.test(e.videoUrl)) {
+        const id = RegExp.$1;
+        return `
+          <h4 class="gallery-title">影片</h4>
+          <div class="video-embed">
+            <iframe
+              src="https://player.vimeo.com/video/${id}"
+              frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
+              allowfullscreen loading="lazy"></iframe>
+          </div>
+        `;
+      }
+    
+      // Instagram（Reels / 貼文）
+      if (e.videoUrl && /instagram\.com/.test(e.videoUrl)) {
+        ensureIGScript();
+        // 讓 IG 重新掃描載入
+        setTimeout(() => window.instgrm?.Embeds?.process(), 0);
+        return `
+          <h4 class="gallery-title">影片</h4>
+          <blockquote class="instagram-media" data-instgrm-permalink="${e.videoUrl}" data-instgrm-captioned style="background:#0b0c0f; border:0; margin: 0 auto; max-width:540px; width:100%"></blockquote>
+        `;
+      }
+    
+      // 其他連結：給一個外開按鈕
+      if (e.videoUrl) {
+        return `
+          <h4 class="gallery-title">影片</h4>
+          <p><a class="btn primary" href="${e.videoUrl}" target="_blank" rel="noopener">前往觀看</a></p>
+        `;
+      }
+    
+      return "";
+    }
+
     function populateTagFilter() {
       const set = new Set();
       events.forEach(e => (e.tags || []).forEach(t => set.add(t)));
@@ -567,21 +642,8 @@
     function openDetail(id) {
       const e = events.find(x => x.id === id);
       if (!e) return;
-      dialogBody.innerHTML = `
-        <div class="detail">
-          <div class="detail-info">
-            <h3>${e.title}</h3>
-            <p>🗓 ${formatDate(e.dateStart)}${e.dateEnd ? ' - ' + formatDate(e.dateEnd) : ''}</p>
-            <p>📍 ${e.location || ''}${e.city ? '（' + e.city + '）' : ''}</p>
-            <div class="chips">${createTagChips(e.tags || [])}</div>
-            <p class="detail-desc">${e.summary || ""}</p>
-            <div class="detail-actions">
-              ${e.ticketUrl ? `<a class="btn primary" href="${e.ticketUrl}" target="_blank" rel="noopener">前往報名</a>` : ""}
-              ${e.videoUrl ? `<a class="btn" href="${e.videoUrl}" target="_blank" rel="noopener">觀看影片</a>` : ""}
-            </div>
-          </div>
-        </div>
-      `;
+    
+      // 基本資訊
       let html = `
         <div class="detail">
           <div class="detail-info">
@@ -592,14 +654,67 @@
             <p class="detail-desc">${e.summary || ""}</p>
             <div class="detail-actions">
               ${e.ticketUrl ? `<a class="btn primary" href="${e.ticketUrl}" target="_blank" rel="noopener">前往報名</a>` : ""}
-              ${e.videoUrl ? `<a class="btn" href="${e.videoUrl}" target="_blank" rel="noopener">觀看影片</a>` : ""}
+              ${e.videoUrl ? `<a class="btn" href="${e.videoUrl}" target="_blank" rel="noopener">另開影片</a>` : ""}
             </div>
           </div>
         </div>
       `;
     
+      // 影片區塊（videoFile / videoUrl 皆可）
+      let needIGProcess = false;
+      if (e.videoFile) {
+        html += `
+          <h4 class="gallery-title">影片</h4>
+          <video class="detail-video" controls preload="metadata" playsinline>
+            <source src="${e.videoFile}" type="video/mp4">
+            你的瀏覽器不支援影片播放。
+          </video>
+        `;
+      } else if (e.videoUrl) {
+        const yt = e.videoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_\-]+)/);
+        const vm = e.videoUrl.match(/vimeo\.com\/(\d+)/);
+        const isIG = /instagram\.com/.test(e.videoUrl);
+    
+        if (yt) {
+          const id = yt[1];
+          html += `
+            <h4 class="gallery-title">影片</h4>
+            <div class="video-embed">
+              <iframe
+                src="https://www.youtube.com/embed/${id}"
+                title="YouTube video player" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen loading="lazy"></iframe>
+            </div>
+          `;
+        } else if (vm) {
+          const id = vm[1];
+          html += `
+            <h4 class="gallery-title">影片</h4>
+            <div class="video-embed">
+              <iframe
+                src="https://player.vimeo.com/video/${id}"
+                frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen loading="lazy"></iframe>
+            </div>
+          `;
+        } else if (isIG) {
+          needIGProcess = true;
+          html += `
+            <h4 class="gallery-title">影片</h4>
+            <blockquote class="instagram-media"
+                        data-instgrm-permalink="${e.videoUrl}"
+                        data-instgrm-captioned
+                        style="background:#0b0c0f; border:0; margin:0 auto; max-width:540px; width:100%"></blockquote>
+          `;
+        } else {
+          // 其他連結：顯示外開按鈕（上面已加），這裡就不再內嵌
+        }
+      }
+    
+      // 相簿（可選）
       if (e.gallery && e.gallery.length) {
-        const galleryHTML = `
+        html += `
           <h4 class="gallery-title">現場照片</h4>
           <div class="gallery-grid">
             ${e.gallery.map((src, i) => `
@@ -610,12 +725,27 @@
             `).join("")}
           </div>
         `;
-        html += galleryHTML;
       }
     
+      // 寫入並開啟對話框
       dialogBody.innerHTML = html;
       dialog.showModal();
+    
+      // Instagram 嵌入：載入/刷新官方腳本
+      if (needIGProcess) {
+        const exist = document.querySelector('script[src*="instagram.com/embed.js"]');
+        if (!exist) {
+          const s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.instagram.com/embed.js';
+          s.onload = () => window.instgrm?.Embeds?.process();
+          document.body.appendChild(s);
+        } else {
+          window.instgrm?.Embeds?.process();
+        }
+      }
     }
+
     dialog.addEventListener("click", (ev) => {
       const rect = dialog.querySelector(".dialog-body").getBoundingClientRect?.() || dialog.getBoundingClientRect();
       const inDialog = ev.clientX >= rect.left && ev.clientX <= rect.right && ev.clientY >= rect.top && ev.clientY <= rect.bottom;
