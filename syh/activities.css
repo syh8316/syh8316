@@ -236,3 +236,23 @@ body{
 /* 讓縮圖點起來更好點 */
 .gallery-grid a{ display:block; border-radius:10px; overflow:hidden; }
 .gallery-grid img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+/* 作品集：外部影片改用可點卡片（不內嵌） */
+.video-link{
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16/9;
+  border: 1px solid #1b2230;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(180deg,#151922,#0e1118);
+  text-decoration: none;
+}
+.vl-center{
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  gap: .6rem; font-weight: 600; color: #e5e7eb;
+}
+.vl-play{ font-size: 2.2rem; line-height: 1; }
+.video-link:hover{ outline: 2px solid #2b3342; }
