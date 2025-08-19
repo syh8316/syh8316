@@ -678,10 +678,10 @@
         </div>
       `;
     
-      // 影片（若有）
-      html += buildVideoBlock ? buildVideoBlock(e) : "";
+      // 影片（若有；你檔案裡已經有 buildVideoBlock/ensureIGScript）
+      html += (typeof buildVideoBlock === "function") ? buildVideoBlock(e) : "";
     
-      // 照片縮圖格
+      // 照片縮圖格 + lightbox
       if (e.gallery && e.gallery.length) {
         html += `
           <h4 class="gallery-title">現場照片</h4>
@@ -694,7 +694,6 @@
             `).join("")}
           </div>
     
-          <!-- Lightbox 觀賞器 -->
           <div class="lightbox" id="lightbox" hidden aria-modal="true" role="dialog">
             <button class="lb-close" aria-label="關閉">✕</button>
             <button class="lb-prev" aria-label="上一張">‹</button>
@@ -734,11 +733,10 @@
     
         thumbs.forEach(a => {
           a.addEventListener("click", ev => {
-            ev.preventDefault(); // 不另開新分頁
+            ev.preventDefault();
             openLB(parseInt(a.dataset.idx, 10) || 0);
           });
         });
-    
         lb.querySelector(".lb-close").addEventListener("click", closeLB);
         lb.querySelector(".lb-prev").addEventListener("click", prev);
         lb.querySelector(".lb-next").addEventListener("click", next);
