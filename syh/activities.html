@@ -654,14 +654,17 @@
       renderPortfolio($("#portfolioList"), kw, tg);
     }
 
-    /* ============== 5) 詳情 Modal（不顯示圖片） ============== */
+    /* ============== 5) 詳情 Modal ============== */
     const dialog = $("#eventDialog");
     const dialogBody = $("#dialogBody");
+    
     function openDetail(id) {
       const e = events.find(x => x.id === id);
       if (!e) return;
     
-      // 基本資訊
+      const isPortfolio = ((e.type || "").trim() === "portfolio");
+    
+      // 基本資訊（作品集時不顯示「另開影片」按鈕）
       let html = `
         <div class="detail">
           <div class="detail-info">
@@ -672,16 +675,48 @@
             <p class="detail-desc">${e.summary || ""}</p>
             <div class="detail-actions">
               ${e.ticketUrl ? `<a class="btn primary" href="${e.ticketUrl}" target="_blank" rel="noopener">前往報名</a>` : ""}
-              ${e.videoUrl ? `<a class="btn" href="${e.videoUrl}" target="_blank" rel="noopener">另開影片</a>` : ""}
+              ${(!isPortfolio && e.videoUrl) ? `<a class="btn" href="${e.videoUrl}" target="_blank" rel="noopener">另開影片</a>` : ""}
             </div>
           </div>
         </div>
       `;
     
-      // 影片（若有）
-      html += (typeof buildVideoBlock === "function") ? buildVideoBlock(e) : "";
+      // 影片區塊
+      if (e.videoFile) {
+        // 你的 mp4：在頁面內播放
+        html += `
+          <h4 class="gallery-title">影片</h4>
+          <video class="detail-video" controls preload="metadata" playsinline>
+            <source src="${e.videoFile}" type="video/mp4">
+            你的瀏覽器不支援影片播放。
+          </video>
+        `;
+      } else if (e.videoUrl) {
+        if (isPortfolio) {
+          // 作品集 + 外部連結：不內嵌，整塊可點出站
+          const provider =
+            /instagram\.com/.test(e.videoUrl) ? "Instagram" :
+            /(youtu\.be|youtube\.com)/.test(e.videoUrl) ? "YouTube" :
+            /vimeo\.com/.test(e.videoUrl) ? "Vimeo" : "外部平台";
+          html += `
+            <h4 class="gallery-title">影片</h4>
+            <a href="${e.videoUrl}" target="_blank" rel="noopener"
+               class="video-link" aria-label="前往${provider}觀看">
+              <div class="vl-center">
+                <span class="vl-play">▶</span>
+                <span>前往${provider}觀看</span>
+              </div>
+            </a>
+          `;
+        } else {
+          // 其他分類：若專案已定義 buildVideoBlock，就用它內嵌；沒有就單靠上面的「另開影片」按鈕
+          if (typeof buildVideoBlock === "function") {
+            html += buildVideoBlock(e);
+          }
+        }
+      }
     
-      // 照片縮圖格 + lightbox
+      // 相簿（含 lightbox）
       if (e.gallery && e.gallery.length) {
         html += `
           <h4 class="gallery-title">現場照片</h4>
@@ -704,16 +739,17 @@
         `;
       }
     
+      // 寫入並開啟對話框
       dialogBody.innerHTML = html;
       dialog.showModal();
     
-      // 綁定縮圖 → 開啟 lightbox
+      // 綁定 lightbox（左右切換、鍵盤、滑鼠拖曳、觸控）
       const grid = dialogBody.querySelector(".gallery-grid");
       const lb   = dialogBody.querySelector("#lightbox");
       if (grid && lb) {
         const thumbs = Array.from(grid.querySelectorAll("a"));
         const state = { idx: 0, gallery: e.gallery.slice(), title: e.title };
-
+    
         function render() {
           const img = lb.querySelector(".lb-img");
           const counter = lb.querySelector(".lb-counter");
@@ -733,44 +769,41 @@
     
         thumbs.forEach(a => {
           a.addEventListener("click", ev => {
-            ev.preventDefault();        // 不另開
+            ev.preventDefault();
             openLB(parseInt(a.dataset.idx, 10) || 0);
           });
         });
-      
-        // ★ 防止點箭頭時關閉（阻止冒泡到遮罩）
+    
+        // 防止點箭頭/關閉鈕時被當作點到遮罩
         lb.querySelector(".lb-close").addEventListener("click", (ev) => { ev.stopPropagation(); closeLB(); });
         lb.querySelector(".lb-prev").addEventListener("click", (ev) => { ev.stopPropagation(); prev(); });
         lb.querySelector(".lb-next").addEventListener("click", (ev) => { ev.stopPropagation(); next(); });
-      
-        // 點遮罩才關閉（保留原本判斷）
+    
+        // 點遮罩才關閉
         lb.addEventListener("click", ev => { if (ev.target === lb) closeLB(); });
-
-        // ★ 桌機也能「拖曳切換」
+    
+        // 滑鼠拖曳（桌機）
         let dragStartX = null;
-        lb.addEventListener("mousedown", e => {
-          if (e.button !== 0) return;   // 只吃左鍵
-          dragStartX = e.clientX;
-        });
-        lb.addEventListener("mouseup", e => {
+        lb.addEventListener("mousedown", e => { if (e.button === 0) dragStartX = e.clientX; });
+        lb.addEventListener("mouseup",   e => {
           if (dragStartX == null) return;
           const dx = e.clientX - dragStartX;
           if (Math.abs(dx) > 40) (dx < 0 ? next() : prev());
           dragStartX = null;
         });
         lb.addEventListener("mouseleave", () => { dragStartX = null; });
-      
-        // 觸控滑動（原本就有，保留）
+    
+        // 觸控滑動（手機/平板）
         let startX = 0;
         lb.addEventListener("touchstart", e => { startX = e.touches[0].clientX; }, {passive:true});
-        lb.addEventListener("touchend", e => {
+        lb.addEventListener("touchend",   e => {
           const dx = e.changedTouches[0].clientX - startX;
           if (Math.abs(dx) > 40) (dx < 0 ? next() : prev());
         }, {passive:true});
       }
     }
     
-    // （函式外）全域事件：這些要保留
+    // （函式外）全域事件：保留這兩個
     dialog.addEventListener("click", (ev) => {
       const rect = dialog.querySelector(".dialog-body").getBoundingClientRect?.() || dialog.getBoundingClientRect();
       const inDialog = ev.clientX >= rect.left && ev.clientX <= rect.right && ev.clientY >= rect.top && ev.clientY <= rect.bottom;
