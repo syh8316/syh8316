@@ -237,7 +237,7 @@ body{
 .gallery-grid a{ display:block; border-radius:10px; overflow:hidden; }
 .gallery-grid img{ width:100%; height:100%; object-fit:cover; display:block; }
 
-/* 作品集：外部影片改用可點卡片（不內嵌） */
+/* 作品集：外部影片改用可點縮圖卡（不內嵌） */
 .video-link{
   position: relative;
   display: block;
@@ -249,10 +249,17 @@ body{
   background: linear-gradient(180deg,#151922,#0e1118);
   text-decoration: none;
 }
+.video-link.has-thumb img{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+  filter: brightness(.86);
+}
 .vl-center{
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
   gap: .6rem; font-weight: 600; color: #e5e7eb;
+  text-shadow: 0 1px 2px rgba(0,0,0,.6);
 }
 .vl-play{ font-size: 2.2rem; line-height: 1; }
 .video-link:hover{ outline: 2px solid #2b3342; }
+
