@@ -25,6 +25,7 @@
         <a class="subnav-link" href="#latest" data-tab="latest" aria-current="page">最新活動</a>
         <a class="subnav-link" href="#history" data-tab="history">活動紀錄</a>
         <a class="subnav-link" href="#portfolio" data-tab="portfolio">作品集</a>
+        <a class="subnav-link" href="#album" data-tab="album">相簿</a>
       </nav>
     </div>
   </header>
@@ -63,6 +64,13 @@
       <div id="portfolioList" class="masonry" aria-live="polite"></div>
       <div class="empty" id="portfolioEmpty" hidden>尚未建立作品集項目。</div>
     </section>
+
+    <section id="panel-album" class="panel" role="region" aria-labelledby="tab-album" hidden>
+      <h2 id="tab-album" class="panel-title">像簿</h2>
+      <div id="albumList" class="masonry" aria-live="polite"></div>
+      <div class="empty" id="albumEmpty" hidden>目前尚未建立相片集。</div>
+    </section>
+
   </main>
 
   <!-- 活動詳情 Modal（不顯示圖片） -->
@@ -430,6 +438,21 @@
         videoUrl: "https://www.instagram.com/reel/DNahemuyJDC/?igsh=ODhwNGhtZms0dHQ4",
         videoThumb: "img/陸文龍花絮.jpg",
         type: "portfolio"
+      },
+      /* ============== 相簿 ============= */
+      {
+        id: "新北板橋深秋",    // 自訂 ID
+        title: "新北板橋深秋",
+        location: "排練場／現場",
+        tags: ["相片","歌仔戲"],
+        summary: "排練與開演前後的照片。",
+        type: "album",
+        gallery: [
+          "img/album/luwenlong/01.jpg",
+          "img/album/luwenlong/02.jpg",
+          "img/album/luwenlong/03.jpg",
+          "img/album/luwenlong/04.jpg"
+        ]
       }
     ];
 
@@ -590,6 +613,20 @@
       </figure>`;
     }
 
+    function albumHTML(e){
+      return `
+      <figure class="masonry-item" tabindex="0" aria-label="${e.title}">
+        <figcaption>
+          <h3>${e.title}</h3>
+          <p>🗓 ${formatDate(e.dateStart)}${e.dateEnd ? ' - ' + formatDate(e.dateEnd) : ''}｜${e.location || ''}</p>
+          <div class="chips">${createTagChips(e.tags || [])}</div>
+          <div class="card-actions">
+            <button class="btn ghost" data-detail="${e.id}">看詳情</button>
+          </div>
+        </figcaption>
+      </figure>`;
+    }
+
     /* ============== 3) 渲染（依 type 分頁，日期只排序不顯示時間） ============== */
     const safeTime = iso => Number.isFinite(Date.parse(iso)) ? Date.parse(iso) : NaN;
     function matchKeyword(e, kw) {
@@ -629,12 +666,23 @@
       $("#portfolioEmpty").hidden = data.length !== 0;
     }
 
+    function renderAlbum(list, kw="", tag="") {
+      const data = events
+        .filter(e => (e.type || "").trim() === "album")
+        .filter(e => matchKeyword(e, kw) && matchTag(e, tag))
+        .sort((a,b) => (Number.isFinite(safeTime(b.dateStart)) ? safeTime(b.dateStart) : -Infinity) - (Number.isFinite(safeTime(a.dateStart)) ? safeTime(a.dateStart) : -Infinity));
+      list.innerHTML = data.map(albumHTML).join("");
+      $("#albumEmpty").hidden = data.length !== 0;
+    }
+
     /* ============== 4) 分頁切換（hash 路由） ============== */
     const panels = {
       latest: $("#panel-latest"),
       history: $("#panel-history"),
       portfolio: $("#panel-portfolio"),
+      album: $("#panel-album"),
     };
+
     function switchTab(tab) {
       Object.entries(panels).forEach(([k, el]) => el.hidden = (k !== tab));
       $$(".subnav-link").forEach(a => {
@@ -653,6 +701,7 @@
       renderLatest($("#latestList"), kw, tg);
       renderHistory($("#historyList"), kw, tg);
       renderPortfolio($("#portfolioList"), kw, tg);
+      renderAlbum($("#albumList"), kw, tg);
     }
 
     /* ============== 5) 詳情 Modal ============== */
