@@ -263,3 +263,30 @@ body{
 .vl-play{ font-size: 2.2rem; line-height: 1; }
 .video-link:hover{ outline: 2px solid #2b3342; }
 
+/* 修：搜尋欄位只能顯示一個字 */
+.filters{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;                /* 空間不夠就換行，避免把 input 壓扁 */
+}
+
+.search{
+  flex: 1 1 420px;               /* 可伸縮，基準寬 ~420px */
+  min-width: 260px;              /* 至少 260px，保證可輸入多個字 */
+  max-width: 720px;              /* 避免太長 */
+  padding: 10px 12px;
+  border: 1px solid #1b2230;
+  border-radius: 10px;
+  background: #0b0c0f;
+  color: #e5e7eb;
+}
+
+.tag-filter{
+  flex: 0 0 180px;               /* 下拉不要擠壓 input */
+  min-width: 160px;
+}
+
+@media (min-width: 1024px){
+  .search{ flex-basis: 540px; }  /* 桌機時更寬一些 */
+}
