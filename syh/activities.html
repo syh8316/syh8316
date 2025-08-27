@@ -253,9 +253,9 @@
       },
       {
         id: "u-20251029-banqiao-shenqiu-fude",
-        title: "新北板橋深秋",
+        title: "新北板橋深丘",
         dateStart: "2025-10-29",
-        location: "新北板橋深秋",
+        location: "新北板橋深丘",
         tags: ["宮廟","新北"],
         summary: "農曆 9/9。",
         type: "upcoming"
@@ -754,7 +754,9 @@
         if (a.dataset.tab === tab) a.setAttribute("aria-current", "page");
         else a.removeAttribute("aria-current");
       });
-      document.activeElement && document.activeElement.blur();
+       // ✅ 只在不是搜尋/下拉時才 blur，避免輸入被中斷
+      const ae = document.activeElement;
+      if (ae && !["search","tagFilter"].includes(ae.id)) ae.blur();
     }
 
     function handleHashChange() {
