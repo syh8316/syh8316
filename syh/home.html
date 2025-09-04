@@ -80,17 +80,21 @@
     </head>
 
     <body>
+        <!-- 開門動畫遮罩（放在 body 最上面） -->
         <div id="door-overlay" aria-hidden="true">
           <div class="door door-left"></div>
           <div class="door door-right"></div>
+        
           <div class="brand-wrap">
             <div class="brand">
+              <!-- 圖片路徑：把「完整抬頭.png」放在 home.html 同層；若放 img/ 就改成 ./img/完整抬頭.png -->
               <img src="./完整抬頭.png" alt="新義和歌劇團 抬頭">
             </div>
           </div>
+        
           <button class="skip-btn" id="skipDoor" type="button">略過動畫 ↦</button>
         </div>
-
+        
         <header class="site-header">
           <!-- 導覽列或頁首區塊 -->
           <a href="https://syh8316.github.io/syh8316/syh/home.html" title="回首頁：新義和歌劇團">
@@ -383,34 +387,59 @@
         (function(){
           const overlay = document.getElementById('door-overlay');
           const skipBtn = document.getElementById('skipDoor');
-          const site = document.querySelector('main')?.parentNode; // body 內主內容
         
+          const showOncePerTab = true;   // 同分頁只播一次
           const playedKey = 'doorPlayed';
-          if (sessionStorage.getItem(playedKey) === '1') {
+          const idleMs = 1600;           // 停留展示 LOGO 時間
+          const animMs = 1200;           // 推門動畫時間（要和 CSS 對齊）
+        
+          // 已播過就直接顯示
+          if (showOncePerTab && sessionStorage.getItem(playedKey) === '1') {
             document.documentElement.classList.add('opened');
-            site.querySelector('.site-content')?.style.visibility = 'visible';
-            overlay.style.display = 'none';
             return;
           }
         
-          setTimeout(() => {
-            document.documentElement.classList.add('opening');
-            setTimeout(finishOpen, 1200);
-          }, 1600);
+          // 進站鎖捲動，避免背景晃動
+          const lockScroll   = () => { document.body.style.overflow = 'hidden'; };
+          const unlockScroll = () => { document.body.style.overflow = ''; };
+          lockScroll();
         
-          skipBtn.addEventListener('click', finishOpen);
+          // 等圖片就緒再開始計時（避免圖片慢載導致空白）
+          const startFlow = () => {
+            setTimeout(() => {
+              document.documentElement.classList.add('opening');         // 開門
+              setTimeout(finishOpen, animMs);                            // 動畫結束收尾
+            }, idleMs);
+          };
+          const brandImg = overlay.querySelector('.brand img');
+          if (brandImg && !brandImg.complete) {
+            brandImg.addEventListener('load', startFlow, { once: true });
+            brandImg.addEventListener('error', startFlow, { once: true }); // 載入失敗也放行
+          } else {
+            startFlow();
+          }
         
-          function finishOpen() {
+          // 略過按鈕
+          skipBtn.addEventListener('click', () => finishOpen(true));
+        
+          // 最終收尾
+          function finishOpen(skipped = false){
             document.documentElement.classList.remove('opening');
             document.documentElement.classList.add('opened');
-            sessionStorage.setItem(playedKey, '1');
+            if (showOncePerTab) sessionStorage.setItem(playedKey, '1');
+            unlockScroll();
           }
+        
+          // 保險：最久 idle+anim+800ms 也放行
+          setTimeout(() => {
+            if (!document.documentElement.classList.contains('opened')) finishOpen(true);
+          }, idleMs + animMs + 800);
         })();
         </script>
-
     </body>
 
 </html>
+
 
 
 
