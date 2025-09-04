@@ -80,15 +80,12 @@
     </head>
 
     <body>
-        <!-- 開門動畫遮罩（整張圖當門，剪成左右兩半） -->
-        <div id="door-overlay" aria-hidden="true">
-          <div class="door door-left">
-            <img src="./完整抬頭.png" alt="新義和歌劇團 抬頭">
-          </div>
-          <div class="door door-right">
-            <img src="./完整抬頭.png" alt="新義和歌劇團 抬頭">
-          </div>
+        <!-- 進場覆蓋層：整張照片覆蓋畫面，稍後淡出 -->
+        <div id="splash-overlay" aria-hidden="true">
+          <!-- 路徑以 home.html 為基準，若圖片在 img/ 資料夾，請用 ./img/完整抬頭.png -->
+          <img src="./img/完整抬頭.png" alt="新義和歌劇團 抬頭">
         </div>
+
         <header class="site-header">
           <!-- 導覽列或頁首區塊 -->
           <a href="https://syh8316.github.io/syh8316/syh/home.html" title="回首頁：新義和歌劇團">
@@ -379,66 +376,52 @@
         </footer>
         <script>
         (function () {
-          // 取得覆蓋層與第一張門圖（左右門各一張相同圖片）
-          const overlay = document.getElementById('door-overlay');
-          if (!overlay) return; // 沒有覆蓋層就不做事
+          const splash = document.getElementById('splash-overlay');
+          if (!splash) return;
         
-          // 是否每次都播；若你只想第一次播，改成 true 並配合 sessionStorage
-          const showOncePerTab = false;
-          const playedKey = 'doorPlayed_v2';
-          const forceIntro = new URLSearchParams(location.search).get('intro') === '1';
-        
-          // 已播過就直接跳過（只有 showOncePerTab=true 時才生效）
-          if (!forceIntro && showOncePerTab && sessionStorage.getItem(playedKey) === '1') {
-            document.documentElement.classList.add('opened');
-            return;
-          }
-        
-          // 參數：等待展示時間 + 開門動畫時間（需與 CSS 動畫時間一致）
-          const idleMs = 1600;  // 停留展示整張圖
-          const animMs = 1200;  // 推門動畫，對應 total.css 的 transition
+          // 參數：等待展示＋淡出時間（需與 CSS 對齊）
+          const idleMs = 1600;   // 停留展示整張圖的時間
+          const fadeMs = 800;    // 淡出持續時間（CSS 也會設定 800ms）
         
           // 進站先鎖捲動，避免背景晃動
-          const lockScroll = () => { document.body.style.overflow = 'hidden'; };
+          const lockScroll   = () => { document.body.style.overflow = 'hidden'; };
           const unlockScroll = () => { document.body.style.overflow = ''; };
           lockScroll();
         
-          // 啟動流程：先等 idle，再加 'opening'，動畫結束後收尾
+          // 圖片載入後再開始計時（避免還沒載入就黑屏）
           const startFlow = () => {
             setTimeout(() => {
-              document.documentElement.classList.add('opening');      // 開門
-              setTimeout(finishOpen, animMs);                         // 動畫結束
+              splash.classList.add('is-fading');         // 觸發淡出
+              // 動畫結束 → 移除覆蓋層 + 解鎖捲動
+              setTimeout(() => {
+                splash.remove();
+                unlockScroll();
+              }, fadeMs);
             }, idleMs);
           };
         
-          // 收尾：打開完成 → 標記 opened、解鎖捲動、記錄（可選）
-          function finishOpen() {
-            document.documentElement.classList.remove('opening');
-            document.documentElement.classList.add('opened');
-            if (showOncePerTab) sessionStorage.setItem(playedKey, '1');
-            unlockScroll();
-          }
-        
-          // 等「第一張門圖」載入（避免還沒載到圖就開始計時）
-          const firstDoorImg = overlay.querySelector('.door img');
-          if (firstDoorImg && !firstDoorImg.complete) {
-            firstDoorImg.addEventListener('load', startFlow,  { once: true });
-            firstDoorImg.addEventListener('error', startFlow, { once: true });
+          const img = splash.querySelector('img');
+          if (img && !img.complete) {
+            img.addEventListener('load', startFlow,  { once: true });
+            img.addEventListener('error', startFlow, { once: true });
           } else {
-            // 已快取完成或找不到圖，也直接開始（避免卡住）
             startFlow();
           }
         
-          // 安全網：就算某些裝置載入很慢，idle+anim+800ms 也會自動放行
+          // 安全網：即使某些裝置載入很慢，最久 idle+fade+800ms 也會放行
           setTimeout(() => {
-            if (!document.documentElement.classList.contains('opened')) finishOpen();
-          }, idleMs + animMs + 800);
+            if (document.getElementById('splash-overlay')) {
+              splash.remove();
+              unlockScroll();
+            }
+          }, idleMs + fadeMs + 800);
         })();
         </script>
 
     </body>
 
 </html>
+
 
 
 
