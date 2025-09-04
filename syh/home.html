@@ -390,7 +390,7 @@
           const forceIntro = new URLSearchParams(location.search).get('intro') === '1';
         
           // ✅ 想要每次都播，把這行設成 false
-          const showOncePerTab = true;
+          const showOncePerTab = false;
         
           // 已播過就直接顯示（除非強制播放）
           if (!forceIntro && showOncePerTab && sessionStorage.getItem(playedKey) === '1') {
@@ -424,7 +424,6 @@
           function finishOpen(){
             document.documentElement.classList.remove('opening');
             document.documentElement.classList.add('opened');
-            if (showOncePerTab) sessionStorage.setItem(playedKey, '1');
             document.body.style.overflow = '';
           }
         
@@ -438,3 +437,4 @@
     </body>
 
 </html>
+
