@@ -80,6 +80,17 @@
     </head>
 
     <body>
+        <div id="door-overlay" aria-hidden="true">
+          <div class="door door-left"></div>
+          <div class="door door-right"></div>
+          <div class="brand-wrap">
+            <div class="brand">
+              <img src="./完整抬頭.png" alt="新義和歌劇團 抬頭">
+            </div>
+          </div>
+          <button class="skip-btn" id="skipDoor" type="button">略過動畫 ↦</button>
+        </div>
+
         <header class="site-header">
           <!-- 導覽列或頁首區塊 -->
           <a href="https://syh8316.github.io/syh8316/syh/home.html" title="回首頁：新義和歌劇團">
@@ -368,9 +379,39 @@
                 </div>
             </div>
         </footer>
+        <script>
+        (function(){
+          const overlay = document.getElementById('door-overlay');
+          const skipBtn = document.getElementById('skipDoor');
+          const site = document.querySelector('main')?.parentNode; // body 內主內容
+        
+          const playedKey = 'doorPlayed';
+          if (sessionStorage.getItem(playedKey) === '1') {
+            document.documentElement.classList.add('opened');
+            site.querySelector('.site-content')?.style.visibility = 'visible';
+            overlay.style.display = 'none';
+            return;
+          }
+        
+          setTimeout(() => {
+            document.documentElement.classList.add('opening');
+            setTimeout(finishOpen, 1200);
+          }, 1600);
+        
+          skipBtn.addEventListener('click', finishOpen);
+        
+          function finishOpen() {
+            document.documentElement.classList.remove('opening');
+            document.documentElement.classList.add('opened');
+            sessionStorage.setItem(playedKey, '1');
+          }
+        })();
+        </script>
+
     </body>
 
 </html>
+
 
 
 
