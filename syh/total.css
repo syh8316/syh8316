@@ -458,7 +458,7 @@ body::after,
 }
 #door-overlay .door{
   /* 路徑：圖跟 total.css 同一層就用這個；若在 img/ 請改成 url("./img/完整抬頭.png") */
-  background-image: url("./完整抬頭.png");
+  background-image: url("./完整抬頭.png?v=1");
   background-repeat: no-repeat;
   /* 讓同一張圖橫向鋪成 200% 寬，剛好被兩扇門各佔一半 */
   background-size: 200% 100%;
@@ -477,3 +477,4 @@ html.opening #door-overlay .door-right { transform: translateX( 100%); }
 html.opened #door-overlay { display: none; }
 
 /*（保留你的 skip-btn 樣式即可，不需更動）*/
+
