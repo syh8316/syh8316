@@ -378,52 +378,58 @@
             </div>
         </footer>
         <script>
-        (function(){
+        (function () {
+          // 取得覆蓋層與第一張門圖（左右門各一張相同圖片）
           const overlay = document.getElementById('door-overlay');
+          if (!overlay) return; // 沒有覆蓋層就不做事
         
-          // ✅ 改成新的 key，避免以前的紀錄影響
+          // 是否每次都播；若你只想第一次播，改成 true 並配合 sessionStorage
+          const showOncePerTab = false;
           const playedKey = 'doorPlayed_v2';
-        
-          // ✅ URL 加上 ?intro=1 會強制播放
           const forceIntro = new URLSearchParams(location.search).get('intro') === '1';
         
-          // ✅ 想要每次都播，把這行設成 false
-          const showOncePerTab = false;
-        
-          // 已播過就直接顯示（除非強制播放）
+          // 已播過就直接跳過（只有 showOncePerTab=true 時才生效）
           if (!forceIntro && showOncePerTab && sessionStorage.getItem(playedKey) === '1') {
             document.documentElement.classList.add('opened');
             return;
           }
         
-          // 鎖捲動
-          document.body.style.overflow = 'hidden';
+          // 參數：等待展示時間 + 開門動畫時間（需與 CSS 動畫時間一致）
+          const idleMs = 1600;  // 停留展示整張圖
+          const animMs = 1200;  // 推門動畫，對應 total.css 的 transition
         
-          const idleMs = 1600;  // 停留展示 LOGO
-          const animMs = 1200;  // 推門動畫（要和 CSS 對齊）
+          // 進站先鎖捲動，避免背景晃動
+          const lockScroll = () => { document.body.style.overflow = 'hidden'; };
+          const unlockScroll = () => { document.body.style.overflow = ''; };
+          lockScroll();
         
+          // 啟動流程：先等 idle，再加 'opening'，動畫結束後收尾
           const startFlow = () => {
             setTimeout(() => {
-              document.documentElement.classList.add('opening');   // 開門
-              setTimeout(finishOpen, animMs);                      // 結束
+              document.documentElement.classList.add('opening');      // 開門
+              setTimeout(finishOpen, animMs);                         // 動畫結束
             }, idleMs);
           };
         
-          const img = overlay.querySelector('.brand img');
-          if (img && !img.complete) {
-            img.addEventListener('load', startFlow, { once: true });
-            img.addEventListener('error', startFlow, { once: true });
-          } else {
-            startFlow();
-          }
-            
-          function finishOpen(){
+          // 收尾：打開完成 → 標記 opened、解鎖捲動、記錄（可選）
+          function finishOpen() {
             document.documentElement.classList.remove('opening');
             document.documentElement.classList.add('opened');
-            document.body.style.overflow = '';
+            if (showOncePerTab) sessionStorage.setItem(playedKey, '1');
+            unlockScroll();
           }
         
-          // 保險：最久 idle+anim+800ms 也放行
+          // 等「第一張門圖」載入（避免還沒載到圖就開始計時）
+          const firstDoorImg = overlay.querySelector('.door img');
+          if (firstDoorImg && !firstDoorImg.complete) {
+            firstDoorImg.addEventListener('load', startFlow,  { once: true });
+            firstDoorImg.addEventListener('error', startFlow, { once: true });
+          } else {
+            // 已快取完成或找不到圖，也直接開始（避免卡住）
+            startFlow();
+          }
+        
+          // 安全網：就算某些裝置載入很慢，idle+anim+800ms 也會自動放行
           setTimeout(() => {
             if (!document.documentElement.classList.contains('opened')) finishOpen();
           }, idleMs + animMs + 800);
@@ -433,5 +439,6 @@
     </body>
 
 </html>
+
 
 
