@@ -383,70 +383,58 @@
           const overlay = document.getElementById('door-overlay');
           const skipBtn = document.getElementById('skipDoor');
         
-          const showOncePerTab = true;   // 同分頁只播一次
-          const playedKey = 'doorPlayed';
-          const idleMs = 1600;           // 停留展示 LOGO 時間
-          const animMs = 1200;           // 推門動畫時間（要和 CSS 對齊）
+          // ✅ 改成新的 key，避免以前的紀錄影響
+          const playedKey = 'doorPlayed_v2';
         
-          // 已播過就直接顯示
-          if (showOncePerTab && sessionStorage.getItem(playedKey) === '1') {
+          // ✅ URL 加上 ?intro=1 會強制播放
+          const forceIntro = new URLSearchParams(location.search).get('intro') === '1';
+        
+          // ✅ 想要每次都播，把這行設成 false
+          const showOncePerTab = true;
+        
+          // 已播過就直接顯示（除非強制播放）
+          if (!forceIntro && showOncePerTab && sessionStorage.getItem(playedKey) === '1') {
             document.documentElement.classList.add('opened');
             return;
           }
         
-          // 進站鎖捲動，避免背景晃動
-          const lockScroll   = () => { document.body.style.overflow = 'hidden'; };
-          const unlockScroll = () => { document.body.style.overflow = ''; };
-          lockScroll();
+          // 鎖捲動
+          document.body.style.overflow = 'hidden';
         
-          // 等圖片就緒再開始計時（避免圖片慢載導致空白）
+          const idleMs = 1600;  // 停留展示 LOGO
+          const animMs = 1200;  // 推門動畫（要和 CSS 對齊）
+        
           const startFlow = () => {
             setTimeout(() => {
-              document.documentElement.classList.add('opening');         // 開門
-              setTimeout(finishOpen, animMs);                            // 動畫結束收尾
+              document.documentElement.classList.add('opening');   // 開門
+              setTimeout(finishOpen, animMs);                      // 結束
             }, idleMs);
           };
-          const brandImg = overlay.querySelector('.brand img');
-          if (brandImg && !brandImg.complete) {
-            brandImg.addEventListener('load', startFlow, { once: true });
-            brandImg.addEventListener('error', startFlow, { once: true }); // 載入失敗也放行
+        
+          const img = overlay.querySelector('.brand img');
+          if (img && !img.complete) {
+            img.addEventListener('load', startFlow, { once: true });
+            img.addEventListener('error', startFlow, { once: true });
           } else {
             startFlow();
           }
         
-          // 略過按鈕
           skipBtn.addEventListener('click', () => finishOpen(true));
         
-          // 最終收尾
-          function finishOpen(skipped = false){
+          function finishOpen(){
             document.documentElement.classList.remove('opening');
             document.documentElement.classList.add('opened');
             if (showOncePerTab) sessionStorage.setItem(playedKey, '1');
-            unlockScroll();
+            document.body.style.overflow = '';
           }
         
           // 保險：最久 idle+anim+800ms 也放行
           setTimeout(() => {
-            if (!document.documentElement.classList.contains('opened')) finishOpen(true);
+            if (!document.documentElement.classList.contains('opened')) finishOpen();
           }, idleMs + animMs + 800);
         })();
         </script>
+
     </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
