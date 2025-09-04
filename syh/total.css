@@ -451,43 +451,39 @@ body::after,
 .bgm-unlock:hover{ transform: translateY(-1px); }
 .bgm-unlock[hidden]{ display: none !important; }
 
-/* ====== 開門動畫（全站共用） ====== */
-#door-overlay{
+/* ====== 開門動畫（整張圖分左右兩扇門） ====== */
+#door-overlay {
   position: fixed; inset: 0;
   z-index: 9999;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  background: #000;
+  grid-template-columns: 1fr 1fr; /* 左右各半 */
   overflow: hidden;
+  background: #000; /* 門縫打開時底色 */
 }
-#door-overlay .door{
-  background: #111;
+
+/* 左右門：用同一張圖的不同部分當背景 */
+#door-overlay .door {
+  background: url("./完整抬頭.png") no-repeat center center;
+  background-size: cover; /* 讓圖放大到剛好填滿整個畫面 */
   transition: transform 1.2s cubic-bezier(.2,.7,0,1);
   will-change: transform;
 }
-#door-overlay .door-left  { border-right: 1px solid rgba(255,255,255,.08); }
-#door-overlay .door-right { border-left:  1px solid rgba(255,255,255,.08); }
 
-#door-overlay .brand-wrap{
-  position: absolute; inset: 0;
-  display: grid; place-items: center;
-}
-#door-overlay .brand img{ max-width: 70%; height: auto; display: block; }
-
-#door-overlay .skip-btn{
-  position: absolute;
-  right: 16px; bottom: 16px;
-  background: rgba(255,255,255,.08);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,.25);
-  border-radius: 999px;
-  padding: 10px 14px;
-  font-size: 14px;
-  cursor: pointer;
-  backdrop-filter: blur(3px);
+/* 左半門：顯示圖片左半 */
+#door-overlay .door-left {
+  background-position: left center;
+  clip-path: inset(0 50% 0 0); /* 只顯示左半 */
 }
 
-/* 狀態切換（掛在 <html> 上） */
+/* 右半門：顯示圖片右半 */
+#door-overlay .door-right {
+  background-position: right center;
+  clip-path: inset(0 0 0 50%); /* 只顯示右半 */
+}
+
+/* 開門動畫 */
 html.opening #door-overlay .door-left  { transform: translateX(-100%); }
 html.opening #door-overlay .door-right { transform: translateX(100%); }
-html.opened  #door-overlay { display: none; }
+
+/* 動畫結束就把遮罩移掉 */
+html.opened #door-overlay { display: none; }
