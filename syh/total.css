@@ -450,33 +450,25 @@ body::after,
 }
 .bgm-unlock:hover{ transform: translateY(-1px); }
 .bgm-unlock[hidden]{ display: none !important; }
-/* ====== 開門動畫（整張圖被切成左右兩半） ====== */
+
+/* ====== 開門動畫（整張圖被切成左右兩半，維持比例） ====== */
 #door-overlay{
   position: fixed; inset: 0; z-index: 9999;
   display: grid; grid-template-columns: 1fr 1fr;
   overflow: hidden; background: #000;
 }
 #door-overlay .door{
-  /* 路徑：圖跟 total.css 同一層就用這個；若在 img/ 請改成 url("./img/完整抬頭.png") */
-  background-image: url("./完整抬頭.png?v=1");
+  background-image: url("./img/完整抬頭.png"); /* 根據你的實際位置調整 */
   background-repeat: no-repeat;
-  /* 讓同一張圖橫向鋪成 200% 寬，剛好被兩扇門各佔一半 */
-  background-size: 200% 100%;
-  background-position-y: center;
+  background-size: 200% auto;    /* ✅ 高度自動，比例不變 */
+  background-position-y: center; /* 圖片垂直置中 */
   transition: transform 1.2s cubic-bezier(.2,.7,0,1);
   will-change: transform;
 }
-/* 左門顯示圖片左半、右門顯示右半（不用 clip-path 了） */
-#door-overlay .door-left  { background-position:   0% 50%; }
-#door-overlay .door-right { background-position: 100% 50%; }
+#door-overlay .door-left  { background-position-x:   0%; }
+#door-overlay .door-right { background-position-x: 100%; }
 
-/* 開門動畫 */
 html.opening #door-overlay .door-left  { transform: translateX(-100%); }
 html.opening #door-overlay .door-right { transform: translateX( 100%); }
 
-/* 動畫結束移除遮罩 */
 html.opened #door-overlay { display: none; }
-
-/*（保留你的 skip-btn 樣式即可，不需更動）*/
-
-
