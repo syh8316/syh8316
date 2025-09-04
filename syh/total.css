@@ -451,5 +451,48 @@ body::after,
 .bgm-unlock:hover{ transform: translateY(-1px); }
 .bgm-unlock[hidden]{ display: none !important; }
 
+/* ====== 開門動畫 ====== */
+.site-content { visibility: hidden; }
 
+#door-overlay {
+  position: fixed; inset: 0;
+  z-index: 9999;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #000;
+  overflow: hidden;
+}
+.door {
+  background: #111;
+  transition: transform 1.2s cubic-bezier(.2,.7,0,1);
+  will-change: transform;
+}
+.door-left  { border-right: 1px solid rgba(255,255,255,.08); }
+.door-right { border-left:  1px solid rgba(255,255,255,.08); }
 
+.brand-wrap {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+}
+.brand img { max-width: 70%; height: auto; }
+
+.skip-btn {
+  position: absolute;
+  right: 16px; bottom: 16px;
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  backdrop-filter: blur(3px);
+}
+
+/* 狀態切換 */
+.opening .door-left  { transform: translateX(-100%); }
+.opening .door-right { transform: translateX(100%); }
+.opening .brand      { opacity: 0; transform: translateY(-8px); }
+
+.opened .site-content { visibility: visible; }
+.opened #door-overlay { display: none; }
