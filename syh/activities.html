@@ -392,7 +392,10 @@
         location: "台北復興北路",
         tags: ["宮廟","活動","台北"],
         summary: "農曆 7/5。",
-        type: "past"
+        type: "past",
+        videoUrl: "https://www.instagram.com/reel/DOI6u43iTPF/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+        videoThumb: "img/落地掃.jpg",
+        videoLinkCard: true
       },
       {
         id: "h-2023-8-26",
@@ -797,19 +800,20 @@
       const type = (e.type || "").trim();
       const isAlbum = type === "album";
       const isPortfolio = type === "portfolio";
+      const showAsLinkCard = isPortfolio || !!e.videoLinkCard; // past 也可用縮圖卡外開
     
-      // 基本資訊（像簿不顯示日期；作品集不顯示「另開影片」）
+      // 基本資訊（像簿不顯示日期；showAsLinkCard 不顯示「另開影片」按鈕）
       let html = `
         <div class="detail">
           <div class="detail-info">
             <h3>${e.title}</h3>
-            ${isAlbum ? "" : `<p>🗓 ${formatDate(e.dateStart)}${e.dateEnd ? ' - ' + formatDate(e.dateEnd) : ''}</p>`}
+            ${isAlbum ? "" : `<p>🗓 ${formatDate(e.dateStart ?? "")}${e.dateEnd ? ' - ' + formatDate(e.dateEnd) : ''}</p>`}
             <p>📍 ${e.location || ''}${e.city ? '（' + e.city + '）' : ''}</p>
             <div class="chips">${createTagChips(e.tags || [])}</div>
             <p class="detail-desc">${e.summary || ""}</p>
             <div class="detail-actions">
               ${e.ticketUrl ? `<a class="btn primary" href="${e.ticketUrl}" target="_blank" rel="noopener">前往報名</a>` : ""}
-              ${(!isAlbum && !isPortfolio && e.videoUrl) ? `<a class="btn" href="${e.videoUrl}" target="_blank" rel="noopener">另開影片</a>` : ""}
+              ${(!isAlbum && !showAsLinkCard && e.videoUrl) ? `<a class="btn" href="${e.videoUrl}" target="_blank" rel="noopener">另開影片</a>` : ""}
             </div>
           </div>
         </div>
@@ -817,7 +821,7 @@
     
       // 影片區塊
       if (e.videoFile) {
-        // 你的 mp4：在頁面內播放
+        // 你的 mp4：內嵌播放
         html += `
           <h4 class="gallery-title">影片</h4>
           <video class="detail-video" controls preload="metadata" playsinline>
@@ -826,8 +830,8 @@
           </video>
         `;
       } else if (e.videoUrl) {
-        if (isPortfolio) {
-          // 作品集 + 外部連結：不內嵌，改成可點縮圖卡
+        if (showAsLinkCard) {
+          // 作品集或有設定 videoLinkCard：用縮圖卡外開
           const provider =
             /instagram\.com/.test(e.videoUrl) ? "Instagram" :
             /(youtu\.be|youtube\.com)/.test(e.videoUrl) ? "YouTube" :
@@ -845,7 +849,7 @@
             </a>
           `;
         } else if (typeof buildVideoBlock === "function") {
-          // 其他分類：若專案已定義 buildVideoBlock，使用既有的內嵌邏輯
+          // 其他分類：若有 buildVideoBlock 就用它做內嵌（YouTube/Vimeo/IG）
           html += buildVideoBlock(e);
         }
       }
@@ -908,7 +912,7 @@
           });
         });
     
-        // 防止點箭頭/關閉鈕時被當作點到遮罩
+        // 防止點箭頭/關閉鈕被當作點到遮罩
         lb.querySelector(".lb-close").addEventListener("click", (ev) => { ev.stopPropagation(); closeLB(); });
         lb.querySelector(".lb-prev").addEventListener("click", (ev) => { ev.stopPropagation(); prev(); });
         lb.querySelector(".lb-next").addEventListener("click", (ev) => { ev.stopPropagation(); next(); });
