@@ -451,8 +451,8 @@ body::after,
 .bgm-unlock:hover{ transform: translateY(-1px); }
 .bgm-unlock[hidden]{ display: none !important; }
 
-/* ====== 開門動畫 ====== */
-#door-overlay {
+/* ====== 開門動畫（全站共用） ====== */
+#door-overlay{
   position: fixed; inset: 0;
   z-index: 9999;
   display: grid;
@@ -460,7 +460,7 @@ body::after,
   background: #000;
   overflow: hidden;
 }
-#door-overlay .door {
+#door-overlay .door{
   background: #111;
   transition: transform 1.2s cubic-bezier(.2,.7,0,1);
   will-change: transform;
@@ -468,13 +468,13 @@ body::after,
 #door-overlay .door-left  { border-right: 1px solid rgba(255,255,255,.08); }
 #door-overlay .door-right { border-left:  1px solid rgba(255,255,255,.08); }
 
-#door-overlay .brand-wrap {
+#door-overlay .brand-wrap{
   position: absolute; inset: 0;
   display: grid; place-items: center;
 }
-#door-overlay .brand img { max-width: 70%; height: auto; display: block; }
+#door-overlay .brand img{ max-width: 70%; height: auto; display: block; }
 
-#door-overlay .skip-btn {
+#door-overlay .skip-btn{
   position: absolute;
   right: 16px; bottom: 16px;
   background: rgba(255,255,255,.08);
@@ -491,5 +491,3 @@ body::after,
 html.opening #door-overlay .door-left  { transform: translateX(-100%); }
 html.opening #door-overlay .door-right { transform: translateX(100%); }
 html.opened  #door-overlay { display: none; }
-
-
