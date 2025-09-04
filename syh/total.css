@@ -451,38 +451,37 @@ body::after,
 .bgm-unlock:hover{ transform: translateY(-1px); }
 .bgm-unlock[hidden]{ display: none !important; }
 
-/* ====== 開門動畫（無縫版：每扇門各放一張同圖，圖寬=整個視窗寬） ====== */
+/* ====== 開門動畫（無縫・平均分配） ====== */
 #door-overlay{
   position: fixed; inset: 0; z-index: 9999;
-  display: flex;              /* 用 flex，避免任何欄間距 */
+  display: flex;                 /* 用 flex，沒有欄距問題 */
+  width: 100vw; height: 100vh;   /* 明確鎖定視窗大小 */
   overflow: hidden;
-  background: #000;           /* 門縫底色 */
+  background: #000;              /* 門縫底色 */
 }
 #door-overlay .door{
   position: relative;
-  flex: 0 0 50%;              /* 每扇門固定一半寬 */
-  height: 100svh;             /* 手機也準確吃到滿高 */
-  overflow: hidden;           /* 關鍵：只露出各自那半 */
+  flex: 0 0 50%;                 /* 每扇門固定一半寬 */
+  height: 100%;
+  overflow: hidden;              /* 只露出各自那半 */
   transition: transform 1.2s cubic-bezier(.2,.7,0,1);
   will-change: transform;
   backface-visibility: hidden;
   transform: translateZ(0);
 }
-/* 門裡的圖要鋪滿「整個視窗寬」，而不是門寬 */
+/* 圖片鋪滿「整個視窗寬」，不是門寬；維持比例不變形 */
 #door-overlay .door > img{
-  position: absolute; inset: 0 auto 0 0;
-  width: 100vw;               /* ✅ 關鍵：圖寬 = 視窗寬 */
-  height: 100%;               /* 高度跟門同高 */
-  object-fit: cover;          /* 維持比例、不變形 */
-  object-position: center;
+  position: absolute; top: 0; left: 0;
+  width: 100vw; height: 100%;
+  object-fit: cover; object-position: center;
   display: block;
 }
-/* 右邊那扇門，把同一張圖往左推 50vw，剛好露出右半邊 */
+/* 右邊那扇門：把同一張圖向左推 50vw（略多 0.5px 防止中線縫隙） */
 #door-overlay .door-right > img{
-  transform: translateX(-50vw);
+  left: calc(-50vw - 0.5px);
 }
 
-/* 開門動畫（把兩扇門往外推） */
+/* 動畫：把兩扇門往外推 */
 html.opening #door-overlay .door-left  { transform: translateX(-100%); }
 html.opening #door-overlay .door-right { transform: translateX( 100%); }
 
