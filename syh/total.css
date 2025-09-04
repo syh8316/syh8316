@@ -451,24 +451,43 @@ body::after,
 .bgm-unlock:hover{ transform: translateY(-1px); }
 .bgm-unlock[hidden]{ display: none !important; }
 
-/* ====== 開門動畫（整張圖被切成左右兩半，維持比例） ====== */
+/* ====== 開門動畫：兩張一樣的 <img>，各剪成左/右半，保持比例不變形 ====== */
 #door-overlay{
-  position: fixed; inset: 0; z-index: 9999;
-  display: grid; grid-template-columns: 1fr 1fr;
-  overflow: hidden; background: #000;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  grid-template-columns: 1fr 1fr;  /* 左右各半 */
+  overflow: hidden;
+  background: #000;                /* 門縫底色 */
 }
+
+/* 每扇門是一個容器，裡面放同一張圖 */
 #door-overlay .door{
-  background-image: url("./img/完整抬頭.png"); /* 根據你的實際位置調整 */
-  background-repeat: no-repeat;
-  background-size: 200% auto;    /* ✅ 高度自動，比例不變 */
-  background-position-y: center; /* 圖片垂直置中 */
+  position: relative;
+  contain: layout paint;           /* 微優化 */
   transition: transform 1.2s cubic-bezier(.2,.7,0,1);
   will-change: transform;
 }
-#door-overlay .door-left  { background-position-x:   0%; }
-#door-overlay .door-right { background-position-x: 100%; }
 
+/* 圖片鋪滿整個視窗，維持比例（關鍵） */
+#door-overlay .door > img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;               /* ✅ 按視窗等比鋪滿，不變形 */
+  object-position: center;         /* 置中裁切 */
+}
+
+/* 用 clip-path 把圖剪成左右半張 */
+#door-overlay .door-left  { clip-path: inset(0 50% 0 0); }
+#door-overlay .door-right { clip-path: inset(0 0 0 50%); }
+
+/* 動畫：加上 html.opening 後門往兩側打開 */
 html.opening #door-overlay .door-left  { transform: translateX(-100%); }
 html.opening #door-overlay .door-right { transform: translateX( 100%); }
 
+/* 結束：移除整個遮罩 */
 html.opened #door-overlay { display: none; }
+
