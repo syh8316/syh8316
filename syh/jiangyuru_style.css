@@ -59,7 +59,7 @@ body{ padding-top: var(--header-h, 80px); }
 
 /* ✅ 關閉鍵固定右上角，層級最高 */
 .event-dialog .close{
-  position:absolute; right:16px; top:16px; z-index: 1600;
+  position:absolute; right:16px; top:16px; z-index: 2000;
   border: none; background:#111; color:#fff;
   border-radius:8px; padding:8px 12px; cursor:pointer;
 }
