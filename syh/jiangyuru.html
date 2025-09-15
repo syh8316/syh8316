@@ -4,22 +4,19 @@
   <meta charset="UTF-8" />
   <title>第二代：江郁茹｜新義和歌劇團</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- 全站樣式（導覽列、字體等） -->
-  <link rel="stylesheet" href="total.css" />
-  <link rel="stylesheet" href="phone.css" />
-  <!-- 參考活動頁的相簿/燈箱規格 -->
-  <link rel="stylesheet" href="activities.css" />
-  <!-- 本頁樣式（覆蓋/補充） -->
-  <link rel="stylesheet" href="jiangyuru_style.css" />
+
+  <!-- 先載入全站，再載入本頁；加 ?v=2 破快取 -->
+  <link rel="stylesheet" href="./total.css?v=2" />
+  <link rel="stylesheet" href="./phone.css?v=2" />
+  <link rel="stylesheet" href="./jiangyuru_style.css?v=3" />
 </head>
 <body>
-  <!-- 導覽列：移除所有導覽連結，只保留品牌與「相簿」按鈕 -->
+  <!-- 導覽列：只留品牌與「相簿」 -->
   <header class="site-header">
     <h1 class="brand"><span class="brand__text">新義和歌劇團</span></h1>
     <a id="openAlbum" class="album-btn" href="javascript:void(0)" aria-haspopup="dialog" aria-controls="albumDialog">相簿</a>
   </header>
 
-  <!-- 內容 -->
   <main class="profile reveal">
     <section class="profile-header">
       <img src="./img/苦旦.jpg" alt="第二代：江郁茹" class="profile-photo" />
@@ -35,20 +32,18 @@
       </p>
     </section>
 
-    <!-- 🔙 返回首頁 -->
     <div class="back-home">
-      <a href="index.html" class="btn-back">← 返回首頁</a>
+      <a href="./index.html" class="btn-back">← 返回首頁</a>
     </div>
   </main>
 
-  <!-- 相簿 Dialog（規格沿用活動頁：.event-dialog + .gallery-grid + .lightbox） -->
+  <!-- 相簿 Dialog（相簿縮圖 + 燈箱） -->
   <dialog id="albumDialog" class="event-dialog" aria-label="江郁茹相簿">
     <button class="close" id="closeAlbum" aria-label="關閉">關閉</button>
     <div class="dialog-body">
-      <h3 style="margin:.2rem 0 1rem;">相簿</h3>
-      <!-- 縮圖網格（可自由增減圖片） -->
+      <h3 class="gallery-title">相簿</h3>
       <div class="gallery-grid" id="albumGrid">
-        <!-- 範例：請換成你的實際路徑 -->
+        <!-- 換成你的實際圖片路徑 -->
         <a href="./img/album/jiangyuru_01.jpg" data-index="0"><img src="./img/album/jiangyuru_01.jpg" alt="舞台照 1" loading="lazy" /></a>
         <a href="./img/album/jiangyuru_02.jpg" data-index="1"><img src="./img/album/jiangyuru_02.jpg" alt="舞台照 2" loading="lazy" /></a>
         <a href="./img/album/jiangyuru_03.jpg" data-index="2"><img src="./img/album/jiangyuru_03.jpg" alt="舞台照 3" loading="lazy" /></a>
@@ -57,7 +52,7 @@
     </div>
   </dialog>
 
-  <!-- Lightbox（沿用活動頁的 class 命名） -->
+  <!-- Lightbox -->
   <div class="lightbox" id="lightbox" hidden>
     <img class="lb-img" id="lbImg" alt="" />
     <button class="lb-prev" id="lbPrev" aria-label="上一張">‹</button>
@@ -66,17 +61,13 @@
     <div class="lb-counter" id="lbCounter">1 / 1</div>
   </div>
 
-  <!-- 頁尾 -->
   <footer class="site-footer">
     <div class="footer-line">
       <p class="footer-title">新義和歌劇團</p>
-      <div class="footer-info">
-        <p>© 新義和歌劇團</p>
-      </div>
+      <div class="footer-info"><p>© 新義和歌劇團</p></div>
     </div>
   </footer>
 
-  <!-- Minimal JS：開關相簿 Dialog + Lightbox 功能 -->
   <script>
     (function(){
       const dlg = document.getElementById('albumDialog');
@@ -85,9 +76,7 @@
 
       openBtn.addEventListener('click', () => dlg.showModal());
       closeBtn.addEventListener('click', () => dlg.close());
-      dlg.addEventListener('click', (e) => {
-        if (e.target === dlg) dlg.close(); // 點透明處關閉
-      });
+      dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
 
       // Lightbox
       const grid = document.getElementById('albumGrid');
@@ -109,19 +98,14 @@
       }
 
       grid.addEventListener('click', (e) => {
-        const a = e.target.closest('a');
-        if(!a) return;
-        e.preventDefault();
-        show(Number(a.dataset.index) || 0);
+        const a = e.target.closest('a'); if(!a) return;
+        e.preventDefault(); show(Number(a.dataset.index) || 0);
         lb.hidden = false;
       });
-
       lbPrev.addEventListener('click', () => show(idx - 1));
       lbNext.addEventListener('click', () => show(idx + 1));
       lbClose.addEventListener('click', () => lb.hidden = true);
-      lb.addEventListener('click', (e) => {
-        if(e.target === lb) lb.hidden = true;
-      });
+      lb.addEventListener('click', (e) => { if(e.target === lb) lb.hidden = true; });
       window.addEventListener('keydown', (e) => {
         if(lb.hidden) return;
         if(e.key === 'Escape') lb.hidden = true;
