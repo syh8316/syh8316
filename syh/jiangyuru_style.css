@@ -50,17 +50,44 @@ body{ padding-top: var(--header-h, 80px); }
 }
 .btn-back:hover{ background:#b45309; color:#fff; }
 
-/* ===== 相簿 Dialog + Lightbox（抽出必要樣式，避免引用整份 activities.css） ===== */
-.event-dialog{
-  width:min(900px,92%); border:none; border-radius:16px; padding:0;
-  background:#fff; color:#111; box-shadow:0 60px 120px rgba(0,0,0,.35);
+/* 相簿全螢幕鋪滿 */
+.event-dialog {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  background: #fff;
+  color: #111;
+  display: flex;
+  flex-direction: column;
 }
-.event-dialog::backdrop{ background:rgba(0,0,0,.55) }
-.event-dialog .close{
-  position:absolute; right:8px; top:8px;
-  border:1px solid #ddd; background:#fff; color:#111;
-  border-radius:10px; padding:.35rem .55rem; cursor:pointer;
+.event-dialog::backdrop {
+  background: rgba(0,0,0,.55);
 }
+
+/* 關閉按鈕固定在右上角 */
+.event-dialog .close {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  z-index: 10;
+  border: none;
+  background: #111;
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+/* 內文區塊可捲動 */
+.event-dialog .dialog-body {
+  flex: 1;
+  overflow: auto;
+  padding: 20px;
+}
+
 .dialog-body{ padding:16px }
 .gallery-title{ margin: 12px 0 8px; font-size: 1.05rem; color:#111; }
 .gallery-grid{
