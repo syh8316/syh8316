@@ -1,23 +1,30 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>第二代：江郁茹｜新義和歌劇團</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="jiangyuru_style.css"> <!-- 套用主站的CSS -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 先載入全站樣式，再載入本頁加強樣式 -->
+  <link rel="stylesheet" href="total.css" />
+  <link rel="stylesheet" href="phone.css" />
+  <link rel="stylesheet" href="jiangyuru_style.css" />
 </head>
+
 <body>
   <!-- 導覽列（可複製主頁那一段） -->
   <header class="site-header">
-    <nav class="navbar">
-      <a href="index.html" class="logo">新義和歌劇團</a>
-      <ul class="nav-links">
+    <h1 class="brand"><span class="brand__text">新義和歌劇團</span></h1>
+    <nav class="site-nav">
+      <ul>
         <li><a href="index.html#history">歷代人物</a></li>
         <li><a href="index.html#works">作品集</a></li>
         <li><a href="index.html#contact">聯絡我們</a></li>
       </ul>
     </nav>
+    <!-- 可選：手機版漢堡鈕（若首頁已用到） -->
+    <!-- <button class="nav-toggle" aria-label="切換選單"><span class="bar"></span><span class="bar"></span><span class="bar"></span></button> -->
   </header>
+
 
   <!-- 人物介紹 -->
   <main class="profile">
