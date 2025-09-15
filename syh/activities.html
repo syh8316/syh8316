@@ -393,12 +393,18 @@
         tags: ["宮廟","活動","台北","影片"],
         summary: "農曆 7/5。",
         type: "past",
-        videoUrl: "https://www.instagram.com/reel/DOI6u43iTPF/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
-        videoThumb: "img/落地掃.jpg",
-        videoLinkCard: true,
-        videoUrl: "https://www.instagram.com/reel/DOQo7g4iZxK/?igsh=MWM5YjVqNTRjcXM4cQ==",
-        videoThumb: "img/格雷先生.jpg",
-        videoLinkCard: true
+        // ✅ 多部影片用陣列
+        videos: [
+          {
+            url: "https://www.instagram.com/reel/DOI6u43iTPF/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+            thumb: "img/落地掃.jpg"
+          },
+          {
+            url: "https://www.instagram.com/reel/DOQo7g4iZxK/?igsh=MWM5YjVqNTRjcXM4cQ==",
+            thumb: "img/格雷先生.jpg"
+          }
+        ],
+        videoLinkCard: true   // past 也要像作品集那樣用「縮圖卡外開」
       },
       {
         id: "h-2023-8-26",
