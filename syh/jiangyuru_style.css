@@ -1,83 +1,96 @@
 /* ========== 人物介紹頁：保持全站一致配色 ========== */
-body {
-  font-family: "Noto Serif TC", "Noto Sans TC", "Microsoft JhengHei", serif;
-  margin: 0;
-  padding: 0;
-  line-height: 1.8;
-  background: #fff;      /* 與 card.css / total.css 保持一致：白底 */
-  color: #111;           /* 主文字顏色：黑 */
+body{
+  font-family:"Noto Serif TC","Noto Sans TC","Microsoft JhengHei",serif;
+  margin:0; padding:0;
+  line-height:1.8;
+  background:#fff;   /* 和全站一致：白底 */
+  color:#111;
 }
 
-/* 導覽列沿用 total.css 的設定，不重複 */
-
-/* 人物標頭區 */
-.profile {
-  max-width: 960px;
-  margin: 2em auto;
-  padding: 0 16px;
+/* ====== 導覽列：只留品牌 + 相簿按鈕 ====== */
+.site-header{
+  position: fixed; top:0; left:0; right:0;
+  height: var(--header-h, 80px);
+  z-index: 1000;
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 0 24px;
+  background: var(--header-bg, rgba(255,255,255,.9));
+  backdrop-filter: blur(var(--header-blur, 8px));
+  -webkit-backdrop-filter: blur(var(--header-blur, 8px));
+  border-bottom: 1px solid rgba(0,0,0,.06);
+  box-shadow: 0 2px 12px rgba(0,0,0,.06);
+  color: var(--header-ink, #111);
 }
+body{ padding-top: var(--header-h, 80px); }
 
-.profile-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+/* 移除任何 nav 連結：留空即可（總之不要出現） */
+
+/* 相簿按鈕 */
+.album-btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding: 10px 14px;
+  background:#111; color:#fff; text-decoration:none;
+  border-radius:10px; font-weight:800; line-height:1;
+  border:1px solid #111;
+  transition: background .25s ease, color .25s ease, transform .2s ease;
+}
+.album-btn:hover{ background:#b45309; border-color:#8a3e07; color:#111; transform: translateY(-1px); }
+
+/* ====== 人物頁內容 ====== */
+.profile{ max-width: 960px; margin: 2em auto; padding: 0 16px; }
+.profile-header{
+  display:flex; flex-direction:column; align-items:center; text-align:center;
   margin-bottom: 2em;
 }
-
-.profile-photo {
-  width: 240px;
-  height: auto;
-  border-radius: 12px;
+.profile-photo{
+  width: 240px; height:auto; border-radius:12px;
   box-shadow: 0 6px 18px rgba(0,0,0,.15);
   margin-bottom: 1em;
 }
-
-.profile-header h1 {
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: #111;  /* 與 header ink 一致 */
-  border-bottom: 3px solid #b45309; /* 點綴色：金棕 */
-  padding-bottom: .3em;
-  display: inline-block;
+.profile-header h1{
+  font-size: 1.8rem; font-weight: 800; color:#111;
+  border-bottom: 3px solid #b45309; padding-bottom: .3em; display:inline-block;
 }
+.profile-content{ font-size: 1.05rem; text-align: justify; color:#333; line-height:1.9; }
 
-/* 人物內文 */
-.profile-content {
-  font-size: 1.05rem;
-  text-align: justify;
-  color: #333;  /* 與主頁段落字色一致 */
-  line-height: 1.9;
-}
-
-/* 頁尾：沿用 total.css 配色 */
-.site-footer {
-  background: #000;
-  color: #b7b7b7;
-  text-align: center;
-  padding: 16px 0;
-  margin-top: 3em;
-  font-size: 14px;
-}
-
-/* 返回首頁按鈕 */
-.back-home {
-  text-align: center;
-  margin-top: 2em;
-}
-
-.btn-back {
-  display: inline-block;
-  padding: 10px 18px;
-  border-radius: 8px;
-  background: #111;       /* 黑底 */
-  color: #fff;            /* 白字 */
-  font-weight: 700;
-  text-decoration: none;
+/* 返回首頁按鈕（放在最底下） */
+.back-home{ text-align:center; margin-top: 2em; }
+.btn-back{
+  display:inline-block; padding:10px 18px; border-radius:8px;
+  background:#111; color:#fff; text-decoration:none; font-weight:700;
   transition: background .3s;
 }
+.btn-back:hover{ background:#b45309; color:#fff; }
 
-.btn-back:hover {
-  background: #b45309;    /* hover 金棕色，呼應全站 accent */
-  color: #fff;
+/* ====== Dialog（相簿）微調 ====== */
+/* 直接沿用 activities.css 的 .event-dialog / .gallery-grid / .lightbox 樣式
+   這裡只做小幅調整（若有需要） */
+.event-dialog .dialog-body{ padding: 18px; }
+.event-dialog h3{ margin:.2rem 0 12px; }
+.gallery-grid img{ transition: transform .2s ease; }
+.gallery-grid a:hover img{ transform: scale(1.02); }
+
+/* ====== 手機版（≤ 768px） ====== */
+@media (max-width: 768px){
+  :root{ --header-h: 68px; }
+
+  .site-header{ padding: 0 16px; }
+  .brand{ width: 190px; height: 52px; }
+  .album-btn{ font-size: 16px; padding: 10px 12px; }
+
+  .profile{ margin: 1.4em auto; padding: 0 14px; }
+  .profile-photo{ width: 200px; }
+  .profile-header h1{ font-size: 1.5rem; }
+
+  /* Dialog 內縮圖排列更密一些 */
+  .gallery-grid{ gap: 10px; }
+}
+
+/* ====== 更小手機（≤ 480px） ====== */
+@media (max-width: 480px){
+  .brand{ width: 165px; height: 48px; }
+  .album-btn{ padding: 9px 10px; font-size: 15px; }
+
+  .profile-photo{ width: 180px; }
+  .profile-header h1{ font-size: 1.35rem; }
 }
