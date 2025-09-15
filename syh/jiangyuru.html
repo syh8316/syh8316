@@ -166,97 +166,34 @@
 
   <script>
   (function(){
-    // --- Dialog 開關 ---
     const dlg = document.getElementById('albumDialog');
     const openBtn = document.getElementById('openAlbum');
     const closeBtn = document.getElementById('closeAlbum');
   
-    openBtn.addEventListener('click', () => { dlg.showModal(); });
-    closeBtn.addEventListener('click', () => dlg.close());
-    dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
-  
-    // --- Lightbox 元件 ---
-    const grid = document.getElementById('albumGrid');
-    const lb = document.getElementById('lightbox');
-    const lbImg = document.getElementById('lbImg');
-    const lbPrev = document.getElementById('lbPrev');
-    const lbNext = document.getElementById('lbNext');
-    const lbClose = document.getElementById('lbClose');
-    const lbCounter = document.getElementById('lbCounter');
-  
-    const thumbs = Array.from(grid.querySelectorAll('.thumb'));
-    const sources = thumbs.map(b => b.dataset.src);
-    let idx = 0;
-  
-    function show(i){
-      idx = (i + sources.length) % sources.length;
-      lbImg.src = sources[idx];
-      lbCounter.textContent = (idx+1) + ' / ' + sources.length;
-    }
-    function openLightbox(i){
-      // 先關閉相簿 dialog，避免它擋住最上層
-      if (typeof dlg?.open !== "undefined" && dlg.open) dlg.close();
-    
-      show(i);
-      lb.hidden = false;
-      document.body.classList.add('no-scroll');
-    }
-    function closeLightbox(){
-      lb.hidden = true;
-      document.body.classList.remove('no-scroll');
-      // 可選：關燈箱後重開相簿
-      // dlg.showModal();
-    }
-  
-    // 縮圖點擊 → 只開燈箱，不跳連結
-    grid.addEventListener('click', (e) => {
-      const btn = e.target.closest('.thumb');
-      if(!btn) return;
-      e.preventDefault();
-    
-      // 這一行是關鍵：點縮圖就先關 dialog
-      if (typeof dlg?.open !== "undefined" && dlg.open) dlg.close();
-    
-      openLightbox( thumbs.indexOf(btn) );
+    // 開啟
+    openBtn.addEventListener('click', () => {
+      if (!dlg.open) dlg.showModal();
     });
   
-    // UI 按鈕
-    lbPrev.addEventListener('click', () => show(idx - 1));
-    lbNext.addEventListener('click', () => show(idx + 1));
-    lbClose.addEventListener('click', closeLightbox);
-    lb.addEventListener('click', (e) => { if(e.target === lb) closeLightbox(); });
+    // ✅ 後備：即使沒有 method="dialog"，也用 JS 關閉
+    closeBtn.addEventListener('click', (e) => {
+      // 如果是 form method="dialog" 會自動 close；這裡再保險一次
+      if (typeof dlg?.open !== "undefined" && dlg.open) dlg.close();
+    });
   
-    // 鍵盤
+    // ✅ Esc 熱鍵也能關
     window.addEventListener('keydown', (e) => {
-      if(lb.hidden) return;
-      if(e.key === 'Escape')  return closeLightbox();
-      if(e.key === 'ArrowLeft')  return show(idx - 1);
-      if(e.key === 'ArrowRight') return show(idx + 1);
+      if (e.key === 'Escape' && dlg.open) dlg.close();
     });
   
-    // 手機滑動（左/右切換）
-    let startX = 0, startY = 0, touching = false;
-    const SWIPE = 40; // 需要移動的最小像素
+    // 你原本的 Lightbox 相關程式…
+    // 注意：打開燈箱前要關 dialog（避免擋住）
+    function openLightbox(i){
+      if (dlg.open) dlg.close();  // ← 關鍵
+      // ... 顯示燈箱的原本邏輯
+    }
   
-    lb.addEventListener('touchstart', (e) => {
-      if(lb.hidden) return;
-      touching = true;
-      const t = e.changedTouches[0];
-      startX = t.clientX;
-      startY = t.clientY;
-    }, {passive:true});
-  
-    lb.addEventListener('touchend', (e) => {
-      if(!touching) return;
-      touching = false;
-      const t = e.changedTouches[0];
-      const dx = t.clientX - startX;
-      const dy = t.clientY - startY;
-      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > SWIPE){
-        if (dx < 0) show(idx + 1);   // 往左滑 → 下一張
-        else        show(idx - 1);   // 往右滑 → 上一張
-      }
-    }, {passive:true});
+    // 其他既有程式碼略…
   })();
   </script>
 
