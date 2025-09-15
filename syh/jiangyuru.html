@@ -92,50 +92,91 @@
   </footer>
 
   <script>
-    (function(){
-      const dlg = document.getElementById('albumDialog');
-      const openBtn = document.getElementById('openAlbum');
-      const closeBtn = document.getElementById('closeAlbum');
-
-      openBtn.addEventListener('click', () => dlg.showModal());
-      closeBtn.addEventListener('click', () => dlg.close());
-      dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
-
-      // Lightbox
-      const grid = document.getElementById('albumGrid');
-      const lb = document.getElementById('lightbox');
-      const lbImg = document.getElementById('lbImg');
-      const lbPrev = document.getElementById('lbPrev');
-      const lbNext = document.getElementById('lbNext');
-      const lbClose = document.getElementById('lbClose');
-      const lbCounter = document.getElementById('lbCounter');
-
-      const thumbs = Array.from(grid.querySelectorAll('a'));
-      const sources = thumbs.map(a => a.getAttribute('href'));
-      let idx = 0;
-
-      function show(i){
-        idx = (i + sources.length) % sources.length;
-        lbImg.src = sources[idx];
-        lbCounter.textContent = (idx+1) + ' / ' + sources.length;
+  (function(){
+    // --- Dialog 開關 ---
+    const dlg = document.getElementById('albumDialog');
+    const openBtn = document.getElementById('openAlbum');
+    const closeBtn = document.getElementById('closeAlbum');
+  
+    openBtn.addEventListener('click', () => { dlg.showModal(); });
+    closeBtn.addEventListener('click', () => dlg.close());
+    dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+  
+    // --- Lightbox 元件 ---
+    const grid = document.getElementById('albumGrid');
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    const lbPrev = document.getElementById('lbPrev');
+    const lbNext = document.getElementById('lbNext');
+    const lbClose = document.getElementById('lbClose');
+    const lbCounter = document.getElementById('lbCounter');
+  
+    const thumbs = Array.from(grid.querySelectorAll('.thumb'));
+    const sources = thumbs.map(b => b.dataset.src);
+    let idx = 0;
+  
+    function show(i){
+      idx = (i + sources.length) % sources.length;
+      lbImg.src = sources[idx];
+      lbCounter.textContent = (idx+1) + ' / ' + sources.length;
+    }
+    function openLightbox(i){
+      show(i);
+      lb.hidden = false;
+      document.body.classList.add('no-scroll');
+    }
+    function closeLightbox(){
+      lb.hidden = true;
+      document.body.classList.remove('no-scroll');
+    }
+  
+    // 縮圖點擊 → 只開燈箱，不跳連結
+    grid.addEventListener('click', (e) => {
+      const btn = e.target.closest('.thumb');
+      if(!btn) return;
+      e.preventDefault();
+      openLightbox( thumbs.indexOf(btn) );
+    });
+  
+    // UI 按鈕
+    lbPrev.addEventListener('click', () => show(idx - 1));
+    lbNext.addEventListener('click', () => show(idx + 1));
+    lbClose.addEventListener('click', closeLightbox);
+    lb.addEventListener('click', (e) => { if(e.target === lb) closeLightbox(); });
+  
+    // 鍵盤
+    window.addEventListener('keydown', (e) => {
+      if(lb.hidden) return;
+      if(e.key === 'Escape')  return closeLightbox();
+      if(e.key === 'ArrowLeft')  return show(idx - 1);
+      if(e.key === 'ArrowRight') return show(idx + 1);
+    });
+  
+    // 手機滑動（左/右切換）
+    let startX = 0, startY = 0, touching = false;
+    const SWIPE = 40; // 需要移動的最小像素
+  
+    lb.addEventListener('touchstart', (e) => {
+      if(lb.hidden) return;
+      touching = true;
+      const t = e.changedTouches[0];
+      startX = t.clientX;
+      startY = t.clientY;
+    }, {passive:true});
+  
+    lb.addEventListener('touchend', (e) => {
+      if(!touching) return;
+      touching = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - startX;
+      const dy = t.clientY - startY;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > SWIPE){
+        if (dx < 0) show(idx + 1);   // 往左滑 → 下一張
+        else        show(idx - 1);   // 往右滑 → 上一張
       }
-
-      grid.addEventListener('click', (e) => {
-        const a = e.target.closest('a'); if(!a) return;
-        e.preventDefault(); show(Number(a.dataset.index) || 0);
-        lb.hidden = false;
-      });
-      lbPrev.addEventListener('click', () => show(idx - 1));
-      lbNext.addEventListener('click', () => show(idx + 1));
-      lbClose.addEventListener('click', () => lb.hidden = true);
-      lb.addEventListener('click', (e) => { if(e.target === lb) lb.hidden = true; });
-      window.addEventListener('keydown', (e) => {
-        if(lb.hidden) return;
-        if(e.key === 'Escape') lb.hidden = true;
-        if(e.key === 'ArrowLeft') show(idx - 1);
-        if(e.key === 'ArrowRight') show(idx + 1);
-      });
-    })();
+    }, {passive:true});
+  })();
   </script>
+
 </body>
 </html>
