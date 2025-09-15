@@ -1,68 +1,20 @@
-/* ========== 全域設定 ========== */
+/* ========== 人物介紹頁：保持全站一致配色 ========== */
 body {
-  font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  font-family: "Noto Serif TC", "Noto Sans TC", "Microsoft JhengHei", serif;
   margin: 0;
   padding: 0;
   line-height: 1.8;
-  background-color: #fff;  /* 主頁一致：白底 */
-  color: #333;             /* 深灰文字 */
+  background: #fff;      /* 與 card.css / total.css 保持一致：白底 */
+  color: #111;           /* 主文字顏色：黑 */
 }
 
-h1, h2, h3 {
-  font-weight: 600;
-  margin: 0.5em 0;
-  color: #222; /* 稍深一點，凸顯標題 */
-}
+/* 導覽列沿用 total.css 的設定，不重複 */
 
-p {
-  margin: 0 0 1.2em;
-}
-
-/* ========== 導覽列 ========== */
-.site-header {
-  background-color: #800000; /* 主色：酒紅 */
-  padding: 0.8em 1.2em;
-}
-
-.navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.navbar .logo {
-  font-size: 1.3em;
-  font-weight: bold;
-  color: #fff;
-  text-decoration: none;
-}
-
-.navbar .nav-links {
-  list-style: none;
-  display: flex;
-  gap: 1em;
-  margin: 0;
-  padding: 0;
-}
-
-.navbar .nav-links a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 0.95em;
-  transition: color 0.3s;
-}
-
-.navbar .nav-links a:hover {
-  color: #c59d5f; /* 金褐色 hover 效果 */
-}
-
-/* ========== 人物專頁 ========== */
+/* 人物標頭區 */
 .profile {
-  max-width: 900px;
+  max-width: 960px;
   margin: 2em auto;
-  padding: 0 1em;
+  padding: 0 16px;
 }
 
 .profile-header {
@@ -74,26 +26,36 @@ p {
 }
 
 .profile-photo {
-  width: 220px;
+  width: 240px;
   height: auto;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.15);
   margin-bottom: 1em;
 }
 
-.profile-content {
-  font-size: 1.05em;
-  text-align: justify;
-  color: #444;
+.profile-header h1 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #111;  /* 與 header ink 一致 */
+  border-bottom: 3px solid #b45309; /* 點綴色：金棕 */
+  padding-bottom: .3em;
+  display: inline-block;
 }
 
-/* ========== 頁尾 ========== */
+/* 人物內文 */
+.profile-content {
+  font-size: 1.05rem;
+  text-align: justify;
+  color: #333;  /* 與主頁段落字色一致 */
+  line-height: 1.9;
+}
+
+/* 頁尾：沿用 total.css 配色 */
 .site-footer {
-  background-color: #f8f8f8; /* 淺灰，避免太重 */
-  color: #555;
+  background: #000;
+  color: #b7b7b7;
   text-align: center;
-  padding: 1em 0;
+  padding: 16px 0;
   margin-top: 3em;
-  font-size: 0.9em;
-  border-top: 2px solid #800000; /* 用酒紅色收邊 */
+  font-size: 14px;
 }
