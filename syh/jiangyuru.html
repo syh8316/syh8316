@@ -166,34 +166,89 @@
 
   <script>
   (function(){
+    // ===== 相簿 Dialog =====
     const dlg = document.getElementById('albumDialog');
     const openBtn = document.getElementById('openAlbum');
     const closeBtn = document.getElementById('closeAlbum');
   
-    // 開啟
-    openBtn.addEventListener('click', () => {
-      if (!dlg.open) dlg.showModal();
-    });
+    // 開啟相簿（滿版 dialog）
+    openBtn.addEventListener('click', () => { if (!dlg.open) dlg.showModal(); });
   
-    // ✅ 後備：即使沒有 method="dialog"，也用 JS 關閉
-    closeBtn.addEventListener('click', (e) => {
-      // 如果是 form method="dialog" 會自動 close；這裡再保險一次
-      if (typeof dlg?.open !== "undefined" && dlg.open) dlg.close();
-    });
+    // 關閉相簿（原生 method="dialog" 會關，這裡再保險一次）
+    closeBtn.addEventListener('click', () => { if (dlg.open) dlg.close(); });
   
-    // ✅ Esc 熱鍵也能關
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && dlg.open) dlg.close();
-    });
+    // Esc 也能關
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && dlg.open) dlg.close(); });
   
-    // 你原本的 Lightbox 相關程式…
-    // 注意：打開燈箱前要關 dialog（避免擋住）
+    // ===== Lightbox =====
+    const grid = document.getElementById('albumGrid');
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    const lbPrev = document.getElementById('lbPrev');
+    const lbNext = document.getElementById('lbNext');
+    const lbClose = document.getElementById('lbClose');
+    const lbCounter = document.getElementById('lbCounter');
+  
+    const thumbs = Array.from(grid.querySelectorAll('.thumb'));
+    const sources = thumbs.map(b => b.dataset.src);
+    let idx = 0;
+  
+    function show(i){
+      idx = (i + sources.length) % sources.length;
+      lbImg.src = sources[idx];
+      lbCounter.textContent = (idx+1) + ' / ' + sources.length;
+    }
     function openLightbox(i){
-      if (dlg.open) dlg.close();  // ← 關鍵
-      // ... 顯示燈箱的原本邏輯
+      // 先關掉相簿（避免 dialog 蓋住燈箱）
+      if (dlg.open) dlg.close();
+      show(i);
+      lb.hidden = false;
+      document.body.classList.add('no-scroll');
+    }
+    function closeLightbox(){
+      lb.hidden = true;
+      document.body.classList.remove('no-scroll');
     }
   
-    // 其他既有程式碼略…
+    // 縮圖點擊 → 開燈箱
+    grid.addEventListener('click', (e) => {
+      const btn = e.target.closest('.thumb');
+      if(!btn) return;
+      e.preventDefault();
+      openLightbox( thumbs.indexOf(btn) );
+    });
+  
+    // 燈箱 UI
+    lbPrev.addEventListener('click', () => show(idx - 1));
+    lbNext.addEventListener('click', () => show(idx + 1));
+    lbClose.addEventListener('click', closeLightbox);
+    lb.addEventListener('click', (e) => { if(e.target === lb) closeLightbox(); });
+  
+    // 鍵盤
+    window.addEventListener('keydown', (e) => {
+      if(lb.hidden) return;
+      if(e.key === 'Escape') closeLightbox();
+      if(e.key === 'ArrowLeft') show(idx - 1);
+      if(e.key === 'ArrowRight') show(idx + 1);
+    });
+  
+    // 手機滑動切換
+    let startX = 0, startY = 0, touching = false;
+    const SWIPE = 40;
+    lb.addEventListener('touchstart', (e) => {
+      if(lb.hidden) return;
+      touching = true;
+      const t = e.changedTouches[0];
+      startX = t.clientX; startY = t.clientY;
+    }, {passive:true});
+    lb.addEventListener('touchend', (e) => {
+      if(!touching) return; touching = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - startX, dy = t.clientY - startY;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > SWIPE){
+        if (dx < 0) show(idx + 1); else show(idx - 1);
+      }
+    }, {passive:true});
   })();
   </script>
 
