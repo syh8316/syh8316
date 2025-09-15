@@ -59,3 +59,25 @@ body {
   margin-top: 3em;
   font-size: 14px;
 }
+
+/* 返回首頁按鈕 */
+.back-home {
+  text-align: center;
+  margin-top: 2em;
+}
+
+.btn-back {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 8px;
+  background: #111;       /* 黑底 */
+  color: #fff;            /* 白字 */
+  font-weight: 700;
+  text-decoration: none;
+  transition: background .3s;
+}
+
+.btn-back:hover {
+  background: #b45309;    /* hover 金棕色，呼應全站 accent */
+  color: #fff;
+}
