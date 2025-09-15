@@ -838,26 +838,35 @@
             你的瀏覽器不支援影片播放。
           </video>
         `;
-      } else if (e.videoUrl) {
-        if (showAsLinkCard) {
-          // 作品集或有設定 videoLinkCard：用縮圖卡外開
-          const provider =
-            /instagram\.com/.test(e.videoUrl) ? "Instagram" :
-            /(youtu\.be|youtube\.com)/.test(e.videoUrl) ? "YouTube" :
-            /vimeo\.com/.test(e.videoUrl) ? "Vimeo" : "外部平台";
-          const thumb = e.videoThumb || e.cover || "";
-          html += `
-            <h4 class="gallery-title">影片</h4>
-            <a href="${e.videoUrl}" target="_blank" rel="noopener"
-               class="video-link${thumb ? " has-thumb" : ""}" aria-label="前往${provider}觀看">
-              ${thumb ? `<img src="${thumb}" alt="${e.title} 影片預覽" loading="lazy" onerror="this.style.display='none'">` : ""}
-              <div class="vl-center">
-                <span class="vl-play">▶</span>
-                <span class="vl-text">前往${provider}觀看</span>
-              </div>
-            </a>
-          `;
-        } else if (typeof buildVideoBlock === "function") {
+      } else {
+        // 兼容：多部影片用 e.videos[]；否則退回單一 videoUrl/videoThumb
+        const linkCardItems = Array.isArray(e.videos)
+          ? e.videos
+          : (e.videoUrl ? [{ url: e.videoUrl, thumb: e.videoThumb || e.cover }] : []);
+    
+        if (showAsLinkCard && linkCardItems.length) {
+          html += `<h4 class="gallery-title">影片</h4>
+            <div class="video-grid">
+              ${linkCardItems.map(v => {
+                const provider =
+                  /instagram\.com/.test(v.url) ? "Instagram" :
+                  /(youtu\.be|youtube\.com)/.test(v.url) ? "YouTube" :
+                  /vimeo\.com/.test(v.url) ? "Vimeo" : "外部平台";
+                const thumb = v.thumb || "";
+                return `
+                  <a href="${v.url}" target="_blank" rel="noopener"
+                     class="video-link${thumb ? " has-thumb" : ""}"
+                     aria-label="前往${provider}觀看">
+                    ${thumb ? `<img src="${thumb}" alt="${e.title} 影片預覽" loading="lazy" onerror="this.style.display='none'">` : ""}
+                    <div class="vl-center">
+                      <span class="vl-play">▶</span>
+                      <span class="vl-text">前往${provider}觀看</span>
+                    </div>
+                  </a>
+                `;
+              }).join("")}
+            </div>`;
+        } else if (e.videoUrl && typeof buildVideoBlock === "function") {
           // 其他分類：若有 buildVideoBlock 就用它做內嵌（YouTube/Vimeo/IG）
           html += buildVideoBlock(e);
         }
@@ -952,7 +961,9 @@
     
     // （函式外）全域事件：保留
     dialog.addEventListener("click", (ev) => {
-      const rect = dialog.querySelector(".dialog-body").getBoundingClientRect?.() || dialog.getBoundingClientRect();
+      const rect = (dialogBody && dialogBody.getBoundingClientRect)
+        ? dialogBody.getBoundingClientRect()
+        : dialog.getBoundingClientRect();
       const inDialog = ev.clientX >= rect.left && ev.clientX <= rect.right && ev.clientY >= rect.top && ev.clientY <= rect.bottom;
       if (!inDialog) dialog.close();
     });
