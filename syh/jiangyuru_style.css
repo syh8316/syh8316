@@ -4,13 +4,14 @@ body {
   margin: 0;
   padding: 0;
   line-height: 1.8;
-  background-color: #fafafa;
-  color: #333;
+  background-color: #fff;  /* 主頁一致：白底 */
+  color: #333;             /* 深灰文字 */
 }
 
 h1, h2, h3 {
   font-weight: 600;
   margin: 0.5em 0;
+  color: #222; /* 稍深一點，凸顯標題 */
 }
 
 p {
@@ -19,7 +20,7 @@ p {
 
 /* ========== 導覽列 ========== */
 .site-header {
-  background-color: #800000; /* 酒紅色，可依劇團形象調整 */
+  background-color: #800000; /* 主色：酒紅 */
   padding: 0.8em 1.2em;
 }
 
@@ -54,7 +55,7 @@ p {
 }
 
 .navbar .nav-links a:hover {
-  color: #ffd700; /* 金色 hover 效果 */
+  color: #c59d5f; /* 金褐色 hover 效果 */
 }
 
 /* ========== 人物專頁 ========== */
@@ -76,21 +77,23 @@ p {
   width: 220px;
   height: auto;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   margin-bottom: 1em;
 }
 
 .profile-content {
   font-size: 1.05em;
   text-align: justify;
+  color: #444;
 }
 
 /* ========== 頁尾 ========== */
 .site-footer {
-  background-color: #222;
-  color: #fff;
+  background-color: #f8f8f8; /* 淺灰，避免太重 */
+  color: #555;
   text-align: center;
   padding: 1em 0;
   margin-top: 3em;
   font-size: 0.9em;
+  border-top: 2px solid #800000; /* 用酒紅色收邊 */
 }
