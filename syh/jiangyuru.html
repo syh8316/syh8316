@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="./total.css?v=2" />
   <link rel="stylesheet" href="./phone.css?v=2" />
-  <link rel="stylesheet" href="./jiangyuru_style.css?v=4" />
+  <link rel="stylesheet" href="./jiangyuru_style.css?v=5" />
 </head>
 <body>
   <!-- 導覽列 -->
@@ -187,7 +187,7 @@
       lbCounter.textContent = (idx+1) + ' / ' + sources.length;
     }
     function openLightbox(i){
-      if (dlg.open) dlg.close();  // 關相簿
+      if (dlg.open) dlg.close(); // 關相簿，避免蓋住
       show(i);
       lb.hidden = false;
       document.body.classList.add('no-scroll');
