@@ -17,12 +17,17 @@ body{
 body{ padding-top:80px; }
 
 .album-btn{
-  display:inline-flex; align-items:center; justify-content:center;
-  padding:10px 14px; border-radius:10px;
-  background:#111; color:#fff; text-decoration:none; font-weight:800;
-  border:1px solid #111; transition: background .25s, color .25s, transform .2s;
+  appearance: none;  /* 讓 button 看起來像你原本設計 */
+  -webkit-appearance: none;
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+  font-weight: 800;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
 }
-.album-btn:hover{ background:#b45309; border-color:#8a3e07; color:#111; transform: translateY(-1px); }
+.album-btn:hover{ background: #b45309; color: #111; }
 
 /* ===== 人物頁 ===== */
 .profile{ max-width:960px; margin:2em auto; padding:0 16px; }
