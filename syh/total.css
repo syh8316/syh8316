@@ -667,3 +667,17 @@ body::after,
   .site-nav ul{ display: flex; gap: 32px; padding: 0; }
 }
 
+/* 保證可捲動 */
+html, body { overflow-y: auto; }
+
+/* about 的遮罩只做視覺，不吃事件 */
+.about::before { pointer-events: none; }
+
+/* 手機展開選單時才鎖捲動；桌機一律不鎖 */
+@media (max-width: 768px){ body.no-scroll { overflow: hidden; } }
+@media (min-width: 769px){ body.no-scroll { overflow: auto !important; } }
+
+/* 抽屜選單收起時不吃事件，展開才吃 */
+.site-nav         { pointer-events: none; }
+.site-nav.is-open { pointer-events: auto; }
+
