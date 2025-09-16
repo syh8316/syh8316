@@ -457,13 +457,13 @@ body::after,
   position: fixed;
   inset: 0;
   z-index: 9999;            /* 蓋在最上層 */
-  background: #000;         /* 邊角/長寬比不合時的底色 */
+  background: #000;         /* 防止邊角露底色 */
   display: grid;
   place-items: center;      /* 圖置中 */
   overflow: hidden;
 }
 
-/* 照片鋪滿畫面且等比不變形 */
+/* 照片等比鋪滿整個視窗 */
 #splash-overlay > img{
   width: 100vw;
   height: 100vh;
@@ -472,9 +472,20 @@ body::after,
   display: block;
 }
 
-/* 觸發淡出：JS 會在 idle 後加上 .is-fading */
+/* 觸發淡出：JS 會在等待時間後加上 .is-fading */
 #splash-overlay.is-fading{
   animation: splash-fade-out 0.8s ease forwards;
+}
+
+/* 尊重偏好動作減少：直接關閉覆蓋層 */
+@media (prefers-reduced-motion: reduce){
+  #splash-overlay{ display: none !important; }
+}
+
+/* 淡出關鍵影格 */
+@keyframes splash-fade-out{
+  from { opacity: 1; }
+  to   { opacity: 0; visibility: hidden; }
 }
 
 /* 尊重偏好動作減少：直接隱藏，不做動畫 */
@@ -680,4 +691,5 @@ html, body { overflow-y: auto; }
 /* 抽屜選單收起時不吃事件，展開才吃 */
 .site-nav         { pointer-events: none; }
 .site-nav.is-open { pointer-events: auto; }
+
 
