@@ -285,74 +285,98 @@
             </button>
             <script>
             (function () {
+              // === 覆蓋層（封面） ===
               const splash = document.getElementById('splash-overlay');
               if (!splash) return;
             
-              // === 可調整參數 ===
-              const idleMs = 1600;  // 封面停留時間
-              const fadeMs = 800;   // 淡出動畫時間（要和 total.css 的 0.8s 對齊）
-              const openNavDelay = 50; // 淡出後等一下再開菜單，避免佈局還在重排
+              // === 可調參數 ===
+              const idleMs = 1600;      // 封面停留時間
+              const fadeMs = 800;       // 淡出動畫時間（請與 total.css 的 0.8s 對齊）
+              const openNavDelay = 50;  // 淡出後延遲一下再展開選單（避免佈局重排）
             
-              // 鎖捲動避免背景晃動
+              // === 工具 ===
               const lockScroll   = () => { document.body.style.overflow = 'hidden'; };
               const unlockScroll = () => { document.body.style.overflow = ''; };
-              lockScroll();
             
-              // 封面流程：等待 → 淡出 → 移除 → 解鎖 → 展開導覽列
-              function startFlow() {
-                setTimeout(() => {
-                  splash.classList.add('is-fading'); // 觸發 CSS 淡出
-                  setTimeout(() => {
-                    splash.remove();
-                    unlockScroll();
-                    // ✅ 淡出完成後展開漢堡導覽列
-                    openHamburgerNav();
-                  }, fadeMs);
-                }, idleMs);
-              }
-            
-              // 展開漢堡導覽列（優先用按鈕 click 觸發既有邏輯；沒有就備援）
-              function openHamburgerNav() {
-                setTimeout(() => {
-                  const toggle = document.getElementById('navToggle');
-                  const nav = document.getElementById('siteNav');
-            
-                  if (toggle) {
-                    const expanded = toggle.getAttribute('aria-expanded') === 'true';
-                    if (!expanded) {
-                      toggle.click(); // 走你原本的事件監聽與動畫
-                    }
-                  } else if (nav) {
-                    // 備援：萬一沒有按鈕，就直接把導覽列標為開啟
-                    nav.classList.add('open', 'is-open', 'active', 'show');
-                    nav.style.display = 'block';
-                    nav.style.visibility = 'visible';
-                    nav.style.opacity = '1';
-                  }
-                }, openNavDelay);
-              }
-            
-              // 等圖片載入後再開始（避免還沒載到圖就黑屏）
+              // === 入口：等封面圖載入完，再開始流程 ===
               const img = splash.querySelector('img');
               if (img && !img.complete) {
-                img.addEventListener('load', startFlow,  { once: true });
+                img.addEventListener('load',  startFlow, { once: true });
                 img.addEventListener('error', startFlow, { once: true });
               } else {
                 startFlow();
               }
             
-              // 安全網：最久 idle+fade+800ms 也會放行並展開導覽列
+              // === 主流程：等待 → 淡出 → 移除 → 解鎖 → 展開選單 ===
+              function startFlow() {
+                lockScroll();
+                setTimeout(() => {
+                  splash.classList.add('is-fading'); // 觸發 CSS 淡出動畫
+                  setTimeout(() => {
+                    splash.remove();                 // 移除覆蓋層
+                    unlockScroll();
+                    openHamburgerNav();              // ✅ 淡出完成後展開漢堡導覽列
+                    bindAutoCloseOnScroll();         // ✅ 綁定「一捲動就收合」
+                  }, fadeMs);
+                }, idleMs);
+              }
+            
+              // === 展開漢堡導覽列：優先用按鈕 click 走既有邏輯；沒有就備援 ===
+              function openHamburgerNav() {
+                setTimeout(() => {
+                  const toggle = document.getElementById('navToggle');
+                  const nav    = document.getElementById('siteNav');
+            
+                  // 僅在行動版才自動展開（桌機本來就是攤開的）
+                  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+            
+                  if (!isMobile) return;
+            
+                  if (toggle) {
+                    const expanded = toggle.getAttribute('aria-expanded') === 'true';
+                    if (!expanded) toggle.click();
+                  } else if (nav) {
+                    // 備援（若無按鈕）：直接標記為開啟
+                    nav.classList.add('is-open');
+                    nav.style.display = 'block';
+                    nav.style.visibility = 'visible';
+                    nav.style.opacity = '1';
+                    document.body.classList.add('no-scroll');
+                  }
+                }, openNavDelay);
+              }
+            
+              // === 一捲動就自動關閉（只在行動版有效） ===
+              function bindAutoCloseOnScroll() {
+                const toggle = document.getElementById('navToggle');
+                const nav    = document.getElementById('siteNav');
+            
+                if (!toggle || !nav) return;
+            
+                const onScroll = () => {
+                  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+                  const expanded = toggle.getAttribute('aria-expanded') === 'true';
+                  if (isMobile && expanded) {
+                    // 用 click 關閉，沿用你現有的關閉邏輯（含 aria/no-scroll 等）
+                    toggle.click();
+                  }
+                };
+            
+                // 監聽一次就好，持續有效
+                window.addEventListener('scroll', onScroll, { passive: true });
+              }
+            
+              // === 安全網：就算載入過慢，也會在超時後放行、展開、綁定收合 ===
               setTimeout(() => {
                 if (document.getElementById('splash-overlay')) {
                   splash.remove();
                   unlockScroll();
                   openHamburgerNav();
+                  bindAutoCloseOnScroll();
                 }
               }, idleMs + fadeMs + 800);
-            
             })();
             </script>
-
                 <div id="social" class="social">
                 <a href="https://www.facebook.com/share/1Ho4w7W3ha/?mibextid=wwXIfr" target="_blank" class="icon"><i class="fab fa-facebook-f"></i></a>
                 <a href="https://www.instagram.com/syh.ot_1994?igsh=MXd6azF0ZWs0NHZkMQ%3D%3D&utm_source=qr" target="_blank" class="icon"><i class="fab fa-instagram"></i></a>
@@ -377,6 +401,7 @@
     </body>
 
 </html>
+
 
 
 
