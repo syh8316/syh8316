@@ -17,33 +17,24 @@ body{
 body{ padding-top:80px; }
 
 .album-btn{
-  appearance: none;  /* 讓 button 看起來像你原本設計 */
-  -webkit-appearance: none;
-  border: 1px solid #111;
-  background: #111;
-  color: #fff;
-  font-weight: 800;
-  padding: 10px 14px;
-  border-radius: 10px;
-  cursor: pointer;
+  appearance:none; -webkit-appearance:none;
+  border:1px solid #111; background:#111; color:#fff;
+  font-weight:800; padding:10px 14px; border-radius:10px; cursor:pointer;
 }
-.album-btn:hover{ background: #b45309; color: #111; }
+.album-btn:hover{ background:#b45309; color:#111; }
 
 /* ===== 人物頁 ===== */
 .profile{ max-width:960px; margin:2em auto; padding:0 16px; }
-.profile-header{text-align:center; margin-bottom:2em;
-                text-align: center;        /* 文字、圖片一起置中 */
-               }
-.profile-header img {
-  display: block;
-  margin: 0 auto;            /* 水平置中 */
+
+.profile-header{
+  text-align:center; margin-bottom:2em;
+}
+.profile-header img{
+  display:block; margin:0 auto;  /* 圖片置中 */
 }
 .profile-photo{
-  width:240px; 
-  height:auto; 
-  border-radius:12px;
-  box-shadow:0 6px 18px rgba(0,0,0,.15); 
-  margin-bottom:1em;
+  width:240px; height:auto; border-radius:12px;
+  box-shadow:0 6px 18px rgba(0,0,0,.15); margin-bottom:1em;
 }
 .profile-header h1{
   font-size:1.8rem; font-weight:800; color:#111;
@@ -52,38 +43,37 @@ body{ padding-top:80px; }
 .profile-content{ font-size:1.05rem; text-align:justify; color:#333; }
 
 /* 返回首頁 */
-.back-home{ text-align:center; margin-top: 2em; }
+.back-home{ text-align:center; margin-top:2em; }
 .btn-back{
   display:inline-block; padding:10px 18px; border-radius:8px;
-  background:#111; color:#fff; text-decoration:none; font-weight:700;
-  transition: background .3s;
+  background:#111; color:#fff; text-decoration:none; font-weight:700; transition:background .3s;
 }
 .btn-back:hover{ background:#b45309; color:#fff; }
 
-/* ===== 相簿 Dialog（置中、小框） ===== */
+/* ===== 相簿 Dialog（Mobile First：滿版） ===== */
 .event-dialog{
-  width:min(900px,92%);
-  border:none; border-radius:16px; padding:0;
-  background:#fff; color:#111;
-  box-shadow:0 60px 120px rgba(0,0,0,.35);
-  z-index: 1500; /* 層級在頁面之上 */
+  position:fixed; inset:0; z-index:1500;
+  width:100vw; height:100vh; margin:0; border:0; border-radius:0; padding:0;
+  background:#fff; color:#111; display:flex; flex-direction:column;
 }
+.event-dialog::backdrop{ background:rgba(0,0,0,.55); }
+
 /* hidden 一定要能隱藏，避免被其他 display 設定蓋掉 */
 .event-dialog[hidden]{ display:none !important; }
 
-.event-dialog::backdrop{ background:rgba(0,0,0,.55); }
-
+/* 右上角關閉 */
 .event-dialog .close{
-  position:absolute; right:8px; top:8px; z-index: 10;
-  border:1px solid #ddd; background:#111; color:#fff;
-  border-radius:10px; padding:.4rem .6rem; cursor:pointer;
+  position:absolute; right:16px; top:16px; z-index:1600;
+  border:none; background:#111; color:#fff;
+  border-radius:8px; padding:8px 12px; cursor:pointer;
 }
 
-.event-dialog .dialog-body{ padding:16px; }
-.gallery-title{ margin:.2rem 0 12px; font-size:1.05rem; }
+/* 內容可捲動 */
+.event-dialog .dialog-body{ flex:1; overflow:auto; padding:20px; }
 
+/* 縮圖網格 */
 .gallery-grid{
-  display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr));
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));
   gap:10px; margin-bottom:6px;
 }
 .gallery-grid .thumb{
@@ -92,34 +82,61 @@ body{ padding-top:80px; }
 }
 .gallery-grid .thumb img{
   width:100%; height:100%; object-fit:cover; display:block;
-  border:1px solid #e5e7eb; transition: transform .2s ease;
+  border:1px solid #e5e7eb; transition:transform .2s ease;
 }
-.gallery-grid .thumb:hover img{ transform: scale(1.02); }
+.gallery-grid .thumb:hover img{ transform:scale(1.02); }
 
-/* ===== 燈箱（在最上層） ===== */
+/* ===== 平板以上（置中卡片） ===== */
+@media (min-width: 768px){
+  .event-dialog{
+    width:min(900px, 92vw);
+    height:auto; max-height:85vh;
+    margin:auto; border-radius:16px;
+    box-shadow:0 60px 120px rgba(0,0,0,.35);
+  }
+  .event-dialog .dialog-body{ padding:20px 22px; }
+  .gallery-grid{
+    grid-template-columns:repeat(auto-fill, minmax(160px, 1fr));
+    gap:12px;
+  }
+}
+
+/* ===== 大桌機（卡片更寬） ===== */
+@media (min-width: 1200px){
+  .event-dialog{
+    width:min(1100px, 90vw);
+    max-height:88vh;
+  }
+  .gallery-grid{
+    grid-template-columns:repeat(auto-fill, minmax(180px, 1fr));
+    gap:14px;
+  }
+}
+
+/* ===== 燈箱（最上層） ===== */
 .lightbox{
-  position: fixed; inset: 0; display:grid; place-items:center;
-  background: rgba(0,0,0,.8); z-index: 2000; /* 高於 dialog */
+  position:fixed; inset:0; display:grid; place-items:center;
+  background:rgba(0,0,0,.8); z-index:2000;   /* 高於 dialog */
 }
 .lightbox[hidden]{ display:none; }
 .lb-img{
-  max-width:92vw; max-height:82vh; border-radius:12px; border:1px solid #e5e7eb;
-  background:#fff;
+  max-width:92vw; max-height:82vh; border-radius:12px;
+  border:1px solid #e5e7eb; background:#fff;
 }
 .lb-prev, .lb-next, .lb-close{
-  position:absolute; border:1px solid #ddd; background:#fff;
-  color:#111; border-radius:10px; padding:.4rem .6rem; cursor:pointer;
+  position:absolute; border:1px solid #ddd; background:#fff; color:#111;
+  border-radius:10px; padding:.4rem .6rem; cursor:pointer;
 }
 .lb-prev, .lb-next{ top:50%; transform:translateY(-50%); font-size:1.6rem; line-height:1; }
 .lb-prev{ left:10px; } .lb-next{ right:10px; }
 .lb-close{ top:10px; right:10px; font-size:1rem; }
 .lb-counter{
   position:absolute; bottom:10px; left:50%; transform:translateX(-50%);
-  background: rgba(255,255,255,.9); border:1px solid #ddd;
+  background:rgba(255,255,255,.9); border:1px solid #ddd;
   padding:.25rem .5rem; border-radius:8px; font-size:.9rem; color:#111;
 }
 
-/* ===== 手機 ===== */
+/* ===== 手機細節 ===== */
 @media (max-width: 768px){
   .profile-photo{ width:200px; }
   .profile-header h1{ font-size:1.5rem; }
