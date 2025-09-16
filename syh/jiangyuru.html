@@ -165,17 +165,9 @@
 
   <script>
   (function(){
-    // 相簿 Dialog
+    // ====== 取得節點（防呆，避免抓不到報錯） ======
     const dlg = document.getElementById('albumDialog');
     const openBtn = document.getElementById('openAlbum');
-    const closeBtn = document.getElementById('closeAlbum');
-
-    openBtn.addEventListener('click', () => { if (!dlg.open) dlg.showModal();});
-    closeBtn.addEventListener('click', () => { if (dlg.open) dlg.close(); });
-    dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); }); // 點半透明區關閉
-    window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && dlg.open) dlg.close(); });
-
-    // Lightbox
     const grid = document.getElementById('albumGrid');
     const lb = document.getElementById('lightbox');
     const lbImg = document.getElementById('lbImg');
@@ -183,18 +175,72 @@
     const lbNext = document.getElementById('lbNext');
     const lbClose = document.getElementById('lbClose');
     const lbCounter = document.getElementById('lbCounter');
-
+    const closeBtn = dlg ? dlg.querySelector('.close') : null;
+  
+    // 若必要節點不存在就結束，避免報錯
+    if (!dlg || !openBtn) return;
+  
+    // ====== 開啟相簿（支援 <a> 或 <button>） ======
+    openBtn.addEventListener('click', function(e){
+      if (e && typeof e.preventDefault === 'function') e.preventDefault();
+      // 初始狀態確保隱藏屬性移除
+      dlg.removeAttribute('hidden');
+      if (typeof dlg.showModal === 'function') {
+        dlg.showModal();
+      } else {
+        // 後備：舊瀏覽器沒有 showModal()
+        dlg.setAttribute('open', '');
+        dlg.style.display = 'block';
+      }
+    });
+  
+    // ====== 關閉相簿（右上角關閉） ======
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function(e){
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        closeDialog();
+      });
+    }
+  
+    // 點 backdrop（對話框外部）也關閉
+    dlg.addEventListener('click', (e) => {
+      if (e.target === dlg) closeDialog();
+    });
+  
+    // Esc 關閉相簿
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isDialogOpen()) closeDialog();
+    });
+  
+    function isDialogOpen(){
+      return typeof dlg.open === 'boolean' ? dlg.open : dlg.hasAttribute('open');
+    }
+    function closeDialog(){
+      if (typeof dlg.close === 'function' && isDialogOpen()) {
+        dlg.close();
+      } else {
+        dlg.removeAttribute('open');
+        dlg.style.display = 'none';
+      }
+      // 重新標記為 hidden（避免刷新記憶打開狀態）
+      dlg.setAttribute('hidden', '');
+    }
+  
+    // ====== 燈箱（如未配置直接跳過） ======
+    if (!grid || !lb || !lbImg || !lbPrev || !lbNext || !lbClose || !lbCounter) return;
+  
     const thumbs = Array.from(grid.querySelectorAll('.thumb'));
     const sources = thumbs.map(b => b.dataset.src);
     let idx = 0;
-
+  
     function show(i){
+      if (!sources.length) return;
       idx = (i + sources.length) % sources.length;
       lbImg.src = sources[idx];
       lbCounter.textContent = (idx+1) + ' / ' + sources.length;
     }
     function openLightbox(i){
-      if (dlg.open) dlg.close();        // 關掉相簿對話框
+      if (isDialogOpen()) closeDialog();     // 先把相簿收起來，避免蓋住
       show(i);
       lb.hidden = false;
       document.body.classList.add('no-scroll');
@@ -203,26 +249,49 @@
       lb.hidden = true;
       document.body.classList.remove('no-scroll');
     }
-
+  
+    // 縮圖 → 開燈箱
     grid.addEventListener('click', (e) => {
       const btn = e.target.closest('.thumb');
       if(!btn) return;
       e.preventDefault();
-      openLightbox( thumbs.indexOf(btn) );
+      const i = thumbs.indexOf(btn);
+      if (i >= 0) openLightbox(i);
     });
-
+  
+    // 燈箱 UI
     lbPrev.addEventListener('click', () => show(idx - 1));
     lbNext.addEventListener('click', () => show(idx + 1));
     lbClose.addEventListener('click', closeLightbox);
     lb.addEventListener('click', (e) => { if(e.target === lb) closeLightbox(); });
-
+  
+    // 鍵盤操作（燈箱開啟時）
     window.addEventListener('keydown', (e) => {
-      if(lb.hidden) return;
-      if(e.key === 'Escape') closeLightbox();
-      if(e.key === 'ArrowLeft') show(idx - 1);
-      if(e.key === 'ArrowRight') show(idx + 1);
+      if (lb.hidden) return;
+      if (e.key === 'Escape')     return closeLightbox();
+      if (e.key === 'ArrowLeft')  return show(idx - 1);
+      if (e.key === 'ArrowRight') return show(idx + 1);
     });
+  
+    // 手機滑動切換
+    let startX = 0, startY = 0, touching = false;
+    const SWIPE = 40; // 最小滑動閾值
+    lb.addEventListener('touchstart', (e) => {
+      if(lb.hidden) return;
+      touching = true;
+      const t = e.changedTouches[0];
+      startX = t.clientX; startY = t.clientY;
+    }, {passive:true});
+    lb.addEventListener('touchend', (e) => {
+      if(!touching) return; touching = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - startX, dy = t.clientY - startY;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > SWIPE){
+        if (dx < 0) show(idx + 1); else show(idx - 1);
+      }
+    }, {passive:true});
   })();
   </script>
+
 </body>
 </html>
