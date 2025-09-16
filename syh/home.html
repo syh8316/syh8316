@@ -412,7 +412,7 @@
           const showBtn = () => { btn.hidden = false; };
           const hideBtn = () => { btn.hidden = true;  };
         
-          // --- 嘗試播放（可能會因為自動播放政策被擋） ---
+          // --- 嘗試播放（可能會被自動播放政策擋） ---
           async function tryStart() {
             try {
               await audio.play();
@@ -424,10 +424,10 @@
             }
           }
         
-          // 1) 封面淡出完成後馬上嘗試播放（你的淡出腳本會 dispatch 'splash:done'）
+          // 1) 封面淡出完成後嘗試播放（你的淡出腳本會 dispatch 'splash:done'）
           document.addEventListener('splash:done', tryStart);
         
-          // 2) 使用者第一次互動就播放（點按鈕或任意觸控）
+          // 2) 使用者第一次互動就播放（點按鈕或任意觸控/點擊）
           const unlockOnce = async () => {
             const ok = await tryStart();
             if (ok) {
@@ -435,46 +435,63 @@
               btn.removeEventListener('click', unlockOnce);
             }
           };
-          btn.addEventListener('click', unlockOnce, { passive: true });
+          btn.addEventListener('click',   unlockOnce, { passive: true });
           window.addEventListener('pointerdown', unlockOnce, { passive: true });
         
           // 3) 保險：若封面事件沒來，2.6 秒後也嘗試一次
           setTimeout(tryStart, 2600);
         
-          // ====== 離開首頁就自動關閉音樂 ======
-          function stopBgm(reset = true) {
+          // ====== 離開/切走就一定關掉 ======
+          function pauseAndReset() {
             try { audio.pause(); } catch (e) {}
-            if (reset) {
-              try { audio.currentTime = 0; } catch (e) {}
-            }
+            try { audio.currentTime = 0; } catch (e) {}
+          }
+          function hardStopAndUnload() {
+            // 最保險的作法：移除音源並強制卸載，避免任何殘響
+            pauseAndReset();
+            try {
+              const src = audio.getAttribute('src');
+              audio.removeAttribute('src');
+              audio.load(); // 立即卸載音訊
+              // 也把 <source> 清掉（如果你有用 <source>）
+              audio.querySelectorAll('source').forEach(s => s.remove());
+              // 若你希望返回此頁面時不自動恢復，可保持無 src；
+              // 若要回來可播，請在返回後（pageshow）改由使用者互動再設定 src。
+            } catch (e) {}
           }
         
-          // A) 跳轉前（重新整理／關分頁／導向其他頁）
-          window.addEventListener('beforeunload', () => stopBgm(), { capture: true });
-        
-          // B) iOS/Safari 最穩的卸載事件
-          window.addEventListener('pagehide', () => stopBgm(), { capture: true });
-        
-          // C) 頁面變背景或切到別的分頁/APP
+          // A) 切到背景分頁：先暫停並歸零（回來時不自動播放）
           document.addEventListener('visibilitychange', () => {
-            if (document.hidden) stopBgm();
+            if (document.hidden) pauseAndReset();
           });
         
-          // D) 任何超連結點擊就先關掉（避免同網域跳頁時短暫殘響）
+          // B) 真的要離開本頁：在卸載前徹底卸載音源（含 iOS/Safari）
+          window.addEventListener('beforeunload', hardStopAndUnload, { capture: true });
+          window.addEventListener('pagehide',     hardStopAndUnload, { capture: true });
+        
+          // C) 點任何超連結就先停音（含新分頁/外連）
           document.addEventListener('click', (e) => {
             const a = e.target.closest && e.target.closest('a[href]');
             if (!a) return;
-        
-            // 忽略純 hash(#錨點) 或 JS 假連結
             const href = a.getAttribute('href') || '';
+            // 忽略純 hash 或 javascript: 連結
             if (href.startsWith('#') || href.startsWith('javascript:')) return;
-        
-            stopBgm();
+            pauseAndReset();
           }, { capture: true });
         
+          // D) 若你希望「返回此頁」也完全靜音（避免 bfcache 自動復原）
+          window.addEventListener('pageshow', (e) => {
+            if (e.persisted) {
+              // 從 bfcache 回來
+              pauseAndReset();
+              // 如要保證不會自動恢復，取消下一行註解以移除音源：
+              // hardStopAndUnload();
+            }
+          });
         })();
         </script>
 
     </body>
 
 </html>
+
