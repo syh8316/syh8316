@@ -189,6 +189,34 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 8px); }
   opacity: 1;
 }
 
+/* 讓整張人物卡都是可點的區域，維持原本 hover 效果 */
+.person-card .person-link{
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;   /* 不要底線 */
+  color: inherit;          /* 承襲文字色 */
+  position: relative;      /* 保持 caption 絕對定位的參考 */
+}
+
+/* 鍵盤可及性：聚焦時給一圈淡淡外框 */
+.person-card .person-link:focus-visible{
+  outline: 3px solid rgba(0,0,0,.35);
+  outline-offset: 3px;
+  border-radius: 12px;
+}
+
+/* 保留你原本的 hover 動畫（link 也算 hover 範圍） */
+.person-card:hover img,
+.person-card .person-link:hover img{
+  transform: scale(1.06) rotate(-1.5deg);
+  filter: brightness(.92);
+}
+.person-card:hover .caption,
+.person-card .person-link:hover .caption{
+  transform: translateY(0);
+  opacity: 1;
+}
 
 /*結語設定*/
 /* 圖左／文右 */
@@ -691,5 +719,6 @@ html, body { overflow-y: auto; }
 /* 抽屜選單收起時不吃事件，展開才吃 */
 .site-nav         { pointer-events: none; }
 .site-nav.is-open { pointer-events: auto; }
+
 
 
