@@ -26,10 +26,19 @@ body{ padding-top:80px; }
 
 /* ===== 人物頁 ===== */
 .profile{ max-width:960px; margin:2em auto; padding:0 16px; }
-.profile-header{ text-align:center; margin-bottom:2em; }
+.profile-header{text-align:center; margin-bottom:2em;
+                text-align: center;        /* 文字、圖片一起置中 */
+               }
+.profile-header img {
+  display: block;
+  margin: 0 auto;            /* 水平置中 */
+}
 .profile-photo{
-  width:240px; height:auto; border-radius:12px;
-  box-shadow:0 6px 18px rgba(0,0,0,.15); margin-bottom:1em;
+  width:240px; 
+  height:auto; 
+  border-radius:12px;
+  box-shadow:0 6px 18px rgba(0,0,0,.15); 
+  margin-bottom:1em;
 }
 .profile-header h1{
   font-size:1.8rem; font-weight:800; color:#111;
