@@ -274,7 +274,7 @@
             });
             </script>
             <!-- 預先載入音檔，縮短首播延遲 -->
-            <link rel="preload" as="audio" href="./芙蓉.m4a" type="audio/mpeg">
+            <link rel="preload" as="audio" href="./芙蓉.m4a" type="audio/mp4">
 
             <!-- 背景音樂（無限重播） -->
             <audio id="bgm" src="./芙蓉.m4a" loop preload="metadata" playsinline></audio>
@@ -369,10 +369,12 @@
               // === 安全網：就算載入過慢，也會在超時後放行、展開、綁定收合 ===
               setTimeout(() => {
                 if (document.getElementById('splash-overlay')) {
-                  splash.remove();
-                  unlockScroll();
-                  openHamburgerNav();
-                  bindAutoCloseOnScroll();
+                    splash.remove();
+                    unlockScroll();
+                    openHamburgerNav();
+                    bindAutoCloseOnScroll();
+                    // ✅ 新增：通知「封面已結束」
+                    document.dispatchEvent(new Event('splash:done'));
                 }
               }, idleMs + fadeMs + 800);
             })();
@@ -397,10 +399,51 @@
                 </div>
             </div>
         </footer>
+        <script>
+        (function () {
+          const audio = document.getElementById('bgm');
+          const btn   = document.getElementById('bgmUnlock');
+          if (!audio || !btn) return;
         
+          // 顯示/隱藏解鎖按鈕
+          const showBtn = () => { btn.hidden = false; };
+          const hideBtn = () => { btn.hidden = true;  };
+        
+          // 嘗試播放（行動瀏覽器若無互動可能失敗 → 顯示解鎖鈕）
+          async function tryStart() {
+            try {
+              await audio.play();
+              hideBtn();
+              return true;
+            } catch (e) {
+              showBtn();
+              return false;
+            }
+          }
+        
+          // 1) 封面淡出完成後馬上嘗試播放
+          document.addEventListener('splash:done', tryStart);
+        
+          // 2) 使用者第一次互動就播放（點解鎖鈕或隨便點一下頁面）
+          const unlockOnce = async () => {
+            const ok = await tryStart();
+            if (ok) {
+              window.removeEventListener('pointerdown', unlockOnce);
+              btn.removeEventListener('click', unlockOnce);
+            }
+          };
+          btn.addEventListener('click', unlockOnce, { passive: true });
+          window.addEventListener('pointerdown', unlockOnce, { passive: true });
+        
+          // 3) 保險：若封面事件沒來，2.6 秒後也嘗試一次
+          setTimeout(tryStart, 2600);
+        })();
+        </script>
+
     </body>
 
 </html>
+
 
 
 
