@@ -408,11 +408,11 @@
           const btn   = document.getElementById('bgmUnlock');
           if (!audio || !btn) return;
         
-          // 顯示/隱藏解鎖按鈕
+          // --- UI ---
           const showBtn = () => { btn.hidden = false; };
           const hideBtn = () => { btn.hidden = true;  };
         
-          // 嘗試播放（行動瀏覽器若無互動可能失敗 → 顯示解鎖鈕）
+          // --- 嘗試播放（可能會因為自動播放政策被擋） ---
           async function tryStart() {
             try {
               await audio.play();
@@ -424,10 +424,10 @@
             }
           }
         
-          // 1) 封面淡出完成後馬上嘗試播放
+          // 1) 封面淡出完成後馬上嘗試播放（你的淡出腳本會 dispatch 'splash:done'）
           document.addEventListener('splash:done', tryStart);
         
-          // 2) 使用者第一次互動就播放（點解鎖鈕或隨便點一下頁面）
+          // 2) 使用者第一次互動就播放（點按鈕或任意觸控）
           const unlockOnce = async () => {
             const ok = await tryStart();
             if (ok) {
@@ -440,25 +440,41 @@
         
           // 3) 保險：若封面事件沒來，2.6 秒後也嘗試一次
           setTimeout(tryStart, 2600);
+        
+          // ====== 離開首頁就自動關閉音樂 ======
+          function stopBgm(reset = true) {
+            try { audio.pause(); } catch (e) {}
+            if (reset) {
+              try { audio.currentTime = 0; } catch (e) {}
+            }
+          }
+        
+          // A) 跳轉前（重新整理／關分頁／導向其他頁）
+          window.addEventListener('beforeunload', () => stopBgm(), { capture: true });
+        
+          // B) iOS/Safari 最穩的卸載事件
+          window.addEventListener('pagehide', () => stopBgm(), { capture: true });
+        
+          // C) 頁面變背景或切到別的分頁/APP
+          document.addEventListener('visibilitychange', () => {
+            if (document.hidden) stopBgm();
+          });
+        
+          // D) 任何超連結點擊就先關掉（避免同網域跳頁時短暫殘響）
+          document.addEventListener('click', (e) => {
+            const a = e.target.closest && e.target.closest('a[href]');
+            if (!a) return;
+        
+            // 忽略純 hash(#錨點) 或 JS 假連結
+            const href = a.getAttribute('href') || '';
+            if (href.startsWith('#') || href.startsWith('javascript:')) return;
+        
+            stopBgm();
+          }, { capture: true });
+        
         })();
         </script>
 
     </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
