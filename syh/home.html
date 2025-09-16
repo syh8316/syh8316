@@ -288,26 +288,51 @@
               const splash = document.getElementById('splash-overlay');
               if (!splash) return;
             
-              // 參數：等待展示＋淡出時間（要與 CSS 的 0.8s 對齊）
-              const idleMs = 1600;  // 停留時間（你想要多一點就加大）
-              const fadeMs = 800;   // 淡出時間（和 CSS 0.8s 一致）
+              // === 可調整參數 ===
+              const idleMs = 1600;  // 封面停留時間
+              const fadeMs = 800;   // 淡出動畫時間（要和 total.css 的 0.8s 對齊）
+              const openNavDelay = 50; // 淡出後等一下再開菜單，避免佈局還在重排
             
-              // 先鎖捲動避免背景晃動
+              // 鎖捲動避免背景晃動
               const lockScroll   = () => { document.body.style.overflow = 'hidden'; };
               const unlockScroll = () => { document.body.style.overflow = ''; };
               lockScroll();
             
-              // 等圖片載入後再啟動流程（避免還沒載到圖就黑屏）
-              const startFlow = () => {
+              // 封面流程：等待 → 淡出 → 移除 → 解鎖 → 展開導覽列
+              function startFlow() {
                 setTimeout(() => {
-                  splash.classList.add('is-fading');      // 觸發 CSS 淡出動畫
+                  splash.classList.add('is-fading'); // 觸發 CSS 淡出
                   setTimeout(() => {
-                    splash.remove();                      // 動畫結束 → 移除覆蓋層
-                    unlockScroll();                       // 解鎖捲動
+                    splash.remove();
+                    unlockScroll();
+                    // ✅ 淡出完成後展開漢堡導覽列
+                    openHamburgerNav();
                   }, fadeMs);
                 }, idleMs);
-              };
+              }
             
+              // 展開漢堡導覽列（優先用按鈕 click 觸發既有邏輯；沒有就備援）
+              function openHamburgerNav() {
+                setTimeout(() => {
+                  const toggle = document.getElementById('navToggle');
+                  const nav = document.getElementById('siteNav');
+            
+                  if (toggle) {
+                    const expanded = toggle.getAttribute('aria-expanded') === 'true';
+                    if (!expanded) {
+                      toggle.click(); // 走你原本的事件監聽與動畫
+                    }
+                  } else if (nav) {
+                    // 備援：萬一沒有按鈕，就直接把導覽列標為開啟
+                    nav.classList.add('open', 'is-open', 'active', 'show');
+                    nav.style.display = 'block';
+                    nav.style.visibility = 'visible';
+                    nav.style.opacity = '1';
+                  }
+                }, openNavDelay);
+              }
+            
+              // 等圖片載入後再開始（避免還沒載到圖就黑屏）
               const img = splash.querySelector('img');
               if (img && !img.complete) {
                 img.addEventListener('load', startFlow,  { once: true });
@@ -316,13 +341,15 @@
                 startFlow();
               }
             
-              // 安全網：就算載入很慢，最久 idle+fade+800ms 也會放行
+              // 安全網：最久 idle+fade+800ms 也會放行並展開導覽列
               setTimeout(() => {
                 if (document.getElementById('splash-overlay')) {
                   splash.remove();
                   unlockScroll();
+                  openHamburgerNav();
                 }
               }, idleMs + fadeMs + 800);
+            
             })();
             </script>
 
@@ -350,6 +377,7 @@
     </body>
 
 </html>
+
 
 
 
