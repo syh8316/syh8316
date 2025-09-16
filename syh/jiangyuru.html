@@ -39,7 +39,9 @@
 
   <!-- 相簿 Dialog（置中、非滿版） -->
   <dialog id="albumDialog" class="event-dialog" aria-label="江郁茹相簿" hidden>
-    <button class="close" id="closeAlbum" aria-label="關閉">關閉</button>
+    <form method="dialog">
+      <button class="close" aria-label="關閉">關閉</button>
+    </form>
     <div class="dialog-body">
       <h3 class="gallery-title">相簿</h3>
       <div class="gallery-grid" id="albumGrid">
@@ -168,7 +170,7 @@
     const openBtn = document.getElementById('openAlbum');
     const closeBtn = document.getElementById('closeAlbum');
 
-    openBtn.addEventListener('click', () => { dlg.showModal(); });
+    openBtn.addEventListener('click', () => { if (!dlg.open) dlg.showModal();});
     closeBtn.addEventListener('click', () => { if (dlg.open) dlg.close(); });
     dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); }); // 點半透明區關閉
     window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && dlg.open) dlg.close(); });
