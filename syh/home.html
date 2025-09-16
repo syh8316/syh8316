@@ -1,243 +1,438 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>新義和歌劇團</title>
+    <head>
+      <meta charset="utf-8" />
+      <title>新義和歌劇團｜歌仔戲劇團・演出預約・歷代人物與聯絡資訊</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
-  <!-- Icons（社群用） -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+      <!-- 重要：頁面摘要（會影響搜尋結果顯示） -->
+      <meta name="description" content="新義和歌劇團官方網站：介紹劇團歷史沿革、歷代人物、演出服務與聯絡方式。提供宮廟、社區、節慶等活動之專業戲曲演出與客製策劃，歡迎合作洽詢。" />
 
-  <!-- 推薦中文字體（完整字集） -->
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+      <!-- 關鍵字（次要訊號，可留） -->
+      <meta name="keywords" content="新義和歌劇團, 歌仔戲, 台灣劇團, 戲曲表演, 宮廟演出, 傳統戲曲" />
 
-  <!-- 預載音檔（換成你的檔名與路徑） -->
-  <link rel="preload" as="audio" href="./audio/bgm.mp3" type="audio/mpeg">
+      <!-- 你的實際公開網址（避免重複內容、統一權重） -->
+      <link rel="canonical" href="https://syh8316.github.io/syh8316/syh/home.html" />
 
-  <!-- 你的 CSS -->
-  <link rel="stylesheet" href="./total.css" />
-</head>
-<body>
+      <!-- Open Graph（Facebook/LINE/IG 預覽卡片） -->
+      <meta property="og:type" content="website" />
+      <meta property="og:locale" content="zh_TW" />
+      <meta property="og:title" content="新義和歌劇團｜歌仔戲劇團・演出預約" />
+      <meta property="og:description" content="傳統骨，年輕魂。新義和歌劇團提供專業戲曲演出與策劃，歡迎洽詢合作。" />
+      <meta property="og:url" content="https://syh8316.github.io/syh8316/syh/home.html" />
+      <meta property="og:image" content="https://syh8316.github.io/syh8316/syh/img/logo.png" />
 
-  <!-- Header：桌機顯示連結；手機使用漢堡 -->
-  <header class="site-header">
-    <a href="#" class="brand" aria-label="新義和歌劇團">新義和歌劇團</a>
+      <!-- Twitter Card（在 X/Twitter 的預覽） -->
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content="新義和歌劇團｜歌仔戲劇團・演出預約" />
+      <meta name="twitter:description" content="傳統骨，年輕魂。新義和歌劇團提供專業戲曲演出與策劃，歡迎洽詢合作。" />
+      <meta name="twitter:image" content="https://syh8316.github.io/syh8316/syh/img/logo.png" />
 
-    <button class="nav-toggle" id="navToggle" aria-label="開啟選單" aria-expanded="false">
-      <span class="nav-toggle__bar"></span>
-      <span class="nav-toggle__bar"></span>
-      <span class="nav-toggle__bar"></span>
-    </button>
+      <!-- Google 驗證（保持不變即可） -->
+      <meta name="google-site-verification" content="N20GhW5Cv0OGp_9mv4Bh8SaradbqZiMPCQZ_FzPSwDU" />
 
-    <nav id="siteNav" class="site-nav" aria-label="主選單">
-      <ul>
-        <li><a href="#about">關於劇團</a></li>
-        <li><a href="#history">劇團歷代人物</a></li>
-        <li><a href="#contact">聯繫我們</a></li>
-        <li><a href="#social">社交平台</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main>
-
-    <!-- 首屏 / 封面（背景圖可換路徑） -->
-    <section id="about" class="about">
-      <h2>新義和歌劇團</h2>
-      <p>傳統骨，年輕魂 —— 戲曲潮牌・新義和</p>
-    </section>
-
-    <!-- 歷代人物（三張並排，滑過顯示標題） -->
-    <section id="history" class="history">
-      <h2 class="section-title section-title--bar">新義和歌劇團歷代人物</h2>
-
-      <figure class="person-card">
-        <img src="./img/老團長.jpg" alt="第一代：江張卻女士（老團長）">
-        <figcaption class="caption">第一代：江張卻女士（老團長）</figcaption>
-      </figure>
-
-      <figure class="person-card">
-        <img src="./img/編劇.jpg" alt="第一代：江春金（編劇）">
-        <figcaption class="caption">第一代：江春金（編劇）</figcaption>
-      </figure>
-
-      <figure class="person-card">
-        <img src="./img/苦旦.jpg" alt="第二代：江郁茹（苦旦）">
-        <figcaption class="caption">第二代：江郁茹（苦旦）</figcaption>
-      </figure>
-    </section>
-
-    <!-- 結語：桌機左圖右文；手機圖上文下 -->
-    <section class="conclusion">
-      <figure class="conclusion-media">
-        <img src="./img/logo.png" alt="新義和歌劇團 LOGO">
-        <figcaption class="tagline">傳統與創新並行，讓戲曲走進每個人的生活。</figcaption>
-      </figure>
-
-      <div class="conclusion-text">
-        <p>新義和歌劇團，源自傳統、勇於創新。我們走進廟埕，唱出老觀眾的回憶，也走進年輕人的心裡，用戲曲說現在的故事。</p>
-        <p>無論你是從小看戲長大的老朋友，還是第一次接觸戲曲的年輕人，新義和都邀你一起——看戲、聽曲、品人生。</p>
-      </div>
-    </section>
-
-    <!-- 聯絡表單（僅示意；提交後動作由你決定） -->
-    <section id="contact" class="contact">
-      <h2>聯絡我！</h2>
-      <p>讓我們合作。 ❤</p>
-
-      <form class="form" id="contactForm">
-        <input type="text" id="name" name="name" placeholder="姓名" required>
-        <input type="email" id="email" name="email" placeholder="電子信箱" required>
-        <textarea id="message" name="message" placeholder="訊息"></textarea>
-        <button type="submit">送出</button>
-      </form>
-    </section>
-
-    <!-- 社群 -->
-    <div id="social" class="social">
-      <a href="https://www.facebook.com/" target="_blank" class="icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-      <a href="https://www.instagram.com/" target="_blank" class="icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-      <a href="mailto:goxyh2012@gmail.com" class="icon" aria-label="Email"><i class="fas fa-envelope"></i></a>
-      <a href="https://line.me/" target="_blank" class="icon" aria-label="LINE"><i class="fab fa-line"></i></a>
-    </div>
-
-  </main>
-
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-line">
-        <h2 class="footer-title">聯絡資訊</h2>
-        <div class="footer-info">
-          <p>團長：江敏琛</p>
-          <p>電話：0971-220-890</p>
-          <p>電子信箱：<a href="mailto:goxyh2012@gmail.com">goxyh2012@gmail.com</a></p>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <!-- 背景音樂（檔案路徑請改成你的） -->
-  <audio id="bgm" src="./audio/bgm.mp3" loop preload="metadata" playsinline></audio>
-  <button type="button" class="bgm-unlock" id="bgmUnlock" hidden aria-label="點一下開啟音樂">▶ 點一下開啟音樂</button>
-
-  <!-- JS：漢堡 + 首次點擊自動展開 + 封面淡化 + BGM（iOS/Android 兼容） -->
-  <script>
-  (function(){
-    /* ========= 漢堡選單 ========= */
-    const nav    = document.getElementById('siteNav')  || document.querySelector('.site-nav');
-    const toggle = document.getElementById('navToggle')|| document.querySelector('.nav-toggle');
-    const body   = document.body;
-
-    const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
-
-    function openNav(){
-      if (!nav || !toggle) return;
-      nav.classList.add('is-open');
-      toggle.setAttribute('aria-expanded','true');
-      body.classList.add('nav-open','no-scroll'); // 封面變暗 + 鎖滾動
-    }
-    function closeNav(){
-      if (!nav || !toggle) return;
-      nav.classList.remove('is-open');
-      toggle.setAttribute('aria-expanded','false');
-      body.classList.remove('nav-open','no-scroll');
-    }
-
-    if (toggle) {
-      toggle.addEventListener('click', (e) => {
-        e.preventDefault();
-        nav.classList.contains('is-open') ? closeNav() : openNav();
-      });
-    }
-
-    // 首次點擊（手機）自動展開，讓長輩直接看到選單
-    let autoOpened = false;
-    const firstTapOpen = (e) => {
-      if (autoOpened || !isMobile()) return;
-      // 忽略：點到漢堡鈕、選單、BGM按鈕
-      if (e.target.closest('#navToggle, .nav-toggle, #siteNav, .site-nav, #bgmUnlock')) return;
-      autoOpened = true;
-      openNav();
-      document.removeEventListener('pointerdown', firstTapOpen, true);
-    };
-    document.addEventListener('pointerdown', firstTapOpen, true);
-
-    // 點選單連結（手機）後自動收起
-    if (nav) {
-      nav.addEventListener('click', (e) => {
-        if (isMobile() && e.target.closest('a')) closeNav();
-      });
-    }
-
-    // 視窗變寬（回桌機）自動收起手機狀態
-    window.addEventListener('resize', () => {
-      if (!isMobile() && nav && nav.classList.contains('is-open')) closeNav();
-    });
-
-    // 錨點距離（避免被固定 header 蓋住）
-    document.querySelectorAll('section[id]').forEach(sec => sec.style.scrollMarginTop = '88px');
-  })();
-
-  (function(){
-    /* ========= 背景音樂（iOS/Android 友善） ========= */
-    const audio = document.getElementById('bgm');
-    const btn   = document.getElementById('bgmUnlock');
-    if (!audio || !btn) return;
-
-    audio.playsInline = true;   // iOS/Android WebView 友善
-    audio.muted = false;
-    audio.volume = 1;
-
-    // 進站嘗試自動播放；若被擋 → 顯示按鈕
-    try {
-      const p = audio.play();
-      if (p && p.catch) p.catch(() => { btn.hidden = false; });
-    } catch { btn.hidden = false; }
-
-    // 解鎖播放（綁多種手勢事件，最大化相容）
-    const unlock = (e) => {
-      if (e && e.preventDefault) e.preventDefault();
-      if (audio.readyState < 2) audio.load();
-      audio.currentTime = 0;
-      audio.muted = false;
-      try { audio.play(); } catch(_){}
-
-      const onPlaying = () => { btn.hidden = true; cleanup(); };
-      const onError   = () => { btn.hidden = false; cleanup(); };
-      const cleanup   = () => {
-        audio.removeEventListener('playing', onPlaying);
-        audio.removeEventListener('error',   onError);
-      };
-      audio.addEventListener('playing', onPlaying, { once:true });
-      audio.addEventListener('error',   onError,   { once:true });
-    };
-    ['click','touchend','pointerup'].forEach(evt=>{
-      btn.addEventListener(evt, unlock, { passive:false });
-    });
-
-    // 備援：第一次點頁面其他地方也啟動（只跑一次）
-    const bootOnce = (e) => { unlock(e); window.removeEventListener('pointerdown', bootOnce); };
-    window.addEventListener('pointerdown', bootOnce, { once:true, passive:false });
-
-    // 循環保險
-    audio.addEventListener('ended', () => {
-      try { audio.currentTime = 0; audio.play(); } catch(_){}
-    });
-
-    // 前景/背景管理
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState !== 'visible') {
-        if (!audio.paused) audio.pause();
-      } else {
-        if (audio.paused && btn.hidden) {
-          audio.play().catch(() => { btn.hidden = false; });
+      <!-- Organization + Logo 結構化資料 -->
+      <script type="application/ld+json">
+      {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "新義和歌劇團",
+          "alternateName": "歌劇團",
+          "url": "https://syh8316.github.io/syh8316/syh/home.html", 
+          "logo": "https://syh8316.github.io/syh8316/syh/img/logo.png",
+          "sameAs": [
+            "https://www.facebook.com/share/1Ho4w7W3ha/?mibextid=wwXIfr",
+            "https://www.instagram.com/syh.ot_1994?igsh=MXd6azF0ZWs0NHZkMQ%3D%3D&utm_source=qr",
+            "https://lin.ee/jj6SE0T"
+          ]
         }
-      }
-    });
-    window.addEventListener('pagehide', () => { if (!audio.paused) audio.pause(); });
-  })();
-  </script>
-</body>
+        </script>
+
+        <!-- 可加：網站結構化資料（選擇性，但加分） -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "新義和歌劇團",
+          "url": "https://syh8316.github.io/syh8316/syh/home.html"
+        }
+        </script>
+
+        <!-- 基本 SEO（選擇性） -->
+        <link rel="canonical" href="https://syh8316.github.io/syh8316/syh/home.html">
+        <meta name="description" content="新義和歌劇團官方網站。最新演出資訊、劇團介紹、聯絡方式等。">
+        <meta name="robots" content="index,follow">
+
+        <!-- 字型與樣式（合併重複的 preconnect） -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Noto+Serif+TC:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+        <link rel="stylesheet" href="./total.css" />
+        <link rel="stylesheet" href="./phone.css" />
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" href="/syh8316/syh/favicon.png?v=1" sizes="32x32">
+        <link rel="icon" type="image/png" href="/syh8316/syh/favicon.png?v=1" sizes="192x192">
+        <link rel="apple-touch-icon" href="/syh8316/syh/favicon.png?v=1" sizes="180x180">
+        <meta name="theme-color" content="#6b7f4a">
+
+    </head>
+
+    <body>
+        <!-- 開門動畫遮罩（整張圖當門，剪成左右兩半） -->
+        <div id="door-overlay" aria-hidden="true">
+          <div class="door door-left">
+            <img src="./完整抬頭.png" alt="新義和歌劇團 抬頭">
+          </div>
+          <div class="door door-right">
+            <img src="./完整抬頭.png" alt="新義和歌劇團 抬頭">
+          </div>
+        </div>
+        <header class="site-header">
+          <!-- 導覽列或頁首區塊 -->
+          <a href="https://syh8316.github.io/syh8316/syh/home.html" title="回首頁：新義和歌劇團">
+          <img
+            src="https://syh8316.github.io/syh8316/syh/img/logo.png"
+            alt="新義和歌劇團 標誌"
+            width="320" height="320"
+            loading="eager" fetchpriority="high"
+            style="max-width:180px;height:auto"
+           >
+           </a>
+
+            
+          <!-- 漢堡按鈕 -->
+          <button class="nav-toggle" id="navToggle"
+                  aria-controls="siteNav"
+                  aria-expanded="false"
+                  aria-label="開合導覽列">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+          </button>
+
+          <!-- 選單 -->
+          <nav class="site-nav" id="siteNav" role="navigation">
+            <ul>
+              <li><a href="#about">關於劇團</a></li>
+              <li><a href="#history">劇團歷代人物</a></li>
+              <li><a href="#contact">聯繫我們</a></li>
+              <li><a href="#social">社交平台</a></li>
+              <li><a href="card_jiangminchen.html">電子名片</a></li>
+              <li><a href="activities.html">活動資訊</a></li>
+            </ul>
+          </nav>
+        </header>
+        <main>
+            <!-- 劇團介紹 -->
+            <section id="about" class="about">
+            <h2 class="reveal" data-reveal="down">簡介</h2>
+            <p class="reveal" data-reveal="up">新義和歌劇團劇團前身為義和歌劇團於1961年由江張卻女士創團，<br/>
+                在中部廣受追捧，後來因受邀歌仔戲電台擔任廣播歌仔戲演員，<br/>
+                隨著節目熱播、演出邀請激增，為了維持演出品質，<br/>
+                決定暫時收團專注於廣播歌仔戲演員。<br/>
+                第二代江郁茹女士1994年登陸歌仔戲工會參加各大劇團演出，累積經驗傳承給第三代傳人。<br/>
+                2012年由第三、四代傳人改名爲新義和歌劇團來傳承祖母與母親的文化精神。
+            </p>
+            </section>
+
+            <!-- 歷代人物 -->
+            <section id="history" class="history reveal-stagger">
+                <h2 class="section-title section-title--bar">
+                    新義和歌劇團歷代人物
+                </h2>
+                <figure class="person-card">
+                    <img src="./img/老團長.jpg" alt="第一代：江張卻女士（老團長）">
+                    <figcaption class="caption">第一代：江張卻女士<br/>（老團長）</figcaption>
+                </figure>
+
+                <figure class="person-card">
+                    <img src="./img/編劇.jpg" alt="第一代：江春金（編劇）">
+                    <figcaption class="caption">第一代：江春金（編劇）</figcaption>
+                </figure>
+
+                <figure class="person-card">
+                    <img src="./img/苦旦.jpg" alt="第二代：江郁茹（苦旦）">
+                    <figcaption class="caption">第二代：江郁茹（苦旦）</figcaption>
+                </figure>
+            </section>
+
+            <!-- 結語 -->
+            <section class="conclusion">
+                <figure class="conclusion-media reveal" data-reveal="left">
+                    <img src="./img/人物.jpg" alt="傳統骨，年輕魂 —— 戲曲潮牌・新義和">
+                    <figcaption class="tagline reveal" data-reveal="up">傳統骨，年輕魂 —— 戲曲潮牌・新義和</figcaption>
+                </figure>
+
+                <div class="conclusion-text">
+                    <p class="reveal" data-reveal="right">新義和歌劇團，源自傳統、勇於創新。<br/>
+                       我們走進廟埕，唱出老觀眾的回憶，也走進年輕人的心裡，用戲曲說現在的故事。
+                    </p>
+                    <p class="reveal" data-reveal="right">在這裡，老戲新唱、青春詮釋，經典與創意交會，讓每一場演出都既熟悉又驚喜。<br/>
+                       無論你是從小看戲長大的老朋友，還是第一次接觸戲曲的年輕人，新義和都邀你一起——看戲、聽曲、品人生。
+                    </p>
+                    <p class="reveal" data-reveal="right">想為地方活動增添熱鬧氣氛與文化底蘊？<br/>
+                       新義和歌劇團提供專業戲曲演出服務，<br/>
+                       量身打造節慶、宮廟、社區活動的表演節目。<br/>
+                       熟齡觀眾最愛的經典劇碼<br/>
+                       青少年也會被吸引的創新橋段<br/>
+                       可配合主題、長度、場地調整演出內容<br/>
+                       專業、準時、口碑好
+                    </p>
+                    <p>接演合作洽詢，歡迎聯繫新義和歌劇團！
+                    </p>
+                </div>
+            </section>
+
+            <!-- 聯絡表單 -->
+            <section id="contact" class="contact">
+            <h2 class="reveal" data-reveal="down">聯絡我！</h2>
+                <p class="reveal" data-reveal="up">讓我們合作。 ❤</p>
+
+                <form class="form" id="contactForm">
+                    <input type="text" id="name" name="name" placeholder="姓名" required>
+                    <input type="email" id="email" name="email" placeholder="電子信箱" required>
+                    <textarea id="message" name="message" placeholder="訊息"></textarea>
+                    <button type="submit">送出</button>
+                </form>
+            </section> <!-- ✅ 關閉 section，避免 footer 被包進去 -->
+
+            <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const navToggle = document.getElementById('navToggle');
+                const siteNav   = document.getElementById('siteNav');
+
+                  if (!navToggle || !siteNav) return;
+    
+                  // 開關選單
+                  navToggle.addEventListener('click', () => {
+                    const open = siteNav.classList.toggle('is-open');
+                    navToggle.classList.toggle('is-active', open);
+                    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                    document.body.classList.toggle('no-scroll', open);
+                  });
+
+                  // 點選單連結自動收起
+                  siteNav.querySelectorAll('a').forEach(a => {
+                    a.addEventListener('click', () => {
+                      siteNav.classList.remove('is-open');
+                      navToggle.classList.remove('is-active');
+                      navToggle.setAttribute('aria-expanded', 'false');
+                      document.body.classList.remove('no-scroll');
+                    });
+                  });
+
+                  // 視窗放大回桌機時，清乾淨狀態（避免切換尺寸出問題）
+                  window.addEventListener('resize', () => {
+                    if (window.innerWidth >= 769) {
+                      siteNav.classList.remove('is-open');
+                      navToggle.classList.remove('is-active');
+                      navToggle.setAttribute('aria-expanded', 'false');
+                      document.body.classList.remove('no-scroll');
+                    }
+                  });
+                // 1) 如果有 .reveal-stagger，先幫它的子元素加上 .reveal 以便統一處理
+              document.querySelectorAll('.reveal-stagger').forEach(group => {
+                [...group.children].forEach(c => c.classList.add('reveal'));
+                if (!group.dataset.stagger) group.dataset.stagger = 80; // 每格延遲(毫秒)
+              });
+
+              // 2) 建立觀察器：進入視窗就顯示；離開就重置（方便下次再進來時重播）
+              const io = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                  const el = entry.target;
+                  const dir = el.dataset.reveal;             // 可用 data-reveal="left|right|up|down"
+                  const dirClass = dir ? `reveal--${dir}` : '';
+
+                  if (entry.isIntersecting) {
+                    if (dirClass) el.classList.add(dirClass);
+                    el.classList.add('is-visible');
+
+                    // 如果是一個「群組」，就幫群組的每個孩子做交錯延遲
+                    if (el.matches('.reveal-stagger')) {
+                      [...el.children].forEach((child, i) => {
+                        child.style.transitionDelay = `${i * (+el.dataset.stagger || 80)}ms`;
+                        child.classList.add('is-visible');
+                      });
+                    }
+                  } else {
+                    // 離開視窗：重置，之後再進來就會再次播放
+                    el.classList.remove('is-visible');
+                    if (el.matches('.reveal-stagger')) {
+                      [...el.children].forEach(child => {
+                        child.classList.remove('is-visible');
+                        child.style.transitionDelay = '';
+                      });
+                    }
+                  }
+                });
+              }, {
+                root: null,
+                threshold: 0.18,          // 元素進入 18% 就算看到
+                rootMargin: '0px 0px -8% 0px'
+              });
+
+              // 3) 觀察所有需要 reveal 的元素
+              const targets = document.querySelectorAll('.reveal, [data-reveal], .reveal-stagger');
+              targets.forEach(el => io.observe(el));
+            });
+            </script>
+            <!-- 預先載入音檔，縮短首播延遲 -->
+            <link rel="preload" as="audio" href="./芙蓉.m4a" type="audio/mpeg">
+
+            <!-- 背景音樂（無限重播） -->
+            <audio id="bgm" src="./芙蓉.m4a" loop preload="metadata" playsinline></audio>
+
+            <!-- 若自動播放被擋，顯示這顆「解鎖」按鈕 -->
+            <button class="bgm-unlock" id="bgmUnlock" hidden aria-label="點一下開啟音樂">
+              ▶ 點一下開啟音樂
+            </button>
+            <script>
+            (function(){
+              const audio = document.getElementById('bgm');
+              const btn   = document.getElementById('bgmUnlock');
+              if (!audio || !btn) return;
+
+              // iOS/Android 友善
+              audio.playsInline = true;
+              audio.muted = false;
+              audio.volume = 1;
+
+              // 進站嘗試自動播放（桌機多半成功；行動裝置多半被擋→顯示按鈕）
+              tryAutoPlay();
+
+              // === 解鎖播放：綁 click / touchend / pointerup，確保 Android 也吃得到手勢 ===
+              const unlock = (e) => {
+                if (e && e.preventDefault) e.preventDefault();       // 避免在 <form> 內提交
+                if (audio.readyState < 2) audio.load();              // 尚未準備就先載入
+                audio.currentTime = 0;
+                audio.muted = false;
+
+                try { audio.play(); } catch(_) {}
+
+                // 成功開始播放（收到 playing）才把按鈕隱藏；失敗則維持顯示
+                const onPlaying = () => { btn.hidden = true; cleanup(); };
+                const onError   = () => { btn.hidden = false; cleanup(); };
+                const cleanup = () => {
+                  audio.removeEventListener('playing', onPlaying);
+                  audio.removeEventListener('error',   onError);
+                };
+                audio.addEventListener('playing', onPlaying, { once: true });
+                audio.addEventListener('error',   onError,   { once: true });
+              };
+              ['click','touchend','pointerup'].forEach(evt => {
+                btn.addEventListener(evt, unlock, { passive:false });
+              });
+
+              // 備援：使用者第一次點頁面任何地方也當作解鎖（只跑一次）
+              const bootOnce = (e) => { unlock(e); window.removeEventListener('pointerdown', bootOnce); };
+              window.addEventListener('pointerdown', bootOnce, { once:true, passive:false });
+
+              // 播完保險重播
+              audio.addEventListener('ended', () => {
+                try { audio.currentTime = 0; audio.play(); } catch(_) {}
+              });
+
+              // 前景/背景：背景一律暫停；回前景若曾解鎖過（按鈕隱藏）自動恢復
+              document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState !== 'visible') {
+                  if (!audio.paused) audio.pause();
+                } else {
+                  if (audio.paused && btn.hidden) {
+                    audio.play().catch(() => { btn.hidden = false; });
+                  }
+                }
+              });
+              window.addEventListener('pagehide', () => { if (!audio.paused) audio.pause(); });
+
+              function tryAutoPlay(){
+                try{
+                  const p = audio.play();
+                  if (p && p.catch) p.catch(() => { btn.hidden = false; });
+                }catch{
+                  btn.hidden = false;
+                }
+              }
+            })();
+            </script>
+
+                <div id="social" class="social">
+                <a href="https://www.facebook.com/share/1Ho4w7W3ha/?mibextid=wwXIfr" target="_blank" class="icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/syh.ot_1994?igsh=MXd6azF0ZWs0NHZkMQ%3D%3D&utm_source=qr" target="_blank" class="icon"><i class="fab fa-instagram"></i></a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=goxyh2012@gmail.com" target="_blank" class="icon"><i class="fas fa-envelope"></i></a>
+                <a href="https://lin.ee/jj6SE0T" target="_blank" class="icon"><i class="fab fa-line"></i></a>
+                </div>
+        </main>
+            <!-- ✅ footer 放在頁面最後，並把社群按鈕一併放進來 -->
+        <footer class="site-footer">
+            <div class="container">
+                <div class="footer-line">
+                    <h2 class="footer-title">聯絡資訊</h2>
+                    <div class="footer-info">
+                        <p>團長：江敏琛</p>
+                        <p>電話：0971-220-890</p>
+                        <p>電子信箱：<a href="mailto:goxyh2012@gmail.com">goxyh2012@gmail.com</a></p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <script>
+        (function(){
+          const overlay = document.getElementById('door-overlay');
+        
+          // ✅ 改成新的 key，避免以前的紀錄影響
+          const playedKey = 'doorPlayed_v2';
+        
+          // ✅ URL 加上 ?intro=1 會強制播放
+          const forceIntro = new URLSearchParams(location.search).get('intro') === '1';
+        
+          // ✅ 想要每次都播，把這行設成 false
+          const showOncePerTab = false;
+        
+          // 已播過就直接顯示（除非強制播放）
+          if (!forceIntro && showOncePerTab && sessionStorage.getItem(playedKey) === '1') {
+            document.documentElement.classList.add('opened');
+            return;
+          }
+        
+          // 鎖捲動
+          document.body.style.overflow = 'hidden';
+        
+          const idleMs = 1600;  // 停留展示 LOGO
+          const animMs = 1200;  // 推門動畫（要和 CSS 對齊）
+        
+          const startFlow = () => {
+            setTimeout(() => {
+              document.documentElement.classList.add('opening');   // 開門
+              setTimeout(finishOpen, animMs);                      // 結束
+            }, idleMs);
+          };
+        
+          const img = overlay.querySelector('.brand img');
+          if (img && !img.complete) {
+            img.addEventListener('load', startFlow, { once: true });
+            img.addEventListener('error', startFlow, { once: true });
+          } else {
+            startFlow();
+          }
+        
+          skipBtn.addEventListener('click', () => finishOpen(true));
+        
+          function finishOpen(){
+            document.documentElement.classList.remove('opening');
+            document.documentElement.classList.add('opened');
+            document.body.style.overflow = '';
+          }
+        
+          // 保險：最久 idle+anim+800ms 也放行
+          setTimeout(() => {
+            if (!document.documentElement.classList.contains('opened')) finishOpen();
+          }, idleMs + animMs + 800);
+        })();
+        </script>
+
+    </body>
+
 </html>
 
