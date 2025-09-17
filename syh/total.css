@@ -751,29 +751,28 @@ html, body { overflow-y: auto; }
   }
 }
 
-/* === 手機版：收合時把父層與按鈕都撐滿＋置中（覆蓋修正） === */
+/* === 手機：收合時把項目與按鈕真正置中（覆蓋） === */
 @media (max-width: 768px){
-  /* 讓每個 <li> 吃滿一行，避免寬度不足造成視覺偏移 */
-  .site-nav ul > li{ width: 100% !important; }
-
-  /* 父層（有下拉的項目）本身也置中 */
-  .site-nav .has-sub{
-    width: 100% !important;
-    text-align: center !important;
+  /* 1) 列表本身在交叉軸置中 */
+  .site-nav ul{
+    align-items: center !important;
   }
-
-  /* 下拉的「開關按鈕」：滿寬、水平＆垂直置中 */
-  .site-nav .nav-parent{
+  /* 2) 每個 li 自己也用 flex 把內部置中 */
+  .site-nav ul > li{
     display: flex !important;
+    justify-content: center !important;
     width: 100% !important;
-    justify-content: center !important;   /* 水平置中 */
-    align-items: center !important;       /* 垂直置中（文字與箭頭對齊） */
-    text-align: center !important;
-    padding: 12px 0 !important;
-    line-height: 1 !important;            /* 避免行高把箭頭擠歪 */
-    gap: 6px !important;                  /* 文字與箭頭的間距 */
   }
-
-  /* 其它一般連結也置中（如果不想影響其它連結，可拿掉這行） */
-  .site-nav a{ text-align: center !important; }
+  /* 3) 下拉按鈕自身：用自寬 + auto 邊距定位在正中線 */
+  .site-nav .nav-parent{
+    display: inline-flex !important;
+    width: auto !important;
+    margin-inline: auto !important;
+    align-self: center !important;
+    justify-content: center !important;
+    gap: 6px !important;        /* 文字與箭頭的間距 */
+    padding: 12px 0 !important; /* 上下留白一致 */
+    line-height: 1 !important;
+    text-align: center !important;
+  }
 }
