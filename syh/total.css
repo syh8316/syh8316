@@ -661,7 +661,7 @@ html, body { overflow-y: auto; }
 }
 .site-nav .dropdown a:hover{ background: rgba(0,0,0,.04); }
 /* ========================================== */
-/* 桌機：子清單改直向，上到下；文字改水平，左到右（最終覆蓋） */
+/* 桌機：子清單直向（上→下）＋ 文字水平（左→右）＋ hover/.open 顯示 */
 @media (min-width: 769px){
   /* 只讓最外層主選單橫排，不影響子層 ul */
   .site-header nav > ul{
@@ -669,34 +669,43 @@ html, body { overflow-y: auto; }
     gap: 32px !important;
     align-items: center;
   }
-  /* 任何巢狀 ul（= 下拉清單）恢復區塊排版，不用 flex 橫排 */
+
+  /* 子清單（第二層 ul）不要用 flex，恢復區塊直向排列 */
   .site-header nav ul ul{
     display: block !important;
     gap: 0 !important;
   }
 
-  /* 下拉清單本體：直向堆疊，上到下 */
+  /* 子清單本體：確保容器與內容都是水平書寫 */
   .site-nav .dropdown{
-    display: block !important;            /* 不是 flex → 就會垂直一列一列 */
-    writing-mode: horizontal-tb !important; /* 保險：容器也指定水平文向 */
+    display: block !important;               /* 垂直一列一列 */
+    writing-mode: horizontal-tb !important;  /* 左→右 */
     text-orientation: mixed !important;
   }
   .site-nav .dropdown > li{
-    display: block !important;            /* 每個項目獨佔一行 */
+    display: block !important;               /* 每項獨佔一行（上→下） */
     width: 100% !important;
   }
-
-  /* 子清單連結：水平文字、不直書、不旋轉 */
   .site-nav .dropdown a{
     display: block !important;
-    writing-mode: horizontal-tb !important;  /* 左→右 */
+    writing-mode: horizontal-tb !important;  /* 左→右文字 */
     text-orientation: mixed !important;
     transform: none !important;
     white-space: nowrap !important;
-    text-align: left;                          /* 要置中就改 center */
+    text-align: left;                        /* 要置中可改 center */
     padding: 10px 14px;
   }
+
+  /* 顯示條件：滑入或程式加上 .open 時打開 */
+  .site-nav .has-sub:hover > .dropdown,
+  .site-nav .has-sub.open  > .dropdown{
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: translateY(0) !important;
+  }
 }
+
 
 /* ========================================== */
 /* 手機覆蓋：未展開與上方兩項對齊；展開時維持透明置中（最終整合版） */
@@ -798,6 +807,7 @@ html, body { overflow-y: auto; }
     display: block !important;
   }
 }
+
 
 
 
