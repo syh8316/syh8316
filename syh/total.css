@@ -387,7 +387,6 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 8px); }
 .site-footer a:hover{ color:#ddd; }
 
 /* ============ 行動版漢堡選單 ============ */
-
 /* —— 漢堡按鈕 —— */
 .nav-toggle{
   display: none;              /* 桌機隱藏，手機顯示 (見媒體查詢) */
@@ -414,7 +413,7 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 8px); }
 
 /* 桌機維持橫排 */
 .site-nav ul{ list-style:none; margin:0; padding:0; display:flex; gap:32px; }
-
+/* ========================================== */
 /* ==== 強制移除任何測試用浮條（所有尺寸） ==== */
 html::before,
 html::after,
@@ -432,22 +431,15 @@ body::after,
   opacity: 0 !important;
   pointer-events: none !important;
 }
-
+/* ========================================== */
 /* ===== Scroll Reveal (淡入 + 位移/縮放/模糊) ===== */
-/* 初始狀態：看不到、略位移 */
 .reveal{
   opacity: 0;
   transform: translateY(16px);
   transition: opacity .6s ease, transform .6s ease;
   will-change: opacity, transform;
 }
-/* 顯示狀態：回到原位並顯示 */
-.reveal.is-visible{
-  opacity: 1;
-  transform: none;
-}
-
-/* 方向版（配合 data-reveal） */
+.reveal.is-visible{ opacity: 1; transform: none; }
 .reveal--left  { transform: translateX(-24px); }
 .reveal--right { transform: translateX( 24px); }
 .reveal--up    { transform: translateY( 24px); }
@@ -455,15 +447,11 @@ body::after,
 .reveal--left.is-visible,
 .reveal--right.is-visible,
 .reveal--up.is-visible,
-.reveal--down.is-visible{
-  transform: none;
-}
+.reveal--down.is-visible{ transform: none; }
 
-/* 交錯群組（如果有需要也可加些預設） */
-.reveal-stagger > *{
-  /* 子元素本身已被 JS 加上 .reveal，因此可不特別寫 */
-}
-
+/* 交錯群組 */
+.reveal-stagger > *{ /* 由 JS 動態加 .reveal，這裡無需特別規則 */ }
+/* ========================================== */
 /* 右下角解鎖播放鈕（黑底白字） */
 .bgm-unlock{
   position: fixed;
@@ -475,131 +463,44 @@ body::after,
   box-shadow: 0 10px 24px rgba(0,0,0,.22);
   cursor: pointer; z-index: 1500;
   transition: transform .2s ease, opacity .2s ease;
-  pointer-events: auto;            /* ← 保險，避免被父層繼承到 none */
+  pointer-events: auto;
 }
 .bgm-unlock:hover{ transform: translateY(-1px); }
 .bgm-unlock[hidden]{ display: none !important; }
-
+/* ========================================== */
 /* ===== 進場淡出覆蓋層（全螢幕照片 → 淡出） ===== */
 #splash-overlay{
   position: fixed;
   inset: 0;
-  z-index: 9999;            /* 蓋在最上層 */
-  background: #000;         /* 防止邊角露底色 */
+  z-index: 9999;
+  background: #000;
   display: grid;
-  place-items: center;      /* 圖置中 */
+  place-items: center;
   overflow: hidden;
 }
-
-/* 照片等比鋪滿整個視窗 */
 #splash-overlay > img{
-  width: 100vw;
-  height: 100vh;
-  object-fit: cover;
-  object-position: center;
+  width: 100vw; height: 100vh;
+  object-fit: cover; object-position: center;
   display: block;
 }
-
-/* 觸發淡出：JS 會在等待時間後加上 .is-fading */
-#splash-overlay.is-fading{
-  animation: splash-fade-out 0.8s ease forwards;
-}
-
-/* 尊重偏好動作減少：直接隱藏，不做動畫 */
+#splash-overlay.is-fading{ animation: splash-fade-out 0.8s ease forwards; }
 @media (prefers-reduced-motion: reduce){
   #splash-overlay{ display: none !important; }
 }
-
-/* 淡出關鍵影格 */
 @keyframes splash-fade-out{
   from { opacity: 1; }
   to   { opacity: 0; visibility: hidden; }
 }
-
-/* ====== ⬇ phone.css（原樣保留） ⬇ ====== */
-
+/* ========================================== */
 /* ============ 手機版（≤ 768px） ============ */
 @media (max-width: 768px){
-
-  /* Header：白底黑字、固定在頂端（尺寸微放大） */
+  /* Header 尺寸微調 */
   :root{ --header-h: 68px; }
   .site-header{ padding: 0 16px; }
   .brand{ width: 190px; height: 52px; }
-  .site-header nav ul{
-    gap: 16px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-  }
-  .site-header nav a{
-    font-size: 18px;
-    padding: 10px 8px;
-  }
 
-  /* 首屏簡介區 */
-  .about{ min-height: 72vh; padding: 52px 18px; }
-  .about h2{ font-size: 40px; line-height: 1.25; }
-  .about p { font-size: 30px; line-height: 1.95; }
-
-  /* 歷代人物：單欄 */
-  .history{
-    width: 100%;
-    grid-template-columns: 1fr;
-    gap: 18px;
-    padding-inline: 18px;
-    justify-items: center;
-  }
-  .person-card{
-    --card-w: min(94vw, 400px);
-    max-height: 336px;
-    border-radius: 10px;
-    box-shadow: 0 8px 18px rgba(0,0,0,.14);
-  }
-  .person-card .caption{
-    font-size: 17px;
-    padding: 12px 14px;
-  }
-
-  /* 結語：圖上文下 */
-  .conclusion{
-    display: flex !important;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-    width: min(94%, 1080px);
-    padding-block: 18px;
-  }
-  .conclusion > *{ flex: 0 0 100% !important; max-width: 100% !important; }
-  .conclusion-media{ order: 0; display:flex; align-items:center; }
-  .conclusion-media img{ width: 100%; height: auto; display:block; }
-  .conclusion .tagline{ text-align:center; }
-  .conclusion-text{ order: 1; display:flex; flex-direction:column; gap:20px; }
-
-  /* 聯絡表單區 */
-  #contact{ padding-block: 14px; }
-  #contact h2{ font-size: 24px; }
-  #contact > p:first-of-type{ font-size: 16px; margin-bottom: 16px; }
-  .form{ width: 94%; margin: 10px auto 24px; }
-  .form input, .form textarea, .form button{ font-size: 18px; padding: 14px 16px; }
-  .form textarea{ min-height: 130px; }
-
-  /* 社群圓形按鈕（放大） */
-  .social{ gap: 18px; padding: 22px 0 40px; }
-  .social .icon{ width: 72px; height: 72px; font-size: 30px; }
-
-  /* Footer（字級放大、可換行） */
-  .site-footer{ padding: 16px 0; }
-  .footer-line{
-    flex-wrap: wrap;
-    gap: 12px 18px;
-    justify-content: center;
-    align-items: center;
-  }
-  .footer-info{ gap: 18px; flex-wrap: wrap; }
-  .footer-title, .footer-info p{ font-size: 15px; }
-
-  /* ✅ 手機版才顯示漢堡，並把選單改為抽屜式 */
+  /* 抽屜本體 */
   .nav-toggle{ display:block; }
-
   .site-nav{
     position: fixed;
     left:0; right:0;
@@ -610,45 +511,62 @@ body::after,
     border-bottom: 1px solid rgba(0,0,0,.06);
     box-shadow: 0 8px 24px rgba(0,0,0,.12);
     max-height: calc(100dvh - var(--header-h, 68px));
-    overflow:auto;
-
+    overflow: auto;
     transform: translateY(-10px);
-    opacity:0; visibility:hidden; pointer-events:none;
+    opacity: 0; visibility: hidden; pointer-events: none;
     transition: transform .25s ease, opacity .25s ease, visibility .25s ease;
-    z-index:1050;
+    z-index: 1050;
+
+    /* 隱藏捲軸外觀（仍可滑動） */
+    -ms-overflow-style: none; scrollbar-width: none;
   }
+  .site-nav::-webkit-scrollbar{ display: none; }
   .site-nav.is-open{
     transform: translateY(0);
-    opacity:1; visibility:visible; pointer-events:auto;
+    opacity: 1; visibility: visible; pointer-events: auto;
   }
 
+  /* 手機：改直向 + 交叉軸置中 → 解決收合時「看起來歪」 */
   .site-nav ul{
     flex-direction: column;
     gap: 10px;
     padding: 14px 18px 16px;
+    align-items: center;                 /* 交叉軸置中（關鍵） */
   }
+  .site-nav ul > li{
+    display: flex; justify-content: center;
+    width: 100%;
+  }
+
+  /* 所有連結滿寬區塊，但內容置中 */
   .site-nav a{
     display:block;
     padding:10px 2px;
     font-size:18px;
     color: var(--header-ink, #111);
     text-decoration:none;
+    text-align: center;                  /* 內容置中 */
   }
   .site-nav a:hover{ color:#444; }
 
   /* 展開時避免背景滾動 */
   body.no-scroll{ overflow:hidden; }
-
+/* ========================================== */
   .bgm-unlock{ right: 12px; bottom: 12px; font-size: 13px; }
 }
 
+
+  .bgm-unlock{ right: 12px; bottom: 12px; font-size: 13px; }
+}
+/* ========================================== */
+/* 屏幕閱讀器專用（無障礙） */
 .sr-only{
   position:absolute !important;
   width:1px;height:1px;
   padding:0;margin:-1px;
   overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
 }
-
+/* ========================================== */
 /* ============ 更小的手機（≤ 480px） ============ */
 @media (max-width: 480px){
   .brand{ width: 165px; height: 48px; }
@@ -673,13 +591,13 @@ body::after,
   .social .icon{ width: 64px; height: 64px; font-size: 26px; }
   .footer-title, .footer-info p{ font-size: 14.5px; }
 }
-
+/* ========================================== */
 /* 依螢幕寬度微調 about 背景對位（保留你的設定） */
 @media (max-width: 1200px){ .about{ --aboutY: 64%; } }
 @media (max-width:  992px){ .about{ --aboutY: 68%; } }
 @media (max-width:  768px){ .about{ --aboutY: 72%; } }
 @media (max-width:  480px){ .about{ --aboutY: 76%; } }
-
+/* ========================================== */
 @media (min-width: 769px){
   .nav-toggle{ display: none !important; }
   .site-nav{
@@ -694,7 +612,7 @@ body::after,
   }
   .site-nav ul{ display: flex; gap: 32px; padding: 0; }
 }
-
+/* ========================================== */
 /* 保證可捲動 */
 html, body { overflow-y: auto; }
 
@@ -708,7 +626,7 @@ html, body { overflow-y: auto; }
 /* 抽屜選單收起時不吃事件，展開才吃 */
 .site-nav         { pointer-events: none; }
 .site-nav.is-open { pointer-events: auto; }
-
+/* ========================================== */
 /* ============ 下拉選單（桌機：hover；手機：手風琴） ============ */
 .site-nav .has-sub { position: relative; }
 .site-nav .nav-parent{
@@ -726,7 +644,7 @@ html, body { overflow-y: auto; }
 }
 .site-nav .has-sub.open > .nav-parent .caret{ transform: rotate(180deg); }
 
-/* 子選單 */
+/* 子選單（桌機基礎：絕對定位、預設隱藏） */
 .site-nav .dropdown{
   list-style: none; margin: 0; padding: 8px 0;
   background: var(--header-bg, rgba(255,255,255,.98));
@@ -742,37 +660,76 @@ html, body { overflow-y: auto; }
   color: var(--header-ink, #111); font-weight: 700; font-size: 16px;
 }
 .site-nav .dropdown a:hover{ background: rgba(0,0,0,.04); }
-
+/* ========================================== */
 /* 桌機顯示：父層開啟時 */
 @media (min-width: 769px){
   .site-nav .has-sub.open > .dropdown{
-    opacity: 1; transform: translateY(0);
-    pointer-events: auto; visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    visibility: visible;
   }
 }
 
-/* === 手機：收合時把項目與按鈕真正置中（覆蓋） === */
+/* 手機覆蓋：手風琴 + 置中 + 透明底（合併版） */
 @media (max-width: 768px){
-  /* 1) 列表本身在交叉軸置中 */
+  /* 父層與按鈕置中（解決收合時歪） */
   .site-nav ul{
-    align-items: center !important;
+    align-items: center !important;            /* 交叉軸置中 */
   }
-  /* 2) 每個 li 自己也用 flex 把內部置中 */
   .site-nav ul > li{
     display: flex !important;
     justify-content: center !important;
     width: 100% !important;
   }
-  /* 3) 下拉按鈕自身：用自寬 + auto 邊距定位在正中線 */
   .site-nav .nav-parent{
     display: inline-flex !important;
     width: auto !important;
     margin-inline: auto !important;
     align-self: center !important;
     justify-content: center !important;
-    gap: 6px !important;        /* 文字與箭頭的間距 */
-    padding: 12px 0 !important; /* 上下留白一致 */
+    gap: 6px !important;
+    padding: 12px 0 !important;
     line-height: 1 !important;
     text-align: center !important;
   }
+
+  /* 子清單：改為流式、預設收合，完全透明 */
+  .site-nav .dropdown{
+    position: static !important;
+    min-width: initial !important;
+    margin: 4px 0 8px 0 !important;
+
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: none !important;
+
+    overflow: hidden !important;
+    max-height: 0 !important;
+
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+
+    text-align: center;
+  }
+
+  /* 展開：打開高度；仍維持透明底 */
+  .site-nav .has-sub.open > .dropdown{
+    max-height: 600px !important;              /* 依清單長度可調 */
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .site-nav .dropdown a{
+    padding: 10px 10px;
+    text-align: center;
+  }
+  .site-nav .dropdown a:hover{
+    background: rgba(255,255,255,.12) !important;
+  }
 }
+
+
