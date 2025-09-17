@@ -735,3 +735,38 @@ html, body { overflow-y: auto; }
     text-align: center !important;
   }
 }
+
+/* 手機：強制「電子名片／活動資訊」→ 標題在上、名單在下；收合時完全隱藏 */
+@media (max-width: 768px){
+  .site-nav .has-sub{
+    display: grid !important;
+    grid-template-rows: auto auto;
+    justify-items: center !important;
+    align-items: start !important;
+    width: auto !important;
+  }
+  .site-nav .nav-parent{ grid-row: 1; }
+
+  /* 名單固定在標題下方 */
+  .site-nav .dropdown{
+    grid-row: 2;
+    position: static !important;
+    display: block !important;          /* 基本顯示（下面再用狀態切換） */
+    margin: 4px 0 0 !important;
+    float: none !important;
+    clear: both !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    text-align: center !important;
+  }
+
+  /* 收合時：完全不佔位；展開時：顯示在下方 */
+  .site-nav .has-sub:not(.open) > .dropdown{
+    display: none !important;
+    margin: 0 !important;
+  }
+  .site-nav .has-sub.open > .dropdown{
+    display: block !important;
+  }
+}
