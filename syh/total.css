@@ -505,17 +505,6 @@ body::after,
   animation: splash-fade-out 0.8s ease forwards;
 }
 
-/* 尊重偏好動作減少：直接關閉覆蓋層 */
-@media (prefers-reduced-motion: reduce){
-  #splash-overlay{ display: none !important; }
-}
-
-/* 淡出關鍵影格 */
-@keyframes splash-fade-out{
-  from { opacity: 1; }
-  to   { opacity: 0; visibility: hidden; }
-}
-
 /* 尊重偏好動作減少：直接隱藏，不做動畫 */
 @media (prefers-reduced-motion: reduce){
   #splash-overlay{ display: none !important; }
@@ -780,7 +769,8 @@ html, body { overflow-y: auto; }
     position: static !important;
     box-shadow: none !important;
     border-radius: 8px;
-    border: 0 !important;        /* ❶ 關鍵：收合時移除邊框，白線就不見 */
+    background: transparent !important;        /* ← 把白色改透明 */
+    border: 0 !important;                 /* ← 同時去掉邊框 */
     margin: 4px 0 8px 0 !important;
     min-width: initial;
     opacity: 1; transform: none; visibility: visible;
@@ -791,8 +781,8 @@ html, body { overflow-y: auto; }
 
   /* 展開狀態：再加回邊框並放開高度 */
   .site-nav .has-sub.open > .dropdown{
-    max-height: 420px;
-    border: 1px solid rgba(0,0,0,.06) !important;  /* ❷ 只在展開時顯示 */
+   background: rgba(255,255,255,0.95) !important; /* 半透明白底 */
+    border: 1px solid rgba(0,0,0,.06) !important;
   }
 
   /* 子連結：置中、點擊區塊化 */
@@ -802,4 +792,3 @@ html, body { overflow-y: auto; }
     text-align: center;
   }
 }
-
