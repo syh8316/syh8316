@@ -751,32 +751,24 @@ html, body { overflow-y: auto; }
   }
 }
 
-/* === 修正：手機抽屜與下拉的白底 → 透明／半透明（覆蓋在檔案最底部） === */
+/* === 修正：手機下拉展開卻看不到內容 → 打開 max-height，維持透明底 === */
 @media (max-width: 768px){
-  /* 抽屜本體：降低白底透明度（需要更透明就把 .75 再調低） */
-  .site-nav{
-    background: rgba(255,255,255,.75) !important;
-    -webkit-backdrop-filter: blur(var(--header-blur, 8px));
-    backdrop-filter: blur(var(--header-blur, 8px));
-  }
-
-  /* 下拉預設（收合狀態）：完全透明、無邊框 */
+  /* 收合：保持透明、無邊框、max-height:0 */
   .site-nav .dropdown{
     background: transparent !important;
     border: 0 !important;
     box-shadow: none !important;
+    max-height: 0 !important;                 /* 收合高度歸 0 */
   }
-
-  /* ✅ 下拉展開時：也維持透明、無邊框（就是把白色卡片拿掉） */
+  /* 展開：打開高度（夠大即可），仍保持透明與無邊框 */
   .site-nav .has-sub.open > .dropdown{
+    max-height: 800px !important;             /* 你有幾個項目就設大一點 */
     background: transparent !important;
     border: 0 !important;
     box-shadow: none !important;
   }
-
-  /* hover 高亮用淺底，不要整塊白：可調成更淡或拿掉 */
+  /* hover 時只做微亮，避免整塊變白 */
   .site-nav .dropdown a:hover{
     background: rgba(255,255,255,.12) !important;
   }
 }
-
