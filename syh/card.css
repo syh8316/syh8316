@@ -194,6 +194,9 @@ body{ padding-top: var(--header-h); } /* 預留固定導覽列的高度 */
   font-weight: 700;
   background: #fff;
 }
+@media (max-width:768px){
+  .site-nav{ display:block !important; }    /* 讓抽屜真的能顯示 */
+}
 
 /* RWD */
 @media (max-width: 560px) {
