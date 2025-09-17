@@ -608,52 +608,6 @@ body::after,
   overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
 }
 /* ========================================== */
-/* ============ 更小的手機（≤ 480px） ============ */
-@media (max-width: 480px){
-  .brand{ width: 165px; height: 48px; }
-  .site-header nav ul{ gap: 12px; }
-  .site-header nav a{ font-size: 17px; }
-
-  .about h2{ font-size: 34px; }
-  .about p { font-size: 22px; }
-
-  .person-card{ --card-w: 92vw; max-height: 320px; }
-  .person-card .caption{ font-size: 16px; }
-
-  .conclusion-media img{ max-width: 90vw; }
-  .conclusion .tagline{ font-size: 16.5px; }
-  .conclusion-text p{ font-size: 20px; line-height: 1.95; }
-
-  #contact h2{ font-size: 23px; }
-  #contact > p:first-of-type{ font-size: 15px; }
-
-  .form input, .form textarea, .form button{ font-size: 17px; }
-
-  .social .icon{ width: 64px; height: 64px; font-size: 26px; }
-  .footer-title, .footer-info p{ font-size: 14.5px; }
-}
-/* ========================================== */
-/* 依螢幕寬度微調 about 背景對位（保留你的設定） */
-@media (max-width: 1200px){ .about{ --aboutY: 64%; } }
-@media (max-width:  992px){ .about{ --aboutY: 68%; } }
-@media (max-width:  768px){ .about{ --aboutY: 72%; } }
-@media (max-width:  480px){ .about{ --aboutY: 76%; } }
-/* ========================================== */
-@media (min-width: 769px){
-  .nav-toggle{ display: none !important; }
-  .site-nav{
-    position: static !important;
-    transform: none !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    border: 0 !important;
-  }
-  .site-nav ul{ display: flex; gap: 32px; padding: 0; }
-}
-/* ========================================== */
 /* 保證可捲動 */
 html, body { overflow-y: auto; }
 
@@ -859,3 +813,4 @@ html, body { overflow-y: auto; }
     display: block !important;
   }
 }
+
