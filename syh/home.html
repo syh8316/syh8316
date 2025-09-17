@@ -264,60 +264,78 @@
               const siteNav = document.getElementById('siteNav');
               if (!siteNav) return;
             
-              // 防重複綁定：若已綁過就不再做一次
-              if (siteNav.dataset.subBound === '1') return;
+              if (siteNav.dataset.subBound === '1') return; // 防重綁
               siteNav.dataset.subBound = '1';
             
               const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
               const subs = Array.from(siteNav.querySelectorAll('.has-sub'));
+              const CLOSE_DELAY = 220;
             
-              function collapseAllSubmenus(exceptLi = null) {
+              function collapseAll(except = null) {
                 subs.forEach(li => {
-                  if (li === exceptLi) return;
-                  li.classList.remove('open');
+                  if (li === except) return;
+                  li.classList.remove('open', 'pinned');
                   const p = li.querySelector('.nav-parent');
                   if (p) p.setAttribute('aria-expanded', 'false');
+                  clearTimeout(li._closeTimer);
+                  li._closeTimer = null;
                 });
               }
             
-              // 綁定每個下拉
               subs.forEach(li => {
                 const btn  = li.querySelector('.nav-parent');
                 const menu = li.querySelector('.dropdown');
                 if (!btn || !menu) return;
             
-                // 無障礙屬性
                 btn.setAttribute('aria-haspopup', 'true');
                 btn.setAttribute('aria-expanded', 'false');
             
-                // ✅ 桌機與手機都用「點擊」切換
+                // ✅ 點擊：切換 pinned（桌機/手機皆適用）
                 btn.addEventListener('click', (e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  const willOpen = !li.classList.contains('open');
-                  collapseAllSubmenus(li);               // 先收其他
-                  li.classList.toggle('open', willOpen); // 自己切換
-                  btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+                  const willOpen = !li.classList.contains('open') || !li.classList.contains('pinned');
+            
+                  // 若要開，先關其他，再開並釘住
+                  if (willOpen) {
+                    collapseAll(li);
+                    li.classList.add('open', 'pinned');
+                    btn.setAttribute('aria-expanded', 'true');
+                  } else {
+                    // 已 pinned 再點 → 關閉
+                    li.classList.remove('open', 'pinned');
+                    btn.setAttribute('aria-expanded', 'false');
+                  }
                 });
             
-                // （可保留）桌機 hover 體驗
+                // 🖱️ 桌機滑入：開啟（不設 pinned）
                 li.addEventListener('mouseenter', () => {
                   if (isMobile()) return;
+                  clearTimeout(li._closeTimer);
                   li.classList.add('open');
                   btn.setAttribute('aria-expanded', 'true');
                 });
+            
+                // 🖱️ 桌機滑出：延遲關閉（若沒被 pinned）
                 li.addEventListener('mouseleave', () => {
                   if (isMobile()) return;
-                  li.classList.remove('open');
-                  btn.setAttribute('aria-expanded', 'false');
+                  clearTimeout(li._closeTimer);
+                  li._closeTimer = setTimeout(() => {
+                    if (!li.classList.contains('pinned')) {
+                      li.classList.remove('open');
+                      btn.setAttribute('aria-expanded', 'false');
+                    }
+                  }, CLOSE_DELAY);
                 });
               });
             
-              // 點擊導覽以外區域就關閉（桌機 & 手機）
+              // 點頁面空白處或按 ESC：全部關
               document.addEventListener('click', (e) => {
-                if (!siteNav.contains(e.target)) collapseAllSubmenus();
+                if (!siteNav.contains(e.target)) collapseAll();
               });
-            });
+              document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') collapseAll();
+              });
             
               // ========== Scroll Reveal：交錯淡入 ==========
             
@@ -594,6 +612,7 @@
     </body>
 
 </html>
+
 
 
 
