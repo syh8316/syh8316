@@ -661,29 +661,34 @@ html, body { overflow-y: auto; }
 }
 .site-nav .dropdown a:hover{ background: rgba(0,0,0,.04); }
 /* ========================================== */
-/* 桌機：下拉清單改為直向列表（避免繼承主選單的 flex 橫排） */
+/* 桌機：子清單改直向堆疊＋水平文字（強制覆蓋） */
 @media (min-width: 769px){
-  /* 只讓頂層主選單橫排，不影響子清單 */
-  .site-header nav > ul{
-    display: flex;
-    gap: 32px;
+  /* 只讓頂層主選單橫排，子清單改為直向 */
+  .site-nav > ul{ display:flex; gap:32px; }
+
+  /* 子清單本體：直向堆疊 */
+  .site-nav .dropdown{
+    display: flex !important;
+    flex-direction: column !important;   /* 上到下 */
+    gap: 0 !important;
+    position: absolute;                  /* 保留原先的浮出樣式 */
+    top: calc(100% + 8px); left: 0;
+    min-width: 180px;
+  }
+  .site-nav .dropdown > li{
+    display: block !important;
+    width: 100% !important;
   }
 
-  /* 子清單本體：改回區塊排版（不是 flex 一排） */
-  .site-nav .dropdown{
-    display: block !important;   /* 關鍵：覆蓋 .site-header nav ul 的 flex */
-    gap: 0 !important;           /* 保險：移除 flex 的間距 */
-  }
-  .site-nav .dropdown li{
-    display: block !important;   /* 每個項目獨佔一行 */
-  }
+  /* 子清單連結：水平文字，不旋轉、不直書 */
   .site-nav .dropdown a{
-    display: block;
-    writing-mode: horizontal-tb; /* 文字水平排列 */
-    text-orientation: mixed;
-    white-space: nowrap;         /* 避免被擠成一列一字 */
-    text-align: left;            /* 要置中就改成 center */
-    padding: 10px 14px;          /* 與原先一致 */
+    display: block !important;
+    writing-mode: horizontal-tb !important;  /* 左到右 */
+    text-orientation: mixed !important;
+    transform: none !important;
+    white-space: nowrap;
+    text-align: left;                         /* 想置中就改 center */
+    padding: 10px 14px;
   }
 }
 
@@ -787,4 +792,5 @@ html, body { overflow-y: auto; }
     display: block !important;
   }
 }
+
 
