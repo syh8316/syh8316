@@ -762,45 +762,43 @@ html, body { overflow-y: auto; }
   }
 }
 
-/* 手機版：父層按鈕 + 子選單置中、收合時不顯示邊框 */
+/* === 修正：手機抽屜下拉置中 & 移除收合時的白線 === */
 @media (max-width: 768px){
 
-  /* 父層（電子名片／活動資訊） */
+  /* 父層：電子名片 / 活動資訊（置中） */
   .site-nav .nav-parent{
     width: 100%;
-    justify-content: center;   /* 讓文字＋箭頭置中 */
+    display: inline-flex;
+    justify-content: center;     /* 置中 */
+    align-items: center;
     text-align: center;
     padding: 12px 2px;
   }
 
-  /* 子選單（預設＝收合） */
+  /* 子清單：預設=收合 → 不要邊框、不要陰影、不要左縮排 */
   .site-nav .dropdown{
-    position: static;
-    box-shadow: none;
+    position: static !important;
+    box-shadow: none !important;
     border-radius: 8px;
-
-    /* 🔧 關鍵：收合時不顯示邊框，避免看到一條白線 */
-    border: 0;
-
-    /* 置中＋去掉左縮排 */
-    margin: 4px 0 8px 0;
+    border: 0 !important;        /* ❶ 關鍵：收合時移除邊框，白線就不見 */
+    margin: 4px 0 8px 0 !important;
     min-width: initial;
     opacity: 1; transform: none; visibility: visible;
     pointer-events: auto; overflow: hidden; max-height: 0;
-    transition: max-height .25s ease, border-color .2s ease;
-    text-align: center;
+    transition: max-height .25s ease;
+    text-align: center;          /* 子項目置中 */
   }
 
   /* 展開狀態：再加回邊框並放開高度 */
   .site-nav .has-sub.open > .dropdown{
     max-height: 420px;
-    border: 1px solid rgba(0,0,0,.06);
+    border: 1px solid rgba(0,0,0,.06) !important;  /* ❷ 只在展開時顯示 */
   }
 
-  /* 子項目：也置中 */
+  /* 子連結：置中、點擊區塊化 */
   .site-nav .dropdown a{
+    display: block;
     padding: 10px 10px;
     text-align: center;
-    display: block;
   }
 }
