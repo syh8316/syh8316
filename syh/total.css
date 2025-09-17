@@ -762,21 +762,45 @@ html, body { overflow-y: auto; }
   }
 }
 
-/* 手機：做成手風琴（抽屜內） */
+/* 手機版：父層按鈕 + 子選單置中、收合時不顯示邊框 */
 @media (max-width: 768px){
-  .site-nav .has-sub { width: 100%; }
+
+  /* 父層（電子名片／活動資訊） */
   .site-nav .nav-parent{
-    width: 100%; justify-content: space-between;
-    padding: 10px 2px;
+    width: 100%;
+    justify-content: center;   /* 讓文字＋箭頭置中 */
+    text-align: center;
+    padding: 12px 2px;
   }
+
+  /* 子選單（預設＝收合） */
   .site-nav .dropdown{
-    position: static; box-shadow: none; border-radius: 8px;
-    border: 1px solid rgba(0,0,0,.06);
-    margin: 4px 0 8px 8px; min-width: initial;
-    opacity: 1; transform: none; visibility: visible;   /* 手機以高度收展 */
+    position: static;
+    box-shadow: none;
+    border-radius: 8px;
+
+    /* 🔧 關鍵：收合時不顯示邊框，避免看到一條白線 */
+    border: 0;
+
+    /* 置中＋去掉左縮排 */
+    margin: 4px 0 8px 0;
+    min-width: initial;
+    opacity: 1; transform: none; visibility: visible;
     pointer-events: auto; overflow: hidden; max-height: 0;
-    transition: max-height .25s ease;
+    transition: max-height .25s ease, border-color .2s ease;
+    text-align: center;
   }
-  .site-nav .has-sub.open > .dropdown{ max-height: 420px; } /* 足夠容納清單 */
-  .site-nav .dropdown a{ padding: 10px 10px 10px 12px; }
+
+  /* 展開狀態：再加回邊框並放開高度 */
+  .site-nav .has-sub.open > .dropdown{
+    max-height: 420px;
+    border: 1px solid rgba(0,0,0,.06);
+  }
+
+  /* 子項目：也置中 */
+  .site-nav .dropdown a{
+    padding: 10px 10px;
+    text-align: center;
+    display: block;
+  }
 }
