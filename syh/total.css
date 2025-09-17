@@ -671,65 +671,71 @@ html, body { overflow-y: auto; }
   }
 }
 
-/* 手機覆蓋：手風琴 + 置中 + 透明底（合併版） */
+/* === 手機：未展開時與前兩項對齊；展開時維持透明置中 === */
 @media (max-width: 768px){
-  /* 父層與按鈕置中（解決收合時歪） */
+  /* 讓整份清單直向排列且水平置中（父層置中基準） */
   .site-nav ul{
-    align-items: center !important;            /* 交叉軸置中 */
+    flex-direction: column;
+    align-items: center !important;
   }
+
+  /* 每個項目用「自寬」而不是撐滿整行，視覺就與上方兩項一致 */
   .site-nav ul > li{
-    display: flex !important;
-    justify-content: center !important;
-    width: 100% !important;
+    display: block !important;
+    width: auto !important;
   }
+  .site-nav .has-sub{
+    width: auto !important;
+    text-align: center !important;
+  }
+
+  /* 標題按鈕本身：自寬＋置中（避免看起來歪一邊） */
   .site-nav .nav-parent{
     display: inline-flex !important;
     width: auto !important;
-    margin-inline: auto !important;
-    align-self: center !important;
+    margin: 0 auto !important;
     justify-content: center !important;
+    align-items: center !important;
     gap: 6px !important;
     padding: 12px 0 !important;
     line-height: 1 !important;
     text-align: center !important;
   }
 
-  /* 子清單：改為流式、預設收合，完全透明 */
+  /* 下拉清單：改成 inline-block＋自寬，置中掛在標題下方；收合時高度=0 */
   .site-nav .dropdown{
     position: static !important;
+    display: inline-block !important;
+    margin: 4px auto 8px !important;   /* 水平置中關鍵 */
     min-width: initial !important;
-    margin: 4px 0 8px 0 !important;
 
+    /* 手風琴收合狀態 */
+    overflow: hidden !important;
+    max-height: 0 !important;
+
+    /* 透明風格 */
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    text-align: center !important;
     opacity: 1 !important;
     visibility: visible !important;
     pointer-events: auto !important;
     transform: none !important;
-
-    overflow: hidden !important;
-    max-height: 0 !important;
-
-    background: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
-
-    text-align: center;
   }
 
-  /* 展開：打開高度；仍維持透明底 */
+  /* 展開：打開高度（可依需要調整），維持透明 */
   .site-nav .has-sub.open > .dropdown{
-    max-height: 600px !important;              /* 依清單長度可調 */
+    max-height: 600px !important;
     background: transparent !important;
     border: 0 !important;
     box-shadow: none !important;
   }
 
+  /* 子選項：區塊化＋置中，避免靠右 */
   .site-nav .dropdown a{
-    padding: 10px 10px;
-    text-align: center;
-  }
-  .site-nav .dropdown a:hover{
-    background: rgba(255,255,255,.12) !important;
+    display: block !important;
+    padding: 10px 14px !important;
+    text-align: center !important;
   }
 }
-
-
