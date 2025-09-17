@@ -261,34 +261,46 @@
               });
             
               // ========== 下拉選單：桌機 hover、手機點擊展開 ==========
+              const siteNav = document.getElementById('siteNav');
+              if (!siteNav) return;
+            
+              // 防重複綁定：若已綁過就不再做一次
+              if (siteNav.dataset.subBound === '1') return;
+              siteNav.dataset.subBound = '1';
+            
               const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
               const subs = Array.from(siteNav.querySelectorAll('.has-sub'));
-              function collapseAllSubmenus() {
+            
+              function collapseAllSubmenus(exceptLi = null) {
                 subs.forEach(li => {
+                  if (li === exceptLi) return;
                   li.classList.remove('open');
-                  const btn = li.querySelector('.nav-parent');
-                  if (btn) btn.setAttribute('aria-expanded', 'false');
+                  const p = li.querySelector('.nav-parent');
+                  if (p) p.setAttribute('aria-expanded', 'false');
                 });
               }
             
+              // 綁定每個下拉
               subs.forEach(li => {
-                const btn  = li.querySelector('.nav-parent');   // 父層按鈕（不跳頁）
-                const menu = li.querySelector('.dropdown');     // 子清單
+                const btn  = li.querySelector('.nav-parent');
+                const menu = li.querySelector('.dropdown');
                 if (!btn || !menu) return;
             
-                // 手機：點擊切換（手風琴）
+                // 無障礙屬性
+                btn.setAttribute('aria-haspopup', 'true');
+                btn.setAttribute('aria-expanded', 'false');
+            
+                // ✅ 桌機與手機都用「點擊」切換
                 btn.addEventListener('click', (e) => {
-                  if (!isMobile()) return;        // 桌機不走 click
                   e.preventDefault();
+                  e.stopPropagation();
                   const willOpen = !li.classList.contains('open');
-                  // 先收其他
-                  subs.forEach(other => { if (other !== li) other.classList.remove('open'); });
-                  // 自己再開/關
-                  li.classList.toggle('open', willOpen);
+                  collapseAllSubmenus(li);               // 先收其他
+                  li.classList.toggle('open', willOpen); // 自己切換
                   btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
                 });
             
-                // 桌機：滑入/滑出
+                // （可保留）桌機 hover 體驗
                 li.addEventListener('mouseenter', () => {
                   if (isMobile()) return;
                   li.classList.add('open');
@@ -301,12 +313,11 @@
                 });
               });
             
-              // 手機：點擊導覽列外部就收起子選單（不關抽屜）
+              // 點擊導覽以外區域就關閉（桌機 & 手機）
               document.addEventListener('click', (e) => {
-                if (!isMobile()) return;
-                const inside = e.target.closest('.site-nav .has-sub');
-                if (!inside) collapseAllSubmenus();
+                if (!siteNav.contains(e.target)) collapseAllSubmenus();
               });
+            });
             
               // ========== Scroll Reveal：交錯淡入 ==========
             
@@ -583,6 +594,7 @@
     </body>
 
 </html>
+
 
 
 
