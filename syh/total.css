@@ -661,16 +661,33 @@ html, body { overflow-y: auto; }
 }
 .site-nav .dropdown a:hover{ background: rgba(0,0,0,.04); }
 /* ========================================== */
-/* 桌機顯示：父層開啟時 */
+/* 桌機：下拉清單改為直向列表（避免繼承主選單的 flex 橫排） */
 @media (min-width: 769px){
-  .site-nav .has-sub.open > .dropdown{
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-    visibility: visible;
+  /* 只讓頂層主選單橫排，不影響子清單 */
+  .site-header nav > ul{
+    display: flex;
+    gap: 32px;
+  }
+
+  /* 子清單本體：改回區塊排版（不是 flex 一排） */
+  .site-nav .dropdown{
+    display: block !important;   /* 關鍵：覆蓋 .site-header nav ul 的 flex */
+    gap: 0 !important;           /* 保險：移除 flex 的間距 */
+  }
+  .site-nav .dropdown li{
+    display: block !important;   /* 每個項目獨佔一行 */
+  }
+  .site-nav .dropdown a{
+    display: block;
+    writing-mode: horizontal-tb; /* 文字水平排列 */
+    text-orientation: mixed;
+    white-space: nowrap;         /* 避免被擠成一列一字 */
+    text-align: left;            /* 要置中就改成 center */
+    padding: 10px 14px;          /* 與原先一致 */
   }
 }
 
+/* ========================================== */
 /* 手機覆蓋：未展開與上方兩項對齊；展開時維持透明置中（最終整合版） */
 @media (max-width: 768px){
   /* 4 個頂層選項：直向排列、等距、置中 */
@@ -770,3 +787,4 @@ html, body { overflow-y: auto; }
     display: block !important;
   }
 }
+
