@@ -671,33 +671,38 @@ html, body { overflow-y: auto; }
   }
 }
 
-/* 手機覆蓋：未展開與上方兩項對齊；展開時維持透明置中 */
+/* 手機覆蓋：未展開與上方兩項對齊；展開時維持透明置中（最終版） */
 @media (max-width: 768px){
-  /* 讓整份清單垂直排列且以「容器中心線」對齊 */
+  /* 清單垂直排列並以容器中心線對齊 */
   .site-nav ul{
     flex-direction: column;
-    align-items: center !important;           /* 交叉軸置中（關鍵） */
-    padding-left: 0 !important;               /* 避免左右 padding 影響視覺中心 */
+    align-items: center !important;
+    padding-left: 0 !important;
     padding-right: 0 !important;
   }
-
-  /* 每個項目使用「自寬」而不是 100% 寬，和上方兩個連結一致 */
+  /* 每個項目用自寬，與上方兩個連結一致 */
   .site-nav ul > li{
     width: auto !important;
-    align-self: center !important;            /* 以自身為中心線 */
+    align-self: center !important;
   }
-
-  /* 一般連結（關於劇團／社交平台）也改成自寬置中，視覺一致 */
+  /* 一般連結也自寬置中（視覺一致） */
   .site-nav ul > li:not(.has-sub) > a{
     display: inline-block !important;
     margin: 0 auto !important;
     text-align: center !important;
   }
 
-  /* 下拉標題按鈕：用 grid 讓「文字＋箭頭」完美置中 */
-  .site-nav .nav-parent{
+  /* ⬇ 這裡用 grid 強制「標題在上、清單在下」 */
+  .site-nav .has-sub{
     display: grid !important;
-    grid-auto-flow: column;
+    grid-template-rows: auto auto;
+    justify-items: center;
+    align-items: start;
+    width: auto !important;
+  }
+  .site-nav .nav-parent{
+    grid-row: 1;
+    display: inline-flex !important;
     justify-content: center !important;
     align-items: center !important;
     gap: 6px !important;
@@ -708,11 +713,15 @@ html, body { overflow-y: auto; }
     text-align: center !important;
   }
 
-  /* 子清單：改為流式區塊，預設收合且完全透明 */
+  /* 清單本體：預設收合、透明、佔在標題「下方」 */
   .site-nav .dropdown{
+    grid-row: 2;
     position: static !important;
-    display: block !important;                /* 用 block，寬度由內容決定 */
-    margin: 4px auto 8px !important;          /* 水平置中 */
+    display: block !important;
+    float: none !important;
+    clear: both !important;
+
+    margin: 6px 0 8px !important;
     min-width: initial !important;
 
     /* 手風琴收合狀態 */
@@ -731,13 +740,9 @@ html, body { overflow-y: auto; }
     pointer-events: auto !important;
     transform: none !important;
   }
-
-  /* 展開：打開高度；維持透明底 */
+  /* 展開時：打開高度（依清單長度調整） */
   .site-nav .has-sub.open > .dropdown{
-    max-height: 600px !important;             /* 可依清單長度調整 */
-    background: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
+    max-height: 800px !important;
   }
 
   .site-nav .dropdown a{
@@ -745,43 +750,4 @@ html, body { overflow-y: auto; }
     padding: 10px 14px !important;
     text-align: center !important;
   }
-
-  /* 父容器改成直向 flex，子元素自然一上一下 */
-  .site-nav .has-sub{
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;   /* 置中 */
-    width: auto !important;
-  }
-
-  /* 標題在上、清單在下（保險指定順序） */
-  .site-nav .nav-parent{ order: 0 !important; }
-  .site-nav .dropdown{
-    order: 1 !important;
-
-    /* 保證不會並排在同一行 */
-    display: block !important;
-    position: static !important;
-    float: none !important;
-    clear: both !important;
-
-    /* 透明 + 手風琴 */
-    margin: 6px 0 8px !important;
-    max-height: 0 !important;
-    overflow: hidden !important;
-    background: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-    transform: none !important;
-    text-align: center !important;
-  }
-
-  /* 展開時打開高度 */
-  .site-nav .has-sub.open > .dropdown{
-    max-height: 600px !important;
-  }
 }
-
