@@ -27,6 +27,10 @@ body{
   background:rgba(11,12,15,.7);
   border-bottom:1px solid #111418;
 }
+/* 深色主題時的 hover 顏色（可調） */
+.site-header nav a:hover{
+  color: #d1d5db;              /* 或用 var(--accent) 想更醒目就改這個 */
+}
 .head-wrap{display:flex;align-items:center;gap:20px;min-height:64px}
 .brand{
   color:#fff;text-decoration:none;font-weight:700;letter-spacing:.5px;
