@@ -728,7 +728,7 @@ html, body { overflow-y: auto; }
     float: none !important;
     clear: both !important;
 
-    margin: 2px 0 4px !important;         /* 清單上下留白更小 */
+    margin: 2px 0 0px !important;         /* 清單上下留白更小 */
     min-width: initial !important;
 
     /* 手風琴收合狀態 */
@@ -760,5 +760,3 @@ html, body { overflow-y: auto; }
     text-align: center !important;
   }
 }
-
-
