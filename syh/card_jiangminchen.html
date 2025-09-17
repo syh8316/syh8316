@@ -71,14 +71,20 @@
 <body>
   <!-- 頁首 -->
   <header class="site-header">
-    <h1 class="brand">
-      <!-- 跟首頁一樣：用 CSS 背景圖顯示 logo，不放 <img> 才不會重疊 -->
-      <a href="home.html" aria-label="新義和歌劇團">
-        <span class="brand__text">新義和歌劇團</span>
-      </a>
-    </h1>
-
-    <!-- 漢堡按鈕（手機用） -->
+    <h1 class="sr-only">新義和歌劇團</h1>
+  
+    <!-- Logo（點擊回首頁） -->
+    <a href="home.html" title="回首頁：新義和歌劇團">
+      <img
+        src="https://syh8316.github.io/syh8316/syh/img/logo.png"
+        alt="新義和歌劇團 標誌"
+        width="320" height="320"
+        loading="eager" fetchpriority="high"
+        style="max-width:180px;height:auto"
+      >
+    </a>
+  
+    <!-- 漢堡按鈕 -->
     <button class="nav-toggle" id="navToggle"
             aria-controls="siteNav"
             aria-expanded="false"
@@ -87,18 +93,38 @@
       <span class="bar"></span>
       <span class="bar"></span>
     </button>
-
-    <!-- 導覽列 -->
+  
+    <!-- 導覽列（統一） -->
     <nav class="site-nav" id="siteNav" role="navigation">
       <ul>
-        <!-- ① 保留首頁按鈕 -->
-        <li><a href="home.html">首頁</a></li>
-
-        <!-- ② 四位成員 -->
-        <li><a href="card_jiangminchen.html" class="is-active">江敏琛</a></li>
-        <li><a href="card_jiangjun.html">江軍</a></li>
-        <li><a href="card_zhengyuxiang.html">鄭聿翔</a></li>
-        <li><a href="card_linyiyan.html">林羿妍</a></li>
+        <li><a href="home.html#about">關於劇團</a></li>
+        <li><a href="home.html#social">社交平台</a></li>
+  
+        <!-- 電子名片 -->
+        <li class="has-sub">
+          <button class="nav-parent" type="button" aria-expanded="false">
+            電子名片 <span class="caret" aria-hidden="true"></span>
+          </button>
+          <ul class="dropdown" role="menu" aria-label="電子名片清單">
+            <li><a role="menuitem" href="card_jiangminchen.html">江敏琛(團長)</a></li>
+            <li><a role="menuitem" href="card_jiangjun.html">江軍(副團長)</a></li>
+            <li><a role="menuitem" href="card_zhengyuxiang.html">鄭聿翔(總務)</a></li>
+            <li><a role="menuitem" href="card_linyiyan.html">林羿妍(行銷公關總監)</a></li>
+          </ul>
+        </li>
+  
+        <!-- 活動資訊 -->
+        <li class="has-sub">
+          <button class="nav-parent" type="button" aria-expanded="false">
+            活動資訊 <span class="caret" aria-hidden="true"></span>
+          </button>
+          <ul class="dropdown" role="menu" aria-label="活動選單">
+            <li><a role="menuitem" href="activities.html#latest">最新活動</a></li>
+            <li><a role="menuitem" href="activities.html#history">活動紀錄</a></li>
+            <li><a role="menuitem" href="activities.html#portfolio">作品集</a></li>
+            <li><a role="menuitem" href="activities.html#portfolio">相簿</a></li>
+          </ul>
+        </li>
       </ul>
     </nav>
   </header>
@@ -236,35 +262,127 @@
     
   </main>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const navToggle = document.getElementById('navToggle');
-      const siteNav   = document.getElementById('siteNav');
-
-      if (navToggle && siteNav) {
-        navToggle.addEventListener('click', () => {
-          const open = siteNav.classList.toggle('is-open');
-          navToggle.classList.toggle('is-active', open);
-          navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-          document.body.classList.toggle('no-scroll', open);
-        });
-        siteNav.querySelectorAll('a').forEach(a => {
-          a.addEventListener('click', () => {
-            siteNav.classList.remove('is-open');
-            navToggle.classList.remove('is-active');
-            navToggle.setAttribute('aria-expanded', 'false');
-            document.body.classList.remove('no-scroll');
-          });
-        });
-        window.addEventListener('resize', () => {
-          if (window.innerWidth >= 769) {
-            siteNav.classList.remove('is-open');
-            navToggle.classList.remove('is-active');
-            navToggle.setAttribute('aria-expanded', 'false');
-            document.body.classList.remove('no-scroll');
-          }
-        });
+  document.addEventListener('DOMContentLoaded', () => {
+    const navToggle = document.getElementById('navToggle');
+    const siteNav   = document.getElementById('siteNav');
+    if (!navToggle || !siteNav) return;
+  
+    // ===== 漢堡抽屜 =====
+    navToggle.addEventListener('click', () => {
+      const open = siteNav.classList.toggle('is-open');
+      navToggle.classList.toggle('is-active', open);
+      navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      document.body.classList.toggle('no-scroll', open);
+      if (!open) collapseAll();
+    });
+  
+    // 點任何連結就關抽屜＆子選單
+    siteNav.querySelectorAll('a[href]').forEach(a => {
+      a.addEventListener('click', () => {
+        siteNav.classList.remove('is-open');
+        navToggle.classList.remove('is-active');
+        navToggle.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('no-scroll');
+        collapseAll();
+      });
+    });
+  
+    // 視窗放大回桌機：清乾淨
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 769) {
+        siteNav.classList.remove('is-open');
+        navToggle.classList.remove('is-active');
+        navToggle.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('no-scroll');
+        collapseAll();
       }
     });
+  
+    // ===== 下拉（手機點擊／桌機 hover + 可釘住）=====
+    if (siteNav.dataset.subBound === '1') return; // 防重綁
+    siteNav.dataset.subBound = '1';
+  
+    const subs = Array.from(siteNav.querySelectorAll('.has-sub'));
+    const CLOSE_DELAY = 350;
+  
+    function collapseAll(except = null) {
+      subs.forEach(li => {
+        if (li === except) return;
+        li.classList.remove('open', 'pinned');
+        const p = li.querySelector('.nav-parent');
+        if (p) p.setAttribute('aria-expanded', 'false');
+        clearTimeout(li._closeTimer);
+        li._closeTimer = null;
+      });
+    }
+  
+    subs.forEach(li => {
+      const btn  = li.querySelector('.nav-parent');
+      const menu = li.querySelector('.dropdown');
+      if (!btn || !menu) return;
+  
+      btn.setAttribute('aria-haspopup', 'true');
+      btn.setAttribute('aria-expanded', 'false');
+  
+      // 點擊：切換 pinned（桌機/手機都適用）
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const willOpen = !li.classList.contains('open') || !li.classList.contains('pinned');
+        if (willOpen) {
+          collapseAll(li);
+          li.classList.add('open', 'pinned');
+          btn.setAttribute('aria-expanded', 'true');
+        } else {
+          li.classList.remove('open', 'pinned');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+  
+      // 滑動的安全延遲（避免手滑就關）
+      const scheduleClose = () => {
+        clearTimeout(li._closeTimer);
+        li._closeTimer = setTimeout(() => {
+          if (!li.classList.contains('pinned')) {
+            li.classList.remove('open');
+            btn.setAttribute('aria-expanded', 'false');
+          }
+        }, CLOSE_DELAY);
+      };
+      const cancelClose = () => {
+        clearTimeout(li._closeTimer);
+        li._closeTimer = null;
+      };
+  
+      // 桌機 hover 開關 + 延遲收合
+      li.addEventListener('mouseenter', () => {
+        cancelClose();
+        li.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      });
+      li.addEventListener('mouseleave', scheduleClose);
+      menu.addEventListener('mouseenter', cancelClose);
+      menu.addEventListener('mouseleave', scheduleClose);
+    });
+  
+    // 點頁面空白處或按 ESC：全關
+    document.addEventListener('click', (e) => {
+      if (!siteNav.contains(e.target)) collapseAll();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') collapseAll();
+    });
+  
+    // =====（可選）自動高亮目前頁的選單連結 =====
+    const cur = location.pathname.split('/').pop();
+    siteNav.querySelectorAll('a[href]').forEach(a => {
+      const href = a.getAttribute('href') || '';
+      if (href === cur || href.startsWith(cur + '#')) {
+        a.classList.add('is-current');
+        a.setAttribute('aria-current','page');
+      }
+    });
+  });
   </script>
 
   <!-- 頁尾（可換成你的） -->
