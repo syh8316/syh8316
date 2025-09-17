@@ -260,23 +260,30 @@
                 }
               });
             
-              // ========== 下拉選單：桌機 hover、手機點擊展開 ==========
-              const siteNav = document.getElementById('siteNav');
-              if (!siteNav) return;
-            
-              if (siteNav.dataset.subBound === '1') return; // 防重綁
-              siteNav.dataset.subBound = '1';
-            
-              const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
-              const subs = Array.from(siteNav.querySelectorAll('.has-sub'));
-              const CLOSE_DELAY = 350;
-            
-              subs.forEach(li => {
+              // ========== 下拉選單：桌機 hover + 安全延遲、手機點擊釘住 ==========
+                const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
+                const subs = Array.from(siteNav.querySelectorAll('.has-sub'));
+                const CLOSE_DELAY = 350;
+                
+                function collapseAll(except = null) {
+                  subs.forEach(li => {
+                    if (li === except) return;
+                    li.classList.remove('open', 'pinned');
+                    const p = li.querySelector('.nav-parent');
+                    if (p) p.setAttribute('aria-expanded', 'false');
+                    clearTimeout(li._closeTimer);
+                    li._closeTimer = null;
+                  });
+                }
+                // 兼容你前面呼叫的舊函式名（不用到處改）
+                function collapseAllSubmenus(){ collapseAll(); }
+                
+                subs.forEach(li => {
                   const btn  = li.querySelector('.nav-parent');
                   const menu = li.querySelector('.dropdown');
                   if (!btn || !menu) return;
                 
-                  // 無障礙屬性
+                  // 無障礙
                   btn.setAttribute('aria-haspopup', 'true');
                   btn.setAttribute('aria-expanded', 'false');
                 
@@ -287,16 +294,16 @@
                     const willOpen = !li.classList.contains('open') || !li.classList.contains('pinned');
                 
                     if (willOpen) {
-                      collapseAll(li);                     // 先關其他
-                      li.classList.add('open', 'pinned');  // 自己開並「釘住」
+                      collapseAll(li);                       // 先把別的關掉
+                      li.classList.add('open', 'pinned');    // 自己開並「釘住」
                       btn.setAttribute('aria-expanded', 'true');
                     } else {
-                      li.classList.remove('open', 'pinned');
+                      li.classList.remove('open', 'pinned'); // 再點一次→關
                       btn.setAttribute('aria-expanded', 'false');
                     }
                   });
                 
-                  // ====== 滑動時的「安全延遲」：避免手滑一下就收起 ======
+                  // 滑鼠「安全延遲」避免手滑就收起
                   const scheduleClose = () => {
                     clearTimeout(li._closeTimer);
                     li._closeTimer = setTimeout(() => {
@@ -311,52 +318,29 @@
                     li._closeTimer = null;
                   };
                 
-                  // 滑入整個 has-sub：打開
+                  // 桌機 hover：滑入開、滑出延遲關
                   li.addEventListener('mouseenter', () => {
+                    if (isMobile()) return;
                     cancelClose();
                     li.classList.add('open');
                     btn.setAttribute('aria-expanded', 'true');
                   });
-                
-                  // 滑出整個 has-sub：延遲關閉（未 pinned 才關）
-                  li.addEventListener('mouseleave', scheduleClose);
-                
-                  // 滑到清單上：取消關閉計時
+                  li.addEventListener('mouseleave', () => {
+                    if (isMobile()) return;
+                    scheduleClose();
+                  });
                   menu.addEventListener('mouseenter', cancelClose);
-                
-                  // 清單滑出：延遲關閉（未 pinned 才關）
                   menu.addEventListener('mouseleave', scheduleClose);
                 });
-            
-                // 🖱️ 桌機滑入：開啟（不設 pinned）
-                li.addEventListener('mouseenter', () => {
-                  if (isMobile()) return;
-                  clearTimeout(li._closeTimer);
-                  li.classList.add('open');
-                  btn.setAttribute('aria-expanded', 'true');
+                
+                // 點頁面空白處或按 ESC：全部關
+                document.addEventListener('click', (e) => {
+                  if (!siteNav.contains(e.target)) collapseAll();
                 });
-            
-                // 🖱️ 桌機滑出：延遲關閉（若沒被 pinned）
-                li.addEventListener('mouseleave', () => {
-                  if (isMobile()) return;
-                  clearTimeout(li._closeTimer);
-                  li._closeTimer = setTimeout(() => {
-                    if (!li.classList.contains('pinned')) {
-                      li.classList.remove('open');
-                      btn.setAttribute('aria-expanded', 'false');
-                    }
-                  }, CLOSE_DELAY);
+                document.addEventListener('keydown', (e) => {
+                  if (e.key === 'Escape') collapseAll();
                 });
-              });
-            
-              // 點頁面空白處或按 ESC：全部關
-              document.addEventListener('click', (e) => {
-                if (!siteNav.contains(e.target)) collapseAll();
-              });
-              document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') collapseAll();
-              });
-            
+                            
               // ========== Scroll Reveal：交錯淡入 ==========
             
               // 1) 若有 .reveal-stagger，先讓子元素加上 .reveal（統一處理）
@@ -632,6 +616,7 @@
     </body>
 
 </html>
+
 
 
 
