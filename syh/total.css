@@ -554,10 +554,6 @@ body::after,
 /* ========================================== */
   .bgm-unlock{ right: 12px; bottom: 12px; font-size: 13px; }
 }
-
-
-  .bgm-unlock{ right: 12px; bottom: 12px; font-size: 13px; }
-}
 /* ========================================== */
 /* 屏幕閱讀器專用（無障礙） */
 .sr-only{
@@ -818,6 +814,7 @@ html, body { overflow-y: auto; }
     display: block !important;
   }
 }
+
 
 
 
