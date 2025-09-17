@@ -706,6 +706,15 @@ html, body { overflow-y: auto; }
     pointer-events: auto !important;
     transform: translateY(0) !important;
   }
+
+  /* 在清單上方鋪一條看不見的「橋」，讓滑鼠穿越時仍算在清單內 */
+  .site-nav .dropdown::before{
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    top: -10px;                /* 覆蓋按鈕與清單之間可能的空氣帶 */
+    height: 10px;              /* 想更寬容可以調 12~14 */
+  }
 }
 
 
@@ -809,6 +818,7 @@ html, body { overflow-y: auto; }
     display: block !important;
   }
 }
+
 
 
 
