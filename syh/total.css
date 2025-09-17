@@ -671,42 +671,48 @@ html, body { overflow-y: auto; }
   }
 }
 
-/* === 手機：未展開時與前兩項對齊；展開時維持透明置中 === */
+/* 手機覆蓋：未展開與上方兩項對齊；展開時維持透明置中 */
 @media (max-width: 768px){
-  /* 讓整份清單直向排列且水平置中（父層置中基準） */
+  /* 讓整份清單垂直排列且以「容器中心線」對齊 */
   .site-nav ul{
     flex-direction: column;
-    align-items: center !important;
+    align-items: center !important;           /* 交叉軸置中（關鍵） */
+    padding-left: 0 !important;               /* 避免左右 padding 影響視覺中心 */
+    padding-right: 0 !important;
   }
 
-  /* 每個項目用「自寬」而不是撐滿整行，視覺就與上方兩項一致 */
+  /* 每個項目使用「自寬」而不是 100% 寬，和上方兩個連結一致 */
   .site-nav ul > li{
-    display: block !important;
     width: auto !important;
+    align-self: center !important;            /* 以自身為中心線 */
   }
-  .site-nav .has-sub{
-    width: auto !important;
+
+  /* 一般連結（關於劇團／社交平台）也改成自寬置中，視覺一致 */
+  .site-nav ul > li:not(.has-sub) > a{
+    display: inline-block !important;
+    margin: 0 auto !important;
     text-align: center !important;
   }
 
-  /* 標題按鈕本身：自寬＋置中（避免看起來歪一邊） */
+  /* 下拉標題按鈕：用 grid 讓「文字＋箭頭」完美置中 */
   .site-nav .nav-parent{
-    display: inline-flex !important;
-    width: auto !important;
-    margin: 0 auto !important;
+    display: grid !important;
+    grid-auto-flow: column;
     justify-content: center !important;
     align-items: center !important;
     gap: 6px !important;
-    padding: 12px 0 !important;
+    padding: 12px 8px !important;
     line-height: 1 !important;
+    width: auto !important;
+    margin: 0 auto !important;
     text-align: center !important;
   }
 
-  /* 下拉清單：改成 inline-block＋自寬，置中掛在標題下方；收合時高度=0 */
+  /* 子清單：改為流式區塊，預設收合且完全透明 */
   .site-nav .dropdown{
     position: static !important;
-    display: inline-block !important;
-    margin: 4px auto 8px !important;   /* 水平置中關鍵 */
+    display: block !important;                /* 用 block，寬度由內容決定 */
+    margin: 4px auto 8px !important;          /* 水平置中 */
     min-width: initial !important;
 
     /* 手風琴收合狀態 */
@@ -718,21 +724,22 @@ html, body { overflow-y: auto; }
     border: 0 !important;
     box-shadow: none !important;
     text-align: center !important;
+
+    /* 關閉桌機隱藏屬性 */
     opacity: 1 !important;
     visibility: visible !important;
     pointer-events: auto !important;
     transform: none !important;
   }
 
-  /* 展開：打開高度（可依需要調整），維持透明 */
+  /* 展開：打開高度；維持透明底 */
   .site-nav .has-sub.open > .dropdown{
-    max-height: 600px !important;
+    max-height: 600px !important;             /* 可依清單長度調整 */
     background: transparent !important;
     border: 0 !important;
     box-shadow: none !important;
   }
 
-  /* 子選項：區塊化＋置中，避免靠右 */
   .site-nav .dropdown a{
     display: block !important;
     padding: 10px 14px !important;
