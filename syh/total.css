@@ -56,6 +56,10 @@ figure { margin: 0; }
   box-shadow: 0 2px 12px rgba(0,0,0,.06);
   color: var(--header-ink);
 }
+/* 深色主題時的 hover 顏色（可調） */
+.site-header nav a:hover{
+  color: #d1d5db;              /* 或用 var(--accent) 想更醒目就改這個 */
+}
 /* 讓內容不被固定 header 壓住 */
 body{ padding-top: var(--header-h); }
 /* Logo（沿用你的圖） */
@@ -814,6 +818,7 @@ html, body { overflow-y: auto; }
     display: block !important;
   }
 }
+
 
 
 
