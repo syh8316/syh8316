@@ -681,6 +681,8 @@ html, body { overflow-y: auto; }
     display: block !important;               /* 垂直一列一列 */
     writing-mode: horizontal-tb !important;  /* 左→右 */
     text-orientation: mixed !important;
+    top: 100% !important;      /* 由 calc(100% + 8px) 改為緊貼 */
+    margin-top: 6px !important;/* 想要視覺間距用 margin 產生，不製造 hover 縫隙 */
   }
   .site-nav .dropdown > li{
     display: block !important;               /* 每項獨佔一行（上→下） */
@@ -807,6 +809,7 @@ html, body { overflow-y: auto; }
     display: block !important;
   }
 }
+
 
 
 
