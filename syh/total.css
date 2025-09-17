@@ -720,5 +720,63 @@ html, body { overflow-y: auto; }
 .site-nav         { pointer-events: none; }
 .site-nav.is-open { pointer-events: auto; }
 
+/* ============ 下拉選單（桌機：hover；手機：手風琴） ============ */
+.site-nav .has-sub { position: relative; }
+.site-nav .nav-parent{
+  appearance: none; border: 0; background: transparent; cursor: pointer;
+  font: inherit; color: var(--header-ink, #111); font-weight: 800; line-height: 1;
+  padding: 10px 8px; display: inline-flex; align-items: center; gap: 6px;
+}
+.site-nav .nav-parent:focus-visible{ outline: 2px solid #999; border-radius: 6px; }
 
+/* 小箭頭 */
+.site-nav .caret{
+  display:inline-block; width: 0; height: 0; margin-left: 2px;
+  border-left: 5px solid transparent; border-right: 5px solid transparent;
+  border-top: 6px solid currentColor; transition: transform .2s ease;
+}
+.site-nav .has-sub.open > .nav-parent .caret{ transform: rotate(180deg); }
 
+/* 子選單 */
+.site-nav .dropdown{
+  list-style: none; margin: 0; padding: 8px 0;
+  background: var(--header-bg, rgba(255,255,255,.98));
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 10px; box-shadow: 0 12px 28px rgba(0,0,0,.12);
+  position: absolute; top: calc(100% + 8px); left: 0; min-width: 180px;
+  opacity: 0; transform: translateY(-6px); pointer-events: none; visibility: hidden;
+  transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+  z-index: 1400;
+}
+.site-nav .dropdown a{
+  display: block; padding: 10px 14px; text-decoration: none;
+  color: var(--header-ink, #111); font-weight: 700; font-size: 16px;
+}
+.site-nav .dropdown a:hover{ background: rgba(0,0,0,.04); }
+
+/* 桌機顯示：父層開啟時 */
+@media (min-width: 769px){
+  .site-nav .has-sub.open > .dropdown{
+    opacity: 1; transform: translateY(0);
+    pointer-events: auto; visibility: visible;
+  }
+}
+
+/* 手機：做成手風琴（抽屜內） */
+@media (max-width: 768px){
+  .site-nav .has-sub { width: 100%; }
+  .site-nav .nav-parent{
+    width: 100%; justify-content: space-between;
+    padding: 10px 2px;
+  }
+  .site-nav .dropdown{
+    position: static; box-shadow: none; border-radius: 8px;
+    border: 1px solid rgba(0,0,0,.06);
+    margin: 4px 0 8px 8px; min-width: initial;
+    opacity: 1; transform: none; visibility: visible;   /* 手機以高度收展 */
+    pointer-events: auto; overflow: hidden; max-height: 0;
+    transition: max-height .25s ease;
+  }
+  .site-nav .has-sub.open > .dropdown{ max-height: 420px; } /* 足夠容納清單 */
+  .site-nav .dropdown a{ padding: 10px 10px 10px 12px; }
+}
