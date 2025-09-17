@@ -42,6 +42,20 @@ body {
   gap: 12px;
 }
 
+
+/* 只讓最外層主選單橫排，不把 flex 傳給子層 ul */
+.site-header nav > ul{
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+
+/* 子清單（第二層 ul）回到 block 直向排列，不要繼承 flex */
+.site-header nav ul ul{
+  display: block !important;
+  gap: 0 !important;
+}
+
 .brand{
   width: 240px; height: 64px; margin: 0;
   background: url("./img/logo.png") no-repeat left center / contain;
@@ -194,8 +208,43 @@ body{ padding-top: var(--header-h); } /* 預留固定導覽列的高度 */
   font-weight: 700;
   background: #fff;
 }
-@media (max-width:768px){
-  .site-nav{ display:block !important; }    /* 讓抽屜真的能顯示 */
+/* 子清單容器（桌機）：維持水平文字 + 直向一列列 */
+@media (min-width: 769px){
+  .site-nav .dropdown{
+    display: block !important;
+    writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+    top: 100% !important;       /* 緊貼按鈕下緣，避免 hover 有縫隙 */
+    margin-top: 0 !important;
+  }
+  .site-nav .dropdown > li{ display:block !important; width:100% !important; }
+  .site-nav .dropdown a{
+    display:block !important;
+    writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+    white-space: nowrap !important;
+    text-align: left;
+    padding: 10px 14px;
+  }
+
+  /* 顯示條件：滑入或 .open（JS 會加）都顯示 */
+  .site-nav .has-sub:hover > .dropdown,
+  .site-nav .has-sub.open  > .dropdown{
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: translateY(0) !important;
+  }
+
+  /* Hover 緩衝橋，避免游標下移時瞬間收起 */
+  .site-nav .dropdown::before{
+    content:""; position:absolute; left:0; right:0; top:-10px; height:10px;
+  }
+}
+
+/* 確保桌機下 .site-nav 可點、不被其它樣式關掉事件 */
+@media (min-width: 769px){
+  .site-nav{ pointer-events: auto !important; }
 }
 
 /* RWD */
