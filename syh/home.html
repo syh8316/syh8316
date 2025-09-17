@@ -114,9 +114,34 @@
             <ul>
               <li><a href="#about">關於劇團</a></li>
               <li><a href="#social">社交平台</a></li>
-              <li><a href="card_jiangminchen.html">電子名片</a></li>
-              <li><a href="activities.html">活動資訊</a></li>
+            
+              <!-- 電子名片：下拉 -->
+              <li class="has-sub">
+                <button class="nav-parent" type="button" aria-expanded="false">
+                  電子名片 <span class="caret" aria-hidden="true"></span>
+                </button>
+                <ul class="dropdown" role="menu" aria-label="電子名片清單">
+                  <li><a role="menuitem" href="card_jiangminchen.html">江敏琛</a></li>
+                  <li><a role="menuitem" href="card_jiangjun.html">江軍</a></li>
+                  <li><a role="menuitem" href="card_zhengyuxiang.html">鄭聿翔</a></li>
+                  <li><a role="menuitem" href="card_linyiyan.html">林羿妍</a></li>
+                </ul>
+              </li>
+            
+              <!-- 活動資訊：下拉 -->
+              <li class="has-sub">
+                <button class="nav-parent" type="button" aria-expanded="false">
+                  活動資訊 <span class="caret" aria-hidden="true"></span>
+                </button>
+                <ul class="dropdown" role="menu" aria-label="活動選單">
+                  <li><a role="menuitem" href="activities.html#latest">最新活動</a></li>
+                  <li><a role="menuitem" href="activities.html#history">活動紀錄</a></li>
+                  <li><a role="menuitem" href="activities.html#portfolio">作品集</a></li>
+                  <li><a role="menuitem" href="activities.html#portfolio">相簿</a></li>
+                </ul>
+              </li>
             </ul>
+
           </nav>
         </header>
         <main>
@@ -198,56 +223,111 @@
 
             <script>
             document.addEventListener('DOMContentLoaded', () => {
-                const navToggle = document.getElementById('navToggle');
-                const siteNav   = document.getElementById('siteNav');
-
-                  if (!navToggle || !siteNav) return;
-    
-                  // 開關選單
-                  navToggle.addEventListener('click', () => {
-                    const open = siteNav.classList.toggle('is-open');
-                    navToggle.classList.toggle('is-active', open);
-                    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-                    document.body.classList.toggle('no-scroll', open);
-                  });
-
-                  // 點選單連結自動收起
-                  siteNav.querySelectorAll('a').forEach(a => {
-                    a.addEventListener('click', () => {
-                      siteNav.classList.remove('is-open');
-                      navToggle.classList.remove('is-active');
-                      navToggle.setAttribute('aria-expanded', 'false');
-                      document.body.classList.remove('no-scroll');
-                    });
-                  });
-
-                  // 視窗放大回桌機時，清乾淨狀態（避免切換尺寸出問題）
-                  window.addEventListener('resize', () => {
-                    if (window.innerWidth >= 769) {
-                      siteNav.classList.remove('is-open');
-                      navToggle.classList.remove('is-active');
-                      navToggle.setAttribute('aria-expanded', 'false');
-                      document.body.classList.remove('no-scroll');
-                    }
-                  });
-                // 1) 如果有 .reveal-stagger，先幫它的子元素加上 .reveal 以便統一處理
+              const navToggle = document.getElementById('navToggle');
+              const siteNav   = document.getElementById('siteNav');
+              if (!navToggle || !siteNav) return;
+            
+              // === 漢堡開關 ===
+              navToggle.addEventListener('click', () => {
+                const open = siteNav.classList.toggle('is-open');
+                navToggle.classList.toggle('is-active', open);
+                navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                document.body.classList.toggle('no-scroll', open);
+            
+                // 關閉抽屜時，順便把所有子選單收起（避免殘留 .open）
+                if (!open) collapseAllSubmenus();
+              });
+            
+              // === 點選單連結自動收起（含下拉內部的 <a>） ===
+              siteNav.querySelectorAll('a[href]').forEach(a => {
+                a.addEventListener('click', () => {
+                  siteNav.classList.remove('is-open');
+                  navToggle.classList.remove('is-active');
+                  navToggle.setAttribute('aria-expanded', 'false');
+                  document.body.classList.remove('no-scroll');
+                  collapseAllSubmenus();
+                });
+              });
+            
+              // === 視窗放大回桌機：清乾淨狀態（避免尺寸切換錯亂） ===
+              window.addEventListener('resize', () => {
+                if (window.innerWidth >= 769) {
+                  siteNav.classList.remove('is-open');
+                  navToggle.classList.remove('is-active');
+                  navToggle.setAttribute('aria-expanded', 'false');
+                  document.body.classList.remove('no-scroll');
+                  collapseAllSubmenus();
+                }
+              });
+            
+              // ========== 下拉選單：桌機 hover、手機點擊展開 ==========
+              const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
+              const subs = Array.from(siteNav.querySelectorAll('.has-sub'));
+              function collapseAllSubmenus() {
+                subs.forEach(li => {
+                  li.classList.remove('open');
+                  const btn = li.querySelector('.nav-parent');
+                  if (btn) btn.setAttribute('aria-expanded', 'false');
+                });
+              }
+            
+              subs.forEach(li => {
+                const btn  = li.querySelector('.nav-parent');   // 父層按鈕（不跳頁）
+                const menu = li.querySelector('.dropdown');     // 子清單
+                if (!btn || !menu) return;
+            
+                // 手機：點擊切換（手風琴）
+                btn.addEventListener('click', (e) => {
+                  if (!isMobile()) return;        // 桌機不走 click
+                  e.preventDefault();
+                  const willOpen = !li.classList.contains('open');
+                  // 先收其他
+                  subs.forEach(other => { if (other !== li) other.classList.remove('open'); });
+                  // 自己再開/關
+                  li.classList.toggle('open', willOpen);
+                  btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+                });
+            
+                // 桌機：滑入/滑出
+                li.addEventListener('mouseenter', () => {
+                  if (isMobile()) return;
+                  li.classList.add('open');
+                  btn.setAttribute('aria-expanded', 'true');
+                });
+                li.addEventListener('mouseleave', () => {
+                  if (isMobile()) return;
+                  li.classList.remove('open');
+                  btn.setAttribute('aria-expanded', 'false');
+                });
+              });
+            
+              // 手機：點擊導覽列外部就收起子選單（不關抽屜）
+              document.addEventListener('click', (e) => {
+                if (!isMobile()) return;
+                const inside = e.target.closest('.site-nav .has-sub');
+                if (!inside) collapseAllSubmenus();
+              });
+            
+              // ========== Scroll Reveal：交錯淡入 ==========
+            
+              // 1) 若有 .reveal-stagger，先讓子元素加上 .reveal（統一處理）
               document.querySelectorAll('.reveal-stagger').forEach(group => {
                 [...group.children].forEach(c => c.classList.add('reveal'));
                 if (!group.dataset.stagger) group.dataset.stagger = 80; // 每格延遲(毫秒)
               });
-
-              // 2) 建立觀察器：進入視窗就顯示；離開就重置（方便下次再進來時重播）
+            
+              // 2) 建立觀察器：進入視窗就顯示；離開就重置（下次再進來可重播）
               const io = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                   const el = entry.target;
                   const dir = el.dataset.reveal;             // 可用 data-reveal="left|right|up|down"
                   const dirClass = dir ? `reveal--${dir}` : '';
-
+            
                   if (entry.isIntersecting) {
                     if (dirClass) el.classList.add(dirClass);
                     el.classList.add('is-visible');
-
-                    // 如果是一個「群組」，就幫群組的每個孩子做交錯延遲
+            
+                    // 若是群組：每個孩子做交錯延遲
                     if (el.matches('.reveal-stagger')) {
                       [...el.children].forEach((child, i) => {
                         child.style.transitionDelay = `${i * (+el.dataset.stagger || 80)}ms`;
@@ -255,7 +335,7 @@
                       });
                     }
                   } else {
-                    // 離開視窗：重置，之後再進來就會再次播放
+                    // 離開視窗：重置狀態
                     el.classList.remove('is-visible');
                     if (el.matches('.reveal-stagger')) {
                       [...el.children].forEach(child => {
@@ -267,10 +347,10 @@
                 });
               }, {
                 root: null,
-                threshold: 0.18,          // 元素進入 18% 就算看到
+                threshold: 0.18,                // 元素進入 18% 就算看到
                 rootMargin: '0px 0px -8% 0px'
               });
-
+            
               // 3) 觀察所有需要 reveal 的元素
               const targets = document.querySelectorAll('.reveal, [data-reveal], .reveal-stagger');
               targets.forEach(el => io.observe(el));
@@ -503,5 +583,6 @@
     </body>
 
 </html>
+
 
 
