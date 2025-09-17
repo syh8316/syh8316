@@ -751,44 +751,32 @@ html, body { overflow-y: auto; }
   }
 }
 
-/* === 修正：手機抽屜下拉置中 & 移除收合時的白線 === */
+/* === 修正：手機抽屜與下拉的白底 → 透明／半透明（覆蓋在檔案最底部） === */
 @media (max-width: 768px){
-
-  /* 父層：電子名片 / 活動資訊（置中） */
-  .site-nav .nav-parent{
-    width: 100%;
-    display: inline-flex;
-    justify-content: center;     /* 置中 */
-    align-items: center;
-    text-align: center;
-    padding: 12px 2px;
+  /* 抽屜本體：降低白底透明度（需要更透明就把 .75 再調低） */
+  .site-nav{
+    background: rgba(255,255,255,.75) !important;
+    -webkit-backdrop-filter: blur(var(--header-blur, 8px));
+    backdrop-filter: blur(var(--header-blur, 8px));
   }
 
-  /* 子清單：預設=收合 → 不要邊框、不要陰影、不要左縮排 */
+  /* 下拉預設（收合狀態）：完全透明、無邊框 */
   .site-nav .dropdown{
-    position: static !important;
+    background: transparent !important;
+    border: 0 !important;
     box-shadow: none !important;
-    border-radius: 8px;
-    background: transparent !important;        /* ← 把白色改透明 */
-    border: 0 !important;                 /* ← 同時去掉邊框 */
-    margin: 4px 0 8px 0 !important;
-    min-width: initial;
-    opacity: 1; transform: none; visibility: visible;
-    pointer-events: auto; overflow: hidden; max-height: 0;
-    transition: max-height .25s ease;
-    text-align: center;          /* 子項目置中 */
   }
 
-  /* 展開狀態：再加回邊框並放開高度 */
+  /* ✅ 下拉展開時：也維持透明、無邊框（就是把白色卡片拿掉） */
   .site-nav .has-sub.open > .dropdown{
-   background: rgba(255,255,255,0.95) !important; /* 半透明白底 */
-    border: 1px solid rgba(0,0,0,.06) !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
   }
 
-  /* 子連結：置中、點擊區塊化 */
-  .site-nav .dropdown a{
-    display: block;
-    padding: 10px 10px;
-    text-align: center;
+  /* hover 高亮用淺底，不要整塊白：可調成更淡或拿掉 */
+  .site-nav .dropdown a:hover{
+    background: rgba(255,255,255,.12) !important;
   }
 }
+
