@@ -751,55 +751,29 @@ html, body { overflow-y: auto; }
   }
 }
 
-/* === 手機版下拉：修正看不到內容 + 透明底，並隱藏抽屜卷軸 === */
+/* === 手機版：收合時把父層與按鈕都撐滿＋置中（覆蓋修正） === */
 @media (max-width: 768px){
+  /* 讓每個 <li> 吃滿一行，避免寬度不足造成視覺偏移 */
+  .site-nav ul > li{ width: 100% !important; }
 
-  /* 抽屜本體：保留可滾動，但把卷軸隱藏（需要時仍可滑動） */
-  .site-nav{
-    -ms-overflow-style: none;      /* IE/Edge */
-    scrollbar-width: none;         /* Firefox */
-  }
-  .site-nav::-webkit-scrollbar{ display: none; }  /* Chrome/Safari */
-
-  /* 子清單：覆蓋桌機規則 → 變成手風琴（可見、可點、佔版面流式） */
-  .site-nav .dropdown{
-    position: static !important;   /* 不再絕對定位，改佔版面 */
-    margin: 4px 0 8px 0 !important;
-    min-width: initial !important;
-
-    /* 🔑 關閉桌機的隱藏屬性 */
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-    transform: none !important;
-
-    /* 手風琴效果 */
-    overflow: hidden !important;
-    max-height: 0 !important;      /* 收合時高度為 0 */
-
-    /* 你要的透明風格 */
-    background: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
-    border-radius: 8px;
-    text-align: center;
+  /* 父層（有下拉的項目）本身也置中 */
+  .site-nav .has-sub{
+    width: 100% !important;
+    text-align: center !important;
   }
 
-  /* 展開時：打開高度（依清單長度調整即可），仍保持透明無邊框 */
-  .site-nav .has-sub.open > .dropdown{
-    max-height: 600px !important;  /* 夠大即可；要更保險可設 800px */
-    background: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
+  /* 下拉的「開關按鈕」：滿寬、水平＆垂直置中 */
+  .site-nav .nav-parent{
+    display: flex !important;
+    width: 100% !important;
+    justify-content: center !important;   /* 水平置中 */
+    align-items: center !important;       /* 垂直置中（文字與箭頭對齊） */
+    text-align: center !important;
+    padding: 12px 0 !important;
+    line-height: 1 !important;            /* 避免行高把箭頭擠歪 */
+    gap: 6px !important;                  /* 文字與箭頭的間距 */
   }
 
-  /* 子連結：置中、可點整行；微亮 hover 即可 */
-  .site-nav .dropdown a{
-    display: block;
-    padding: 10px 10px;
-    text-align: center;
-  }
-  .site-nav .dropdown a:hover{
-    background: rgba(255,255,255,.12) !important;
-  }
+  /* 其它一般連結也置中（如果不想影響其它連結，可拿掉這行） */
+  .site-nav a{ text-align: center !important; }
 }
