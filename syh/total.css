@@ -32,7 +32,6 @@ figure { margin: 0; }
     box-sizing: border-box;
 }
 
-
 /*標題設定*/
 /* 版頭條 */
 :root{
@@ -502,7 +501,64 @@ body::after,
   :root{ --header-h: 68px; }
   .site-header{ padding: 0 16px; }
   .brand{ width: 190px; height: 52px; }
+  /* 歷代人物：單欄直排 */
+  .history{
+    width: 100%;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding-inline: 16px;
+    justify-items: center;
+    align-items: start;
+  }
+  .history h2{
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .person-card{
+    --card-w: min(94vw, 420px);
+    width: var(--card-w);
+    max-width: 100%;
+    max-height: 340px;
+    border-radius: 10px;
+    box-shadow: 0 8px 18px rgba(0,0,0,.14);
+  }
 
+  /* 結語：圖上文下 */
+  .conclusion{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 14px !important;
+    width: min(94%, 1080px) !important;
+    padding-block: 18px !important;
+  }
+  .conclusion > *{
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+  .conclusion-media{
+    order: 0 !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+  .conclusion-media img{
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    border-radius: 10px !important;
+  }
+  .conclusion .tagline{
+    text-align: center !important;
+    margin-top: 6px !important;
+  }
+  .conclusion-text{
+    order: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
   /* 抽屜本體 */
   .nav-toggle{ display:block; }
   .site-nav{
@@ -818,6 +874,7 @@ html, body { overflow-y: auto; }
     display: block !important;
   }
 }
+
 
 
 
