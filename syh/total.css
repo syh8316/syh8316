@@ -751,23 +751,54 @@ html, body { overflow-y: auto; }
   }
 }
 
-/* === 修正：手機下拉展開卻看不到內容 → 打開 max-height，維持透明底 === */
+/* === 手機版下拉：修正看不到內容 + 透明底，並隱藏抽屜卷軸 === */
 @media (max-width: 768px){
-  /* 收合：保持透明、無邊框、max-height:0 */
+
+  /* 抽屜本體：保留可滾動，但把卷軸隱藏（需要時仍可滑動） */
+  .site-nav{
+    -ms-overflow-style: none;      /* IE/Edge */
+    scrollbar-width: none;         /* Firefox */
+  }
+  .site-nav::-webkit-scrollbar{ display: none; }  /* Chrome/Safari */
+
+  /* 子清單：覆蓋桌機規則 → 變成手風琴（可見、可點、佔版面流式） */
   .site-nav .dropdown{
+    position: static !important;   /* 不再絕對定位，改佔版面 */
+    margin: 4px 0 8px 0 !important;
+    min-width: initial !important;
+
+    /* 🔑 關閉桌機的隱藏屬性 */
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: none !important;
+
+    /* 手風琴效果 */
+    overflow: hidden !important;
+    max-height: 0 !important;      /* 收合時高度為 0 */
+
+    /* 你要的透明風格 */
     background: transparent !important;
     border: 0 !important;
     box-shadow: none !important;
-    max-height: 0 !important;                 /* 收合高度歸 0 */
+    border-radius: 8px;
+    text-align: center;
   }
-  /* 展開：打開高度（夠大即可），仍保持透明與無邊框 */
+
+  /* 展開時：打開高度（依清單長度調整即可），仍保持透明無邊框 */
   .site-nav .has-sub.open > .dropdown{
-    max-height: 800px !important;             /* 你有幾個項目就設大一點 */
+    max-height: 600px !important;  /* 夠大即可；要更保險可設 800px */
     background: transparent !important;
     border: 0 !important;
     box-shadow: none !important;
   }
-  /* hover 時只做微亮，避免整塊變白 */
+
+  /* 子連結：置中、可點整行；微亮 hover 即可 */
+  .site-nav .dropdown a{
+    display: block;
+    padding: 10px 10px;
+    text-align: center;
+  }
   .site-nav .dropdown a:hover{
     background: rgba(255,255,255,.12) !important;
   }
