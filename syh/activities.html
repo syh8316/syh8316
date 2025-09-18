@@ -94,6 +94,12 @@
         <a class="btn" href="#portfolio">作品集</a>
         <a class="btn" href="#album">相簿</a>
       </div>
+      <!-- ✅ 僅保留「標籤搜尋」，移除關鍵字輸入框 -->
+      <div class="filter-row" aria-label="標籤篩選">
+        <label for="tagFilter">依標籤篩選：</label>
+        <select id="tagFilter" aria-label="活動標籤">
+        </select>
+      </div>
     </div>
   </section>
 
@@ -838,18 +844,16 @@
       const tab = (location.hash.replace("#","") || "latest");
       switchTab(tab);
   
-      // ✅ 沒有搜尋/標籤時，不會報錯
-      const searchEl = document.getElementById('search');
-      const tagSel   = document.getElementById('tagFilter');
-      const kw = searchEl ? searchEl.value.trim() : "";
+      // 只保留標籤篩選；關鍵字統一為空字串
+      const tagSel = document.getElementById('tagFilter');
       const tg = tagSel ? tagSel.value : "";
+      const kw = ""; // ← 不再使用關鍵字搜尋
   
       renderLatest(document.getElementById("latestList"), kw, tg);
       renderHistory(document.getElementById("historyList"), kw, tg);
       renderPortfolio(document.getElementById("portfolioList"), kw, tg);
       renderAlbum(document.getElementById("albumList"), kw, tg);
     }
-
     /* ============== 5) 詳情 Modal ============== */
     const dialog = $("#eventDialog");
     const dialogBody = $("#dialogBody");
@@ -1025,25 +1029,22 @@
     });
 
     /* ============== 6) 搜尋與標籤事件 ============== */
-    // （可選）只有存在時才綁定 → 方便你之後想再加回搜尋
-    const _searchEl = document.getElementById("search");
-    const _tagSel   = document.getElementById("tagFilter");
-    if (_searchEl) _searchEl.addEventListener("input", handleHashChange);
-    if (_tagSel)   _tagSel.addEventListener("change", handleHashChange);
+    // 只有 tagFilter 需要事件
+    const _tagSel = document.getElementById("tagFilter");
+    if (_tagSel) {
+      _tagSel.addEventListener("change", handleHashChange);
+    }
     /* ============== 7) 初始化 ============== */
-    (function init() {
-      $("#year").textContent = new Date().getFullYear();
-      $$(".subnav a[data-tab]").forEach(a => {
-        a.addEventListener("click", (e) => {
-          e.preventDefault();
-          history.replaceState(null, "", `#${a.dataset.tab}`);
-          handleHashChange();
-        });
-      });
+    (function init(){
+      // 仍由資料動態生出標籤選項
+      populateTagFilter();
+  
+      // 預設切到 #latest
       if (!location.hash) location.hash = "#latest";
+  
+      // 首次渲染 + 監聽 hash
       handleHashChange();
       window.addEventListener("hashchange", handleHashChange);
-      injectStructuredData(events);
     })();
 
     /* ============== 8) JSON-LD（SEO；不輸出 image） ============== */
