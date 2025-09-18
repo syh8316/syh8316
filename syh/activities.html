@@ -837,12 +837,17 @@
     function handleHashChange() {
       const tab = (location.hash.replace("#","") || "latest");
       switchTab(tab);
-      const kw = $("#search").value.trim();
-      const tg = $("#tagFilter").value;
-      renderLatest($("#latestList"), kw, tg);
-      renderHistory($("#historyList"), kw, tg);
-      renderPortfolio($("#portfolioList"), kw, tg);
-      renderAlbum($("#albumList"), kw, tg);
+  
+      // ✅ 沒有搜尋/標籤時，不會報錯
+      const searchEl = document.getElementById('search');
+      const tagSel   = document.getElementById('tagFilter');
+      const kw = searchEl ? searchEl.value.trim() : "";
+      const tg = tagSel ? tagSel.value : "";
+  
+      renderLatest(document.getElementById("latestList"), kw, tg);
+      renderHistory(document.getElementById("historyList"), kw, tg);
+      renderPortfolio(document.getElementById("portfolioList"), kw, tg);
+      renderAlbum(document.getElementById("albumList"), kw, tg);
     }
 
     /* ============== 5) 詳情 Modal ============== */
@@ -1020,13 +1025,14 @@
     });
 
     /* ============== 6) 搜尋與標籤事件 ============== */
-    $("#search").addEventListener("input", handleHashChange);
-    $("#tagFilter").addEventListener("change", handleHashChange);
-
+    // （可選）只有存在時才綁定 → 方便你之後想再加回搜尋
+    const _searchEl = document.getElementById("search");
+    const _tagSel   = document.getElementById("tagFilter");
+    if (_searchEl) _searchEl.addEventListener("input", handleHashChange);
+    if (_tagSel)   _tagSel.addEventListener("change", handleHashChange);
     /* ============== 7) 初始化 ============== */
     (function init() {
       $("#year").textContent = new Date().getFullYear();
-      populateTagFilter();
       $$(".subnav a[data-tab]").forEach(a => {
         a.addEventListener("click", (e) => {
           e.preventDefault();
