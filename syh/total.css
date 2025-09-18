@@ -814,4 +814,25 @@ html, body { overflow-y: auto; }
   }
 }
 
+/* === Android + in-app 降級：加上 .no-blur 時，關掉昂貴的 backdrop-filter === */
+.no-blur .site-header{
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: rgba(255,255,255,.98) !important;
+}
 
+/* 外部開啟提示列樣式 */
+.inapp-tip{
+  position: fixed; z-index: 99999;
+  left: 12px; right: 12px; bottom: 14px;
+  padding: 10px 12px; border-radius: 10px;
+  background: rgba(0,0,0,.75); color: #fff;
+  font-size: 14px; line-height: 1.4;
+  display: flex; gap: 10px; align-items: center; justify-content: space-between;
+  box-shadow: 0 6px 20px rgba(0,0,0,.25);
+}
+.inapp-tip button{
+  appearance: none; border: 0; cursor: pointer;
+  padding: 8px 10px; border-radius: 8px; font-weight: 700;
+  background: #fff; color: #111;
+}
