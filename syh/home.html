@@ -654,7 +654,61 @@
           });
         })();
         </script>
+        <script>
+        /* --- 強制在離開/切頁前停音，兼容 FB/IG/LINE 內建瀏覽器 --- */
+        (function(){
+          const audio = document.getElementById('bgm');
+          if (!audio) return;
+        
+          function hardStop(){
+            try{ audio.pause(); }catch(e){}
+            try{ audio.currentTime = 0; }catch(e){}
+            // 對付頑固的 in-app 瀏覽器：暫時拔掉音源，確保不殘留播放
+            const wasSrc = audio.getAttribute('src') || audio.src || '';
+            audio.removeAttribute('src');
+            audio.load();
+            // 供你回來時需要時手動還原（不會自動播放；仍需使用者點擊）
+            try { sessionStorage.setItem('bgmSrcBackup', wasSrc); } catch(e){}
+          }
+        
+          // 1) 任何「要離開頁面」的連結，在 click/touch 的最早階段就先停音
+          function preNavHandler(e){
+            const a = e.target.closest && e.target.closest('a[href]');
+            if(!a) return;
+            const href = a.getAttribute('href') || '';
+            // 排除同頁錨點與 JS 偽連結
+            if (href.startsWith('#') || href.startsWith('javascript:')) return;
+            hardStop();
+          }
+          document.addEventListener('click', preNavHandler, {capture:true});
+          ['pointerdown','touchstart'].forEach(ev=>{
+            document.addEventListener(ev, preNavHandler, {capture:true, passive:true});
+          });
+        
+          // 2) 頁面被隱藏 / 進入 BFCache / 切到別頁：再保險停一次
+          document.addEventListener('visibilitychange', () => {
+            if (document.hidden) hardStop();
+          });
+          window.addEventListener('pagehide', hardStop, {capture:true});
+          window.addEventListener('beforeunload', hardStop, {capture:true});
+        
+          // 3) 若你從別頁「返回」這一頁，且之前拔過 src，就還原音源（不自動播放）
+          window.addEventListener('pageshow', () => {
+            try{
+              const backup = sessionStorage.getItem('bgmSrcBackup');
+              if (backup && !audio.getAttribute('src')) {
+                audio.setAttribute('src', backup);
+                audio.load(); // 仍需使用者再按一次你的「開啟音樂」按鈕才能播
+              }
+            }catch(e){}
+          });
+        
+          // 4) 如果站內用 JS 導頁（location.href / open等），導頁前也請呼叫 hardStop()
+          window.__bgmHardStop__ = hardStop; // 你可在自家腳本先呼叫它再導頁
+        })();
+        </script>
 
     </body>
 
 </html>
+
