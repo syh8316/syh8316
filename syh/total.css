@@ -83,7 +83,6 @@ body{ padding-top: var(--header-h); }
 /* 錨點跳轉不被固定列擋住 */
 section[id]{ scroll-margin-top: calc(var(--header-h) + 8px); }
 
-
 /*簡介設定*/
 .about {
     background-color: antiquewhite;
@@ -286,7 +285,6 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 8px); }
   margin: 4px 0 18px;
   line-height: 1.6;
 }
-
 
 /* 表單 */
 .form {
@@ -619,8 +617,10 @@ html, body { overflow-y: auto; }
 @media (min-width: 769px){ body.no-scroll { overflow: auto !important; } }
 
 /* 抽屜選單收起時不吃事件，展開才吃 */
-.site-nav         { pointer-events: none; }
-.site-nav.is-open { pointer-events: auto; }
+@media (max-width: 768px){
+  .site-nav         { pointer-events: none; }
+  .site-nav.is-open { pointer-events: auto; }
+}
 /* ========================================== */
 /* ============ 下拉選單（桌機：hover；手機：手風琴） ============ */
 .site-nav .has-sub { position: relative; }
@@ -813,4 +813,5 @@ html, body { overflow-y: auto; }
     display: block !important;
   }
 }
+
 
