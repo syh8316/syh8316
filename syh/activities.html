@@ -709,12 +709,7 @@
       const prev = sel.value ?? "";
     
       // 收集全站四個分頁可能用到的資料陣列（沒有就略過）
-      const sources = [
-        window.latestEvents,
-        window.historyEvents,
-        window.portfolioItems,
-        window.albumItems
-      ].filter(Boolean);
+      const sources = [events];
     
       // 蒐集所有出現過的 tags
       const tagSet = new Set();
