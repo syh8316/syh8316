@@ -612,17 +612,49 @@
           }, { capture: true });
         })();
         </script>
+        <!-- === LINE/Android in-app WebView fixes === -->
+        <script>
+        (function () {
+          const ua = navigator.userAgent;
+          const isAndroid = /Android/i.test(ua);
+          const isLine = /Line\//i.test(ua);
+          if (!(isAndroid && isLine)) return;
+        
+          // 1) 停用昂貴效果：移除封面覆蓋層；關閉 header 霧化（交給 CSS 降級）
+          const splash = document.getElementById('splash-overlay');
+          if (splash) { try { splash.remove(); } catch(e) { splash.style.display = 'none'; } }
+          document.documentElement.classList.add('no-blur');
+        
+          // 2) 音樂解鎖：顯示按鈕，需點擊一次才播放
+          const audio = document.getElementById('bgm');
+          const btn   = document.getElementById('bgmUnlock');
+          if (audio && btn) {
+            btn.hidden = false;
+            const unlock = async () => {
+              try { await audio.play(); btn.hidden = true; }
+              catch (e) { /* 仍被阻擋就保持按鈕可見 */ }
+            };
+            ['click','touchend','pointerup'].forEach(ev => btn.addEventListener(ev, unlock, { once: true }));
+          }
+        
+          // 3) 提供「用瀏覽器開啟」按鈕（intent 跳轉到 Chrome；失敗則開新分頁）
+          const bar = document.createElement('div');
+          bar.className = 'inapp-tip';
+          bar.innerHTML = `
+            在 LINE 內開啟可能不順暢。
+            <button id="openExternalBtn" type="button" aria-label="用瀏覽器開啟">用瀏覽器開啟</button>
+          `;
+          document.body.appendChild(bar);
+        
+          document.getElementById('openExternalBtn')?.addEventListener('click', () => {
+            const raw = location.href.replace(/^https?:\/\//, '');
+            const intent = `intent://${raw}#Intent;scheme=https;package=com.android.chrome;end`;
+            location.href = intent;
+            setTimeout(() => { window.open(location.href, '_blank', 'noopener'); }, 500);
+          });
+        })();
+        </script>
 
     </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
