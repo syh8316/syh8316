@@ -98,6 +98,9 @@
       <div class="filter-row" aria-label="標籤篩選">
         <label for="tagFilter">依標籤篩選：</label>
         <select id="tagFilter" aria-label="活動標籤">
+          <!-- 預設：全部 -->
+          <option value="">全部標籤</option>
+          <!-- 其餘選項由 JS 的 populateTagFilter() 動態加入 -->
         </select>
       </div>
     </div>
@@ -699,14 +702,52 @@
     }
 
     function populateTagFilter() {
-      const set = new Set();
-      events.forEach(e => (e.tags || []).forEach(t => set.add(t)));
-      const sel = $("#tagFilter");
-      [...set].sort().forEach(tag => {
-        const opt = document.createElement("option");
-        opt.value = tag; opt.textContent = tag;
-        sel.appendChild(opt);
-      });
+      const sel = document.getElementById('tagFilter');
+      if (!sel) return;
+    
+      // 嘗試保留先前選取
+      const prev = sel.value ?? "";
+    
+      // 收集全站四個分頁可能用到的資料陣列（沒有就略過）
+      const sources = [
+        window.latestEvents,
+        window.historyEvents,
+        window.portfolioItems,
+        window.albumItems
+      ].filter(Boolean);
+    
+      // 蒐集所有出現過的 tags
+      const tagSet = new Set();
+      for (const arr of sources) {
+        for (const item of arr) {
+          // 常見結構：item.tags 是陣列；若是單一字串 item.tag 也相容
+          const tags = Array.isArray(item?.tags)
+            ? item.tags
+            : (item?.tag ? [item.tag] : []);
+          for (const t of tags) if (t && String(t).trim()) tagSet.add(String(t).trim());
+        }
+      }
+    
+      // 重新渲染 <select>
+      sel.innerHTML = '';
+    
+      // ① 「全部標籤」永遠放第一個
+      const optAll = document.createElement('option');
+      optAll.value = '';
+      optAll.textContent = '全部標籤';
+      sel.appendChild(optAll);
+    
+      // ② 其它標籤（依字母順序）
+      [...tagSet].sort((a, b) => a.localeCompare(b, 'zh-Hant'))
+        .forEach(tag => {
+          const opt = document.createElement('option');
+          opt.value = tag;
+          opt.textContent = tag;
+          sel.appendChild(opt);
+        });
+    
+      // ③ 邏輯：若原本選的標籤仍存在就保留，否則回到「全部」
+      sel.value = [...tagSet].includes(prev) ? prev : '';
     }
 
     /* ============== 2) HTML 生成（不含圖片） ============== */
