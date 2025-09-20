@@ -846,3 +846,15 @@ html, body { overflow-y: auto; }
   font-weight: 700;
   box-shadow: 0 6px 16px rgba(34,211,238,.35);
 }
+
+/* 只改 Hero 區塊裡的「加入官方 LINE」按鈕，不影響其他 primary */
+.quick-actions .btn.primary{
+  background: linear-gradient(135deg, #06C755, #22C55E) !important; /* LINE 綠 → 翡翠綠 */
+  border-color: #059669 !important;   /* 深綠邊框 */
+  color: #fff !important;
+  font-weight: 800;
+  box-shadow: 0 6px 16px rgba(6, 199, 85, .28);
+}
+.quick-actions .btn.primary:hover{
+  filter: saturate(112%);
+}
