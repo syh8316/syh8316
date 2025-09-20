@@ -335,8 +335,9 @@ body{
 /* === Quick actions：目前分頁高亮 === */
 .quick-actions .qa-tab.is-active,
 .quick-actions .qa-tab[aria-current="page"]{
-  background: linear-gradient(135deg,#b45309,#d97706); /* 與 .btn.primary 同系 */
-  border-color:#8a3e07;
-  color:#111;
-  font-weight:700;
+  background: linear-gradient(135deg, #2563eb, #22d3ee); /* 亮藍 → 青 */
+  border-color: #1e40af;
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(34, 211, 238, .35); /* 淡淡光暈更醒目 */
 }
