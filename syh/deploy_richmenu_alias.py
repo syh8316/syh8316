@@ -15,20 +15,20 @@ def must_ok(r, msg):
         print(f"[ERROR] {msg}: {r.status_code} {r.text}")
         sys.exit(1)
 
-def fit_cover(path, tw=W, th=H):
-    """把任意尺寸圖片轉成 tw×th（等比放大 + 置中裁切），輸出到 /tmp/*.jpg 並回傳路徑。"""
+def fit_contain(path, tw=W, th=H, bg=(0,0,0)):
+    """把圖等比縮放到剛好放得下（不裁切），不足的邊留背景色。"""
     img = Image.open(path).convert("RGB")
     iw, ih = img.size
-    print(f"[INFO] source image {path} size = {iw}x{ih}")
-    s = max(tw/iw, th/ih)
+    s = min(tw/iw, th/ih)             # 注意這裡是 min → 不裁切
     nw, nh = int(iw*s), int(ih*s)
-    img = img.resize((nw, nh), Image.LANCZOS)
-    left = (nw - tw)//2
-    top  = (nh - th)//2
-    img = img.crop((left, top, left+tw, top+th))
-    out = f"/tmp/{os.path.basename(path).rsplit('.',1)[0]}.jpg"
-    img.save(out, quality=90)
-    print(f"[OK] normalized to {tw}x{th} -> {out}")
+    resized = img.resize((nw, nh), Image.LANCZOS)
+    canvas = Image.new("RGB", (tw, th), bg)
+    left = (tw - nw)//2
+    top  = (th - nh)//2
+    canvas.paste(resized, (left, top))
+    out = f"/tmp/{os.path.basename(path).rsplit('.',1)[0]}_contain.jpg"
+    canvas.save(out, quality=90)
+    print(f"[OK] fitted (contain) to {tw}x{th} -> {out}")
     return out
     
 def build_areas():
@@ -128,8 +128,8 @@ def main():
     args = parse_args()
 
     # ✨ 這裡改成自動裁切
-    imgA = fit_cover(args.imageA)
-    imgB = fit_cover(args.imageB)
+    imgA = fit_contain(args.imageA)
+    imgB = fit_contain(args.imageB)
 
     areas = build_areas()
 
