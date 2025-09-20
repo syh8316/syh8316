@@ -6,7 +6,7 @@ API = "https://api.line.me/v2/bot"
 API_DATA = "https://api-data.line.me/v2/bot"
 
 W, H = 2500, 1686            # Rich menu 大尺寸
-TAB_H = 250                  # 上方切換列高度
+TAB_H = 320                  # 上方切換列高度
 COL_W = [833, 834, 833]      # 三等分寬
 X_OFF = [0, 833, 1667]
 
@@ -30,7 +30,7 @@ def fit_cover(path, tw=W, th=H):
     img.save(out, quality=90)
     print(f"[OK] normalized to {tw}x{th} -> {out}")
     return out
-
+    
 def build_areas():
     return [
         {"bounds": {"x": X_OFF[0], "y": 0, "width": COL_W[0], "height": TAB_H},
@@ -107,3 +107,25 @@ def main():
 
     # ✨ 這裡改成自動裁切
     imgA = fit_cover(args.imageA)
+    imgB = fit_cover(args.imageB)
+
+    areas = build_areas()
+
+    rid_a = create_menu(token, "選單A", args.chatbar, areas); upload_image(token, rid_a, imgA)
+    rid_b = create_menu(token, "選單B", args.chatbar, areas); upload_image(token, rid_b, imgB)
+
+    create_or_update_alias(token, "menu-a", rid_a)
+    create_or_update_alias(token, "menu-b", rid_b)
+
+    set_default_all(token, rid_a if args.__dict__["set_default"] == "menu-a" else rid_b)
+
+    if args.delete_others:
+        keep = {rid_a, rid_b}
+        for m in list_menus(token):
+            if m["richMenuId"] not in keep:
+                delete_menu(token, m["richMenuId"])
+
+    print("\n[完成] 用手機開和機器人 1:1 聊天 → 點上方『選單 A / 選單 B』即可切換。")
+
+if __name__ == "__main__":
+    main()
