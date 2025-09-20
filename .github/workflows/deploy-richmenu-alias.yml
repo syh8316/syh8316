@@ -5,8 +5,8 @@ on:
   push:                          # 自動觸發
     branches: [main]             # 只在 main 分支
     paths:                       # 指定哪些檔案變更才觸發
-      - 'syh/line/menuA.jpg'
-      - 'syh/line/menuB.jpg'
+      - 'syh/line/menuA.png'
+      - 'syh/line/menuB.png'
       - 'syh/deploy_richmenu_alias.py'
       - 'requirements.txt'
       - '.github/workflows/deploy-richmenu-alias.yml'
@@ -33,8 +33,9 @@ jobs:
         env:
           LINE_TOKEN: ${{ secrets.LINE_TOKEN }}
         run: |
+          ls -al syh/line || true
           python syh/deploy_richmenu_alias.py \
-            --imageA syh/line/menuA.jpg \
-            --imageB syh/line/menuB.jpg \
+            --imageA syh/line/menuA.png \
+            --imageB syh/line/menuB.png \
             --set-default menu-a \
             --delete-others
