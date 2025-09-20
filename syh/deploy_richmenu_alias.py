@@ -66,16 +66,38 @@ def set_default_all(token, richmenu_id):
 
 def create_or_update_alias(token, alias_id, richmenu_id):
     HJ = {'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'}
-    payload = json.dumps({"richMenuAliasId": alias_id, "richMenuId": richmenu_id}).encode("utf-8")
-    r = requests.post(f"{API}/richmenu/alias", headers=HJ, data=payload)
-    if r.status_code == 409:
-        r2 = requests.post(f"{API}/richmenu/alias/{alias_id}",
-                           headers=HJ, data=json.dumps({"richMenuId": richmenu_id}).encode("utf-8"))
-        must_ok(r2, f"update alias {alias_id}")
+
+    # 先嘗試「更新」既有 alias
+    r_upd = requests.post(
+        f"{API}/richmenu/alias/{alias_id}",
+        headers=HJ,
+        data=json.dumps({"richMenuId": richmenu_id}).encode("utf-8")
+    )
+    if r_upd.status_code == 404:
+        # 不存在 → 改為「建立」
+        r_new = requests.post(
+            f"{API}/richmenu/alias",
+            headers=HJ,
+            data=json.dumps({"richMenuAliasId": alias_id, "richMenuId": richmenu_id}).encode("utf-8")
+        )
+        must_ok(r_new, f"create alias {alias_id}")
+        print(f"[OK] alias created: {alias_id} -> {richmenu_id}")
+    elif r_upd.ok:
         print(f"[OK] alias updated: {alias_id} -> {richmenu_id}")
     else:
-        must_ok(r, f"create alias {alias_id}")
-        print(f"[OK] alias created: {alias_id} -> {richmenu_id}")
+        # 少數情況 API 會回 400 conflict；再補一次 create 或顯示錯誤
+        txt = r_upd.text.lower()
+        if r_upd.status_code == 400 and "conflict" in txt:
+            # 既有但無法直接更新，改走建立（若仍衝突，請用方案2刪除）
+            r_new = requests.post(
+                f"{API}/richmenu/alias",
+                headers=HJ,
+                data=json.dumps({"richMenuAliasId": alias_id, "richMenuId": richmenu_id}).encode("utf-8")
+            )
+            must_ok(r_new, f"create alias {alias_id} (after 400)")
+            print(f"[OK] alias created(after 400): {alias_id} -> {richmenu_id}")
+        else:
+            must_ok(r_upd, f"update alias {alias_id}")
 
 def parse_args():
     ap = argparse.ArgumentParser()
