@@ -602,6 +602,11 @@
         ]
       }
     ];
+    /* 依 type 分類，提供給 populateTagFilter 使用 */
+    window.latestEvents   = events.filter(e => (e.type || "").trim() === "upcoming");
+    window.historyEvents  = events.filter(e => (e.type || "").trim() === "past");
+    window.portfolioItems = events.filter(e => (e.type || "").trim() === "portfolio");
+    window.albumItems     = events.filter(e => (e.type || "").trim() === "album");
 
     /* ============== 1) 小工具 ============== */
     const $ = (sel, root = document) => root.querySelector(sel);
