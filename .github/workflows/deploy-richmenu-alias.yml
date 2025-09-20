@@ -1,0 +1,32 @@
+name: Deploy LINE Rich Menu (Alias Switch A/B)
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: richmenu-alias
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: |
+          pip install -r requirements.txt
+
+      - name: Deploy two-page rich menu (A/B)
+        env:
+          LINE_TOKEN: ${{ secrets.LINE_TOKEN }}
+        run: |
+          python syh/deploy_richmenu_alias.py \
+            --imageA syh/line/menuA.jpg \
+            --imageB syh/line/menuB.jpg \
+            --set-default menu-a \
+            --delete-others
