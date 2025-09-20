@@ -89,10 +89,10 @@
         <!-- 1) 官方 LINE（新分頁開啟） -->
         <a class="btn primary" href="https://lin.ee/jj6SE0T" target="_blank" rel="noopener">加入官方 LINE</a>
         <!-- 2~5) 內頁分頁切換（hash 連結） -->
-        <a class="btn" href="#latest">最新活動</a>
-        <a class="btn" href="#history">活動紀錄</a>
-        <a class="btn" href="#portfolio">作品集</a>
-        <a class="btn" href="#album">相簿</a>
+        <a class="btn qa-tab" data-tab="latest" href="#latest">最新活動</a>
+        <a class="btn qa-tab" data-tab="history" href="#history">活動紀錄</a>
+        <a class="btn qa-tab" data-tab="portfolio" href="#portfolio">作品集</a>
+        <a class="btn qa-tab" data-tab="album" href="#album">相簿</a>
       </div>
       <!-- ✅ 僅保留「標籤搜尋」，移除關鍵字輸入框 -->
       <div class="filter-row" aria-label="標籤篩選">
@@ -865,13 +865,25 @@
     };
 
     function switchTab(tab) {
+      // 顯示對應面板
       Object.entries(panels).forEach(([k, el]) => el.hidden = (k !== tab));
+    
+      // 1) 以前預留的 .subnav-link 高亮（若有）
       $$(".subnav-link").forEach(a => {
         a.classList.toggle("active", a.dataset.tab === tab);
-        if (a.dataset.tab === tab) a.setAttribute("aria-current", "page");
+        if (a.dataset.tab === tab) a.setAttribute("aria-current","page");
         else a.removeAttribute("aria-current");
       });
-       // ✅ 只在不是搜尋/下拉時才 blur，避免輸入被中斷
+    
+      // 2) Hero 區塊四顆分頁按鈕高亮
+      $$(".quick-actions .qa-tab").forEach(a => {
+        const on = (a.getAttribute("data-tab") === tab);
+        a.classList.toggle("is-active", on);
+        if (on) a.setAttribute("aria-current","page");
+        else a.removeAttribute("aria-current");
+      });
+    
+      // 避免非搜尋/下拉時 focus 黏住
       const ae = document.activeElement;
       if (ae && !["search","tagFilter"].includes(ae.id)) ae.blur();
     }
@@ -1232,6 +1244,51 @@
         a.setAttribute('aria-current','page');
       }
     });
+
+   // ============= 新增：抽屜關閉小函式（共用） =============
+    function closeDrawer(){
+      siteNav.classList.remove('is-open');
+      navToggle.classList.remove('is-active');
+      navToggle.setAttribute('aria-expanded','false');
+      document.body.classList.remove('no-scroll');
+      // 若你程式內有 collapseAll()（下拉子選單清空），一起呼叫
+      try{ typeof collapseAll === 'function' && collapseAll(); }catch(e){}
+    }
+  
+    // 讓「點選任何連結」改用共用關閉（可選）
+    siteNav.querySelectorAll('a[href]').forEach(a => {
+      a.addEventListener('click', closeDrawer);
+    });
+  
+    // 視窗放大回桌機：清乾淨（延用你原本的，也可改用 closeDrawer）
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 769) closeDrawer();
+    });
+  
+    // ============= 自動收起：捲動／滑鼠滾輪／觸控滑動 =============
+    // 1) 有實際「捲動」時
+    window.addEventListener('scroll', () => {
+      if (siteNav.classList.contains('is-open')) closeDrawer();
+    }, { passive:true });
+  
+    // 2) 在禁止捲動的情況（body.no-scroll），使用滑鼠滾輪也關
+    window.addEventListener('wheel', () => {
+      if (siteNav.classList.contains('is-open')) closeDrawer();
+    }, { passive:true });
+  
+    // 3) 觸控上下滑（即使頁面沒真的捲動也能關）
+    let _startY = null;
+    document.addEventListener('touchstart', (e) => {
+      _startY = e.touches?.[0]?.clientY ?? null;
+    }, { passive:true });
+    document.addEventListener('touchmove', (e) => {
+      if (!siteNav.classList.contains('is-open') || _startY == null) return;
+      const dy = (e.touches?.[0]?.clientY ?? _startY) - _startY;
+      if (Math.abs(dy) > 12) {  // 小於 12px 視為抖動不處理
+        closeDrawer();
+        _startY = null;
+      }
+    }, { passive:true }); 
   });
   </script>
   <!-- === LINE/Android in-app WebView fixes === -->
