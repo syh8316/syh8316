@@ -836,3 +836,13 @@ html, body { overflow-y: auto; }
   padding: 8px 10px; border-radius: 8px; font-weight: 700;
   background: #fff; color: #111;
 }
+
+/* 只高亮四顆分頁，不影響「加入官方 LINE」 */
+.quick-actions .qa-tab.is-active,
+.quick-actions .qa-tab[aria-current="page"]{
+  background: linear-gradient(135deg, #2563eb, #22d3ee) !important; /* 藍→青 */
+  border-color: #1e40af !important;
+  color: #fff !important;
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(34,211,238,.35);
+}
