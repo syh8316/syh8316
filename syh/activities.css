@@ -331,3 +331,12 @@ body{
   border: 1px solid #ccc;
   background:#fff;
 }
+
+/* === Quick actions：目前分頁高亮 === */
+.quick-actions .qa-tab.is-active,
+.quick-actions .qa-tab[aria-current="page"]{
+  background: linear-gradient(135deg,#b45309,#d97706); /* 與 .btn.primary 同系 */
+  border-color:#8a3e07;
+  color:#111;
+  font-weight:700;
+}
