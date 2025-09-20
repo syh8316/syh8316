@@ -15,9 +15,21 @@ def must_ok(r, msg):
         print(f"[ERROR] {msg}: {r.status_code} {r.text}")
         sys.exit(1)
 
-def check_image(path):
-    w, h = Image.open(path).size
-    assert (w, h) == (W, H), f"圖片尺寸需 {W}x{H}，現在是 {w}x{h}"
+def fit_cover(path, tw=W, th=H):
+    """把任意尺寸圖片轉成 tw×th（等比放大＋置中裁切），回傳暫存路徑"""
+    img = Image.open(path).convert("RGB")
+    iw, ih = img.size
+    print(f"[INFO] source image {path} size = {iw}x{ih}")
+    s = max(tw/iw, th/ih)
+    nw, nh = int(iw*s), int(ih*s)
+    img = img.resize((nw, nh), Image.LANCZOS)
+    left = (nw - tw)//2
+    top  = (nh - th)//2
+    img = img.crop((left, top, left+tw, top+th))
+    out = f"/tmp/{os.path.basename(path).rsplit('.',1)[0]}.jpg"
+    img.save(out, quality=90)
+    print(f"[OK] normalized to {tw}x{th} -> {out}")
+    return out
 
 def build_areas():
     # 只做上方三個分區：A、B 用 richmenuswitch；C 先顯示「尚未製作」
@@ -100,17 +112,19 @@ def main():
         sys.exit(1)
 
     args = parse_args()
-    for p in (args.imageA, args.imageB):
-        check_image(p)
+
+    # 先把圖片規格化成 2500x1686（支援 .png/.jpg 任意尺寸）
+    imgA = fit_cover(args.imageA)
+    imgB = fit_cover(args.imageB)
 
     areas = build_areas()
 
-    # 建 A、B 兩張
+    # 建 A、B 兩張並上傳規格化後的圖片
     rid_a = create_menu(token, "選單A", args.chatbar, areas)
-    upload_image(token, rid_a, args.imageA)
+    upload_image(token, rid_a, imgA)
 
     rid_b = create_menu(token, "選單B", args.chatbar, areas)
-    upload_image(token, rid_b, args.imageB)
+    upload_image(token, rid_b, imgB)
 
     # 設定 alias
     create_or_update_alias(token, "menu-a", rid_a)
