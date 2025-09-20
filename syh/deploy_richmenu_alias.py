@@ -6,7 +6,7 @@ API = "https://api.line.me/v2/bot"
 API_DATA = "https://api-data.line.me/v2/bot"
 
 W, H = 2500, 1686            # Rich menu 大尺寸
-TAB_H = 320                  # 上方切換列高度
+TAB_H = 250                  # 上方切換列高度
 COL_W = [833, 834, 833]      # 三等分寬
 X_OFF = [0, 833, 1667]
 
