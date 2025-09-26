@@ -294,6 +294,9 @@ body{
   min-width: 160px;
 }
 
+.list { margin: 0 0 1rem 1.25rem; line-height: 1.7; }
+.list li { margin: .25rem 0; }
+
 @media (min-width: 1024px){
   .search{ flex-basis: 540px; }  /* 桌機時更寬一些 */
 }
