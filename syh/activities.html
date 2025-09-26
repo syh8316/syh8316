@@ -93,6 +93,7 @@
         <a class="btn qa-tab" data-tab="history" href="#history">活動紀錄</a>
         <a class="btn qa-tab" data-tab="portfolio" href="#portfolio">作品集</a>
         <a class="btn qa-tab" data-tab="album" href="#album">相簿</a>
+        <a class="btn qa-tab" data-tab="peripheral" href="#peripheral">周邊資訊</a>
       </div>
       <!-- ✅ 僅保留「標籤搜尋」，移除關鍵字輸入框 -->
       <div class="filter-row" aria-label="標籤篩選">
@@ -130,6 +131,12 @@
       <h2 id="tab-album" class="panel-title">相簿</h2>
       <div id="albumList" class="masonry" aria-live="polite"></div>
       <div class="empty" id="albumEmpty" hidden>目前尚未建立相片集。</div>
+    </section>
+
+    <section id="panel-peripheral" class="panel" role="region" aria-labelledby="tab-peripheral" hidden>
+      <h2 id="tab-peripheral" class="panel-title">周邊資訊</h2>
+      <div id="peripheralList" class="masonry" aria-live="polite"></div>
+      <div class="empty" id="peripheralEmpty" hidden>目前尚無周邊公告。</div>
     </section>
 
   </main>
@@ -601,6 +608,29 @@
           "img/其他/19.jpg"
         ]
       }
+      /* ============== 相簿 ============= */
+      {
+        id: "m-周邊領取公告-2025-09",
+        type: "peripheral",
+        title: "周邊領取｜限量開放領取",
+        tags: ["周邊","公告"],
+        summary: "周邊限量，請依說明來現場領取或依指定方式私訊領取。",
+        // 影片改用「縮圖卡外開」的設計（跟作品集一致）
+        videos: [
+          {
+            url: "https://www.instagram.com/reel/DPEJFZ5lVBd/?utm_source=ig_web_copy_link",
+            // 可選：換成你自己的封面圖；沒有就先留空
+            thumb: "img/merch/周邊宣傳.jpg"
+          }
+        ],
+        videoLinkCard: true,
+        //（可選）把「詳情彈窗」的注意事項放在 summary 底下
+        notes: [
+          "領取方式：到場出示此貼文畫面（或出示指定通關口令）。",
+          "數量有限，送完為止；每人限領 1 份。",
+          "若需代領請事先私訊官方 LINE。"
+        ]
+      }
     ];
     /* 依 type 分類，提供給 populateTagFilter 使用 */
     window.latestEvents   = events.filter(e => (e.type || "").trim() === "upcoming");
@@ -811,6 +841,21 @@
       </figure>`;
     }
 
+    function peripheralHTML(e){
+      // 卡片內容簡潔：標題、說明、標籤、按鈕 → 開詳情（詳情裡有可點縮圖卡）
+      return `
+      <figure class="masonry-item" tabindex="0" aria-label="${e.title}">
+        <figcaption>
+          <h3>${e.title}</h3>
+          <p>${e.summary || ""}</p>
+          <div class="chips">${createTagChips(e.tags || [])}</div>
+          <div class="card-actions">
+            <button class="btn ghost" data-detail="${e.id}">看詳情</button>
+          </div>
+        </figcaption>
+      </figure>`;
+    }
+
     /* ============== 3) 渲染（依 type 分頁，日期只排序不顯示時間） ============== */
     const safeTime = iso => Number.isFinite(Date.parse(iso)) ? Date.parse(iso) : NaN;
     function matchKeyword(e, kw) {
@@ -861,12 +906,23 @@
       $("#albumEmpty").hidden = data.length !== 0;
     }
 
+    function renderPeripheral(list, kw="", tag="") {
+      const data = events
+        .map((e,i)=>({...e,_idx:i}))
+        .filter(e => (e.type || "").trim() === "peripheral")
+        .filter(e => matchKeyword(e, kw) && matchTag(e, tag))
+        .sort((a,b)=>a._idx - b._idx); // 用原始順序
+      list.innerHTML = data.map(peripheralHTML).join("");
+      document.getElementById("peripheralEmpty").hidden = data.length !== 0;
+    }
+
     /* ============== 4) 分頁切換（hash 路由） ============== */
     const panels = {
       latest: $("#panel-latest"),
       history: $("#panel-history"),
       portfolio: $("#panel-portfolio"),
       album: $("#panel-album"),
+      peripheral: $("#panel-peripheral"),
     };
 
     function switchTab(tab) {
@@ -906,6 +962,7 @@
       renderHistory(document.getElementById("historyList"), kw, tg);
       renderPortfolio(document.getElementById("portfolioList"), kw, tg);
       renderAlbum(document.getElementById("albumList"), kw, tg);
+      renderPeripheral(document.getElementById("peripheralList"), kw, tg);
     }
     /* ============== 5) 詳情 Modal ============== */
     const dialog = $("#eventDialog");
@@ -979,6 +1036,14 @@
           // 其他分類：若有 buildVideoBlock 就用它做內嵌（YouTube/Vimeo/IG）
           html += buildVideoBlock(e);
         }
+      }
+
+      // 只在「周邊資訊」或你有填 notes 時顯示（想全類型都可顯示就拿掉 type 判斷）
+      if ((type === "peripheral") && Array.isArray(e.notes) && e.notes.length){
+        html += `<h4 class="gallery-title">注意事項</h4>
+                 <ul class="list">
+                   ${e.notes.map(t=>`<li>${t}</li>`).join("")}
+                 </ul>`;
       }
     
       // 相簿（含 lightbox）
