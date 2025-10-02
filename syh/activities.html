@@ -974,6 +974,9 @@
       const isAlbum = type === "album";
       const isPortfolio = type === "portfolio";
       const showAsLinkCard = isPortfolio || !!e.videoLinkCard; // past 也可用縮圖卡外開
+      // ★ 新增：是否有媒體
+      const hasVideo   = !!(e.videoFile || e.videoUrl || (Array.isArray(e.videos) && e.videos.length));
+      const hasGallery = Array.isArray(e.gallery) && e.gallery.length > 0;
     
       // 基本資訊（像簿不顯示日期；showAsLinkCard 不顯示「另開影片」按鈕）
       let html = `
@@ -1065,6 +1068,11 @@
             <div class="lb-counter" aria-live="polite"></div>
           </div>
         `;
+      }
+
+      // ★ 新增：如果沒有任何照片或影片，顯示『敬請期待』
+      if (!hasVideo && !hasGallery) {
+        html += `<p class="empty" style="text-align:center;margin:14px 0 0;">敬請期待</p>`;
       }
     
       // 寫入並開啟對話框
