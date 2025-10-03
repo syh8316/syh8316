@@ -151,6 +151,23 @@ body{
 .detail-info h3{margin:.2rem 0 .4rem}
 .detail-desc{margin:.5rem 0;color:#d6dde7}
 .detail-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+/* 對話框右上角關閉鈕 */
+.event-dialog .dlg-close{
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  border: 1px solid #1b2230;
+  background: #0f1420;
+  color: #cbd5e1;
+  border-radius: 10px;
+  padding: .35rem .55rem;
+  cursor: pointer;
+  z-index: 2;              /* 確保蓋在內容上面 */
+}
+.event-dialog .dlg-close:hover{
+  background: #131a27;
+  border-color: #3a465b;
+}
 @media (min-width:860px){
   .detail{grid-template-columns:1.1fr 1fr;align-items:start}
 }
