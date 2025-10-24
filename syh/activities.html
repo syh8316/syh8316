@@ -104,9 +104,9 @@
         </select>
       
         <label for="dateFrom" style="margin-left:12px;">日期：</label>
-        <input type="date" id="dateFrom" class="date-input" aria-label="起日">
+        <input type="date" id="dateFrom" class="date-input" aria-label="起日" min="2024-01-01">
         <span class="date-sep">—</span>
-        <input type="date" id="dateTo" class="date-input" aria-label="迄日">
+        <input type="date" id="dateTo" class="date-input" aria-label="迄日" min="2024-01-01">
         <button type="button" id="dateClear" class="btn" style="margin-left:6px;">清除</button>
       </div>
 
@@ -1727,7 +1727,27 @@
     const _from = document.getElementById("dateFrom");
     const _to   = document.getElementById("dateTo");
     [_from, _to].forEach(el => el && el.addEventListener("change", handleHashChange));
-    
+    // 讓點擊/聚焦時直接跳出原生小日曆（支援 showPicker 的瀏覽器）
+    [_from, _to].forEach(el => {
+      if (!el) return;
+      // 再保險一次：確保最小日期限制
+      el.min = '2024-01-01';
+      ['focus', 'click'].forEach(ev => {
+        el.addEventListener(ev, () => {
+          if (typeof el.showPicker === 'function') el.showPicker();
+          if (_from && _to) {
+            _from.addEventListener('change', () => {
+              if (_to.value && _to.value < _from.value) _to.value = _from.value;
+              handleHashChange();
+            });
+            _to.addEventListener('change', () => {
+              if (_from.value && _to.value < _from.value) _from.value = _to.value;
+              handleHashChange();
+            });
+          }
+        });
+      });
+    });
     const _clear = document.getElementById("dateClear");
     if (_clear) {
       _clear.addEventListener("click", () => {
