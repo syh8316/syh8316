@@ -940,7 +940,14 @@
         location: "台北景美溪州",
         tags: ["宮廟","台北"],
         summary: "農曆 8/5–8/6。",
-        type: "past"
+        type: "past",
+        videos: [
+          {
+            url: "https://www.instagram.com/reel/DPoPthRiaS4/?igsh=MTdrNHd6MTc2czgyZA==",
+            thumb: "img/20250926-2景美.png"
+          },
+        ],
+        videoLinkCard: true   // past 也要像作品集那樣用「縮圖卡外開」
       },
       {
         id: "h-2025-09-22",
@@ -1038,6 +1045,54 @@
       },
       /* ============== 作品集 ============= */
       {
+        id: "p-ig-中秋燈籠",
+        title: "中秋燈籠",
+        dateStart: "2025-10-24",
+        location: "Instagram / YouTube",
+        city: "線上",
+        tags: ["作品集", "中秋節"],
+        summary: "這次不只是燈籠挑戰，也是我們把「劇團日常」搬上網的第一支影片✨",
+        // ✅ 多支影片用 videos 陣列（每支一個 {url, thumb}）
+        videos: [
+          {
+            // 建議用這種「基礎網址」就好；你貼的那段少了 ?，正式寫法是 ?igsh=...
+            url: "https://www.instagram.com/reel/DQLASpliRpT/",
+            thumb: "img/燈籠比賽.png"
+          },
+          {
+            url: "https://youtu.be/fJYBHSc5-jM",
+            thumb: "img/燈籠比賽.png"   // 沒別的縮圖就先共用
+          }
+        ],
+        type: "portfolio"
+      },
+      {
+        id: "p-ig-中秋政見發表",
+        title: "中秋政見發表",
+        dateStart: "2025-10-06",           // 想排序靠前就填今天或最近日期；不填也可
+        location: "Instagram Reels",
+        city: "線上",
+        cover: "https://www.instagram.com/reel/DPd8r3yjJV-/?igsh=YjdhNHYxdHBycngx", // 建議換成你自己的封面圖網址
+        tags: ["作品集", "中秋節"],
+        summary: "🎤【中秋政見發表會開跑！】祝大家中秋節快樂～願你提著喜歡的燈籠，照亮回家的路💫*純屬娛樂 切勿當真",
+        videoUrl: "https://www.instagram.com/reel/DPd8r3yjJV-/?igsh=YjdhNHYxdHBycngx",
+        videoThumb: "img/中秋政見.png",
+        type: "portfolio"
+      },
+      {
+        id: "p-ig-中秋政見發表",
+        title: "中秋政見發表",
+        dateStart: "2025-10-06",           // 想排序靠前就填今天或最近日期；不填也可
+        location: "Instagram Reels",
+        city: "線上",
+        cover: "https://www.instagram.com/reel/DPd8r3yjJV-/?igsh=YjdhNHYxdHBycngx", // 建議換成你自己的封面圖網址
+        tags: ["作品集", "中秋節"],
+        summary: "🎤【中秋政見發表會開跑！】祝大家中秋節快樂～願你提著喜歡的燈籠，照亮回家的路💫*純屬娛樂 切勿當真",
+        videoUrl: "https://www.instagram.com/reel/DPd8r3yjJV-/?igsh=YjdhNHYxdHBycngx",
+        videoThumb: "img/中秋政見.png",
+        type: "portfolio"
+      },
+      {
         id: "p-ig-最初學琴的地方",
         title: "回到最初學琴的地方──《新和興總團》",
         dateStart: "2025-08-28",           // 想排序靠前就填今天或最近日期；不填也可
@@ -1056,7 +1111,7 @@
         dateStart: "2025-08-18",           // 想排序靠前就填今天或最近日期；不填也可
         location: "Instagram Reels",
         city: "線上",
-        cover: "https://picsum.photos/seed/luwenlong/800/500", // 建議換成你自己的封面圖網址
+        cover: "https://www.instagram.com/reel/DNahemuyJDC/?igsh=ODhwNGhtZms0dHQ4", // 建議換成你自己的封面圖網址
         tags: ["作品集", "花絮", "歌仔戲"],
         summary: "片段花絮：經典電視歌仔戲《陸文龍》中的曲調節選。",
         videoUrl: "https://www.instagram.com/reel/DNahemuyJDC/?igsh=ODhwNGhtZms0dHQ4",
@@ -1139,7 +1194,28 @@
           "img/其他/19.jpg"
         ]
       },
-      /* ============== 活動資訊 ============= */
+      /* ============== 周邊資訊 ============= */
+      {
+        id: "m-周邊領取辦法-2025-10",
+        type: "peripheral",
+        title: "周邊領取｜領取辦法教學",
+        tags: ["周邊","公告","教學"],
+        summary: "周邊限量，請依說明來現場領取，如有問題可私訊官方Line，將由小編為您解惑。",
+        // 影片改用「縮圖卡外開」的設計（跟作品集一致）
+        videos: [
+          {
+            url: "https://www.instagram.com/reel/DPYbS2UieSR/?igsh=MWZrZTA1ZGFkOWtpdQ==",
+            // 可選：換成你自己的封面圖；沒有就先留空
+            thumb: "img/精品小物_扇子領取辦法.png"
+          }
+        ],
+        videoLinkCard: true,
+        //（可選）把「詳情彈窗」的注意事項放在 summary 底下
+        notes: [
+          "領取方式：請點擊連結觀看領取方式。",
+          "數量有限，送完為止；每人限領 1 份。"
+        ]
+      }
       {
         id: "m-周邊領取公告-2025-09",
         type: "peripheral",
