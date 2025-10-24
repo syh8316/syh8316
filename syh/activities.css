@@ -270,3 +270,14 @@ body{
 
 /* A11y */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* 修正篩選選單在白底上的字色 */
+.filter-row select { 
+  color: #111 !important;     /* 黑色字 */
+  background: #fff;           /* 你原本就有設定白底，保留 */
+}
+
+/* 有些系統會用 option 的顏色，保險一起設 */
+.filter-row select option { 
+  color: #111; 
+}
