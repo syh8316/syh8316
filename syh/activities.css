@@ -67,6 +67,15 @@ body{
 .tag-filter{ flex:0 0 180px; min-width:160px; }
 .search:focus,.tag-filter:focus{border-color:#2b3342}
 
+/* 日期篩選欄位 */
+.date-input{
+  background:#0f1420; border:1px solid #1b2230; color:var(--text);
+  border-radius:12px; padding:.45rem .6rem; outline:none;
+  min-width: 150px;
+}
+.date-input:focus{ border-color:#2b3342; }
+.date-sep{ opacity:.75; margin:0 4px; }
+
 /* Panels / 空狀態 */
 .panel{padding:28px 0}
 .panel-title{font-size:1.4rem;margin:0 0 12px}
