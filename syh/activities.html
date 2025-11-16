@@ -1500,16 +1500,21 @@
       const hasFrom = Number.isFinite(fromTs);
       const hasTo   = Number.isFinite(toTs);
     
+      // ✅ 1) 如果「沒有選任何日期篩選」→ 全部都通過
+      if (!hasFrom && !hasTo) return true;
+    
       const s  = Date.parse(e.dateStart || "");
       const ed = Date.parse(e.dateEnd   || "");
       const hasS = Number.isFinite(s);
       const hasE = Number.isFinite(ed);
     
-      if (!hasS && !hasE) return false;
+      // ✅ 2) event 本身沒有日期（像相簿、周邊）→ 不跟日期玩，照樣顯示
+      if (!hasS && !hasE) return true;
     
       const start = hasS ? s : ed;
       const end   = hasE ? ed : start;
     
+      // ✅ 3) 有日期的才按照區間判斷
       return (!hasFrom || end   >= fromTs) &&
              (!hasTo   || start <= toTs);
     }
