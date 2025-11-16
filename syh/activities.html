@@ -118,30 +118,40 @@
     <section id="panel-latest" class="panel" role="region" aria-labelledby="tab-latest">
       <h2 id="tab-latest" class="panel-title">最新活動</h2>
       <div id="latestList" class="card-grid" aria-live="polite"></div>
+      <!-- ⬇️ 新增：最新活動的分頁條 -->
+      <div id="latestPagination" class="pagination" aria-label="最新活動頁數"></div>
       <div class="empty" id="latestEmpty" hidden>目前沒有即將舉辦的活動，敬請期待！</div>
     </section>
-
+    
     <section id="panel-history" class="panel" role="region" aria-labelledby="tab-history" hidden>
       <h2 id="tab-history" class="panel-title">活動紀錄</h2>
       <div id="historyList" class="timeline" aria-live="polite"></div>
+      <!-- ⬇️ 新增：活動紀錄的分頁條 -->
+      <div id="historyPagination" class="pagination" aria-label="活動紀錄頁數"></div>
       <div class="empty" id="historyEmpty" hidden>尚無活動紀錄。</div>
     </section>
-
+    
     <section id="panel-portfolio" class="panel" role="region" aria-labelledby="tab-portfolio" hidden>
       <h2 id="tab-portfolio" class="panel-title">作品集</h2>
       <div id="portfolioList" class="masonry" aria-live="polite"></div>
+      <!-- ⬇️ 新增：作品集的分頁條 -->
+      <div id="portfolioPagination" class="pagination" aria-label="作品集頁數"></div>
       <div class="empty" id="portfolioEmpty" hidden>尚未建立作品集項目。</div>
     </section>
-
+    
     <section id="panel-album" class="panel" role="region" aria-labelledby="tab-album" hidden>
       <h2 id="tab-album" class="panel-title">相簿</h2>
       <div id="albumList" class="masonry" aria-live="polite"></div>
+      <!-- ⬇️ 新增：相簿的分頁條 -->
+      <div id="albumPagination" class="pagination" aria-label="相簿頁數"></div>
       <div class="empty" id="albumEmpty" hidden>目前尚未建立相片集。</div>
     </section>
-
+    
     <section id="panel-peripheral" class="panel" role="region" aria-labelledby="tab-peripheral" hidden>
       <h2 id="tab-peripheral" class="panel-title">周邊資訊</h2>
       <div id="peripheralList" class="masonry" aria-live="polite"></div>
+      <!-- ⬇️ 新增：周邊的分頁條 -->
+      <div id="peripheralPagination" class="pagination" aria-label="周邊資訊頁數"></div>
       <div class="empty" id="peripheralEmpty" hidden>目前尚無周邊公告。</div>
     </section>
 
@@ -1450,8 +1460,25 @@
       </figure>`;
     }
 
-    /* ============== 3) 渲染（依 type 分頁，日期只排序不顯示時間） ============== */
+    /* ============== 3) 渲染＋分頁設定（依 type 分頁，日期只排序不顯示時間） ============== */
+    const PAGE_SIZE = {
+      latest: 9,      // 最新活動：一頁 9 筆（桌機剛好 3x3 卡片）
+      history: 10,    // 活動紀錄：一頁 10 筆
+      portfolio: 9,   // 作品集
+      album: 9,       // 相簿
+      peripheral: 9   // 周邊
+    };
+    
+    const currentPage = {
+      latest: 1,
+      history: 1,
+      portfolio: 1,
+      album: 1,
+      peripheral: 1,
+    };
+    
     const safeTime = iso => Number.isFinite(Date.parse(iso)) ? Date.parse(iso) : NaN;
+    
     function matchKeyword(e, kw) {
       if (!kw) return true;
       const hay = [e.title, e.location, e.city, e.summary, ...(e.tags || [])].join(" ").toLowerCase();
@@ -1461,7 +1488,7 @@
       if (!tag) return true;
       return (e.tags || []).includes(tag);
     }
-
+    
     // 解析 <input type="date"> 的值為時間戳
     function parseDateVal(v){
       const t = Date.parse(v);
@@ -1472,70 +1499,124 @@
     function matchDate(e, fromTs, toTs){
       const hasFrom = Number.isFinite(fromTs);
       const hasTo   = Number.isFinite(toTs);
-      if (!hasFrom && !hasTo) return true; // 沒有日期篩選 → 全通過
     
-      const s = Date.parse(e.dateStart || "");
-      const ed= Date.parse(e.dateEnd   || "");
+      const s  = Date.parse(e.dateStart || "");
+      const ed = Date.parse(e.dateEnd   || "");
       const hasS = Number.isFinite(s);
       const hasE = Number.isFinite(ed);
     
-      if (!hasS && !hasE) return false; // 這筆沒有日期 → 有日期條件時不顯示
+      if (!hasS && !hasE) return false;
     
-      const start = hasS ? s : ed;          // 缺開始就用結束
-      const end   = hasE ? ed : start;      // 缺結束就用開始（單日）
-      return (!hasFrom || end   >= fromTs)  // 事件結束 >= 起日
-          && (!hasTo   || start <= toTs);   // 事件開始 <= 迄日
+      const start = hasS ? s : ed;
+      const end   = hasE ? ed : start;
+    
+      return (!hasFrom || end   >= fromTs) &&
+             (!hasTo   || start <= toTs);
     }
     
-    function renderLatest(list, kw="", tag="", fromTs, toTs) {
+    /* 共用：把資料切頁、更新列表＋分頁條 */
+    function updateListWithPagination(kind, data, listEl, pagerEl, htmlFn, emptyId) {
+      const emptyEl = document.getElementById(emptyId);
+      if (!listEl || !pagerEl || !emptyEl) return;
+    
+      if (!Array.isArray(data) || data.length === 0) {
+        listEl.innerHTML = "";
+        emptyEl.hidden = false;
+        pagerEl.innerHTML = "";
+        pagerEl.hidden = true;
+        return;
+      }
+    
+      emptyEl.hidden = true;
+    
+      const size = PAGE_SIZE[kind] || 10;
+      const totalPages = Math.ceil(data.length / size);
+    
+      let page = currentPage[kind] || 1;
+      if (page < 1) page = 1;
+      if (page > totalPages) page = totalPages;
+      currentPage[kind] = page;
+    
+      const start = (page - 1) * size;
+      const items = data.slice(start, start + size);
+      listEl.innerHTML = items.map(htmlFn).join("");
+    
+      if (totalPages <= 1) {
+        pagerEl.innerHTML = "";
+        pagerEl.hidden = true;
+        return;
+      }
+    
+      pagerEl.hidden = false;
+    
+      let html = "";
+    
+      if (page > 1) {
+        html += `<button class="page-btn" data-tab="${kind}" data-page="${page - 1}" aria-label="上一頁">&laquo;</button>`;
+      }
+    
+      for (let p = 1; p <= totalPages; p++) {
+        const active = p === page ? " is-active" : "";
+        const aria   = p === page ? ` aria-current="page"` : "";
+        html += `<button class="page-btn${active}" data-tab="${kind}" data-page="${p}"${aria}>${p}</button>`;
+      }
+    
+      if (page < totalPages) {
+        html += `<button class="page-btn" data-tab="${kind}" data-page="${page + 1}" aria-label="下一頁">&raquo;</button>`;
+      }
+    
+      pagerEl.innerHTML = html;
+    }
+    
+    function renderLatest(list, pager, kw = "", tag = "", fromTs, toTs) {
       const data = events
         .filter(e => (e.type || "").trim() === "upcoming")
         .filter(e => matchKeyword(e, kw) && matchTag(e, tag) && matchDate(e, fromTs, toTs))
-        .sort((a,b) => (Number.isFinite(safeTime(a.dateStart)) ? safeTime(a.dateStart) : Infinity)
-                    - (Number.isFinite(safeTime(b.dateStart)) ? safeTime(b.dateStart) : Infinity));
-      list.innerHTML = data.map(cardHTML).join("");
-      $("#latestEmpty").hidden = data.length !== 0;
+        .sort((a, b) =>
+          (Number.isFinite(safeTime(a.dateStart)) ? safeTime(a.dateStart) : Infinity) -
+          (Number.isFinite(safeTime(b.dateStart)) ? safeTime(b.dateStart) : Infinity)
+        );
+      updateListWithPagination("latest", data, list, pager, cardHTML, "latestEmpty");
     }
-
-    function renderHistory(list, kw="", tag="", fromTs, toTs) {
+    
+    function renderHistory(list, pager, kw = "", tag = "", fromTs, toTs) {
       const data = events
         .filter(e => (e.type || "").trim() === "past")
         .filter(e => matchKeyword(e, kw) && matchTag(e, tag) && matchDate(e, fromTs, toTs))
-        .sort((a,b) => (Number.isFinite(safeTime(b.dateStart)) ? safeTime(b.dateStart) : -Infinity)
-                    - (Number.isFinite(safeTime(a.dateStart)) ? safeTime(a.dateStart) : -Infinity));
-      list.innerHTML = data.map(timelineHTML).join("");
-      $("#historyEmpty").hidden = data.length !== 0;
+        .sort((a, b) =>
+          (Number.isFinite(safeTime(b.dateStart)) ? safeTime(b.dateStart) : -Infinity) -
+          (Number.isFinite(safeTime(a.dateStart)) ? safeTime(a.dateStart) : -Infinity)
+        );
+      updateListWithPagination("history", data, list, pager, timelineHTML, "historyEmpty");
     }
-
-    function renderPortfolio(list, kw="", tag="", fromTs, toTs) {
+    
+    function renderPortfolio(list, pager, kw = "", tag = "", fromTs, toTs) {
       const data = events
+        .map((e, i) => ({ ...e, _idx: i }))
         .filter(e => (e.type || "").trim() === "portfolio")
         .filter(e => matchKeyword(e, kw) && matchTag(e, tag) && matchDate(e, fromTs, toTs))
-        .sort((a,b) => (Number.isFinite(safeTime(b.dateStart)) ? safeTime(b.dateStart) : -Infinity)
-                    - (Number.isFinite(safeTime(a.dateStart)) ? safeTime(a.dateStart) : -Infinity));
-      list.innerHTML = data.map(portfolioHTML).join("");
-      $("#portfolioEmpty").hidden = data.length !== 0;
+        .sort((a, b) => a._idx - b._idx);
+      updateListWithPagination("portfolio", data, list, pager, portfolioHTML, "portfolioEmpty");
     }
-
-    function renderAlbum(list, kw="", tag="", fromTs, toTs) {
+    
+    function renderAlbum(list, pager, kw = "", tag = "", fromTs, toTs) {
       const data = events
         .map((e, i) => ({ ...e, _idx: i }))
         .filter(e => (e.type || "").trim() === "album")
         .filter(e => matchKeyword(e, kw) && matchTag(e, tag) && matchDate(e, fromTs, toTs))
         .sort((a, b) => a._idx - b._idx);
-      list.innerHTML = data.map(albumHTML).join("");
-      $("#albumEmpty").hidden = data.length !== 0;
+      updateListWithPagination("album", data, list, pager, albumHTML, "albumEmpty");
     }
-
-    function renderPeripheral(list, kw="", tag="", fromTs, toTs) {
+    
+    function renderPeripheral(list, pager, kw = "", tag = "", fromTs, toTs) {
       const data = events
-        .map((e,i)=>({...e,_idx:i}))
+        .map((e, i) => ({ ...e, _idx: i }))
         .filter(e => (e.type || "").trim() === "peripheral")
         .filter(e => matchKeyword(e, kw) && matchTag(e, tag) && matchDate(e, fromTs, toTs))
-        .sort((a,b)=>a._idx - b._idx);
-      list.innerHTML = data.map(peripheralHTML).join("");
-      document.getElementById("peripheralEmpty").hidden = data.length !== 0;
+        .sort((a, b) => a._idx - b._idx);
+      updateListWithPagination("peripheral", data, list, pager, peripheralHTML, "peripheralEmpty");
     }
+
     /* ============== 4) 分頁切換（hash 路由） ============== */
     const panels = {
       latest: $("#panel-latest"),
@@ -1569,25 +1650,58 @@
       if (ae && !["search","tagFilter"].includes(ae.id)) ae.blur();
     }
 
-    function handleHashChange() {
-      const tab = (location.hash.replace("#","") || "latest");
-      switchTab(tab);
-    
+    function getFilterState() {
       const tagSel = document.getElementById('tagFilter');
       const tg = tagSel ? tagSel.value : "";
-      const kw = ""; // 我們已移除關鍵字輸入
+      const kw = ""; // 目前沒有關鍵字搜尋
     
-      // 取得日期欄位並轉成時間戳
       const fromEl = document.getElementById('dateFrom');
       const toEl   = document.getElementById('dateTo');
       const fromTs = fromEl ? parseDateVal(fromEl.value) : NaN;
       const toTs   = toEl   ? parseDateVal(toEl.value)   : NaN;
     
-      renderLatest(document.getElementById("latestList"),    kw, tg, fromTs, toTs);
-      renderHistory(document.getElementById("historyList"),  kw, tg, fromTs, toTs);
-      renderPortfolio(document.getElementById("portfolioList"), kw, tg, fromTs, toTs);
-      renderAlbum(document.getElementById("albumList"),      kw, tg, fromTs, toTs);
-      renderPeripheral(document.getElementById("peripheralList"), kw, tg, fromTs, toTs);
+      return { kw, tg, fromTs, toTs };
+    }
+    
+    function refreshLists() {
+      const { kw, tg, fromTs, toTs } = getFilterState();
+    
+      renderLatest(
+        document.getElementById("latestList"),
+        document.getElementById("latestPagination"),
+        kw, tg, fromTs, toTs
+      );
+      renderHistory(
+        document.getElementById("historyList"),
+        document.getElementById("historyPagination"),
+        kw, tg, fromTs, toTs
+      );
+      renderPortfolio(
+        document.getElementById("portfolioList"),
+        document.getElementById("portfolioPagination"),
+        kw, tg, fromTs, toTs
+      );
+      renderAlbum(
+        document.getElementById("albumList"),
+        document.getElementById("albumPagination"),
+        kw, tg, fromTs, toTs
+      );
+      renderPeripheral(
+        document.getElementById("peripheralList"),
+        document.getElementById("peripheralPagination"),
+        kw, tg, fromTs, toTs
+      );
+    }
+    
+    function handleHashChange(ev) {
+      // 如果是標籤或日期「change」事件 → 重設所有分頁回第 1 頁
+      if (ev && ev.type === "change") {
+        Object.keys(currentPage).forEach(k => { currentPage[k] = 1; });
+      }
+    
+      const tab = (location.hash.replace("#","") || "latest");
+      switchTab(tab);
+      refreshLists();
     }
 
     /* ============== 5) 詳情 Modal ============== */
@@ -1775,9 +1889,23 @@
       const inDialog = ev.clientX >= rect.left && ev.clientX <= rect.right && ev.clientY >= rect.top && ev.clientY <= rect.bottom;
       if (!inDialog) dialog.close();
     });
+    // 分頁按鈕 click：更新 currentPage + 重繪列表
     document.body.addEventListener("click", (ev) => {
-      const btn = ev.target.closest("[data-detail]");
-      if (btn) openDetail(btn.getAttribute("data-detail"));
+      const btn = ev.target.closest(".page-btn");
+      if (!btn) return;
+    
+      const tab  = btn.dataset.tab || "latest";
+      const page = parseInt(btn.dataset.page || "1", 10);
+      if (!page || !currentPage[tab]) return;
+    
+      currentPage[tab] = page;
+      refreshLists();
+    
+      // 可選：捲回該分頁的上方，避免卡在中間
+      const panel = panels[tab];
+      if (panel && typeof panel.scrollIntoView === "function") {
+        panel.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     });
 
     /* ============== 6) 搜尋與標籤事件 ============== */
